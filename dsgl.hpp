@@ -1,5 +1,5 @@
-#ifndef DSGL
-#define DSGL
+
+#include <cstdio>
 #include <cstring>
 #include <GL/gl3w.h>
 
@@ -13,7 +13,7 @@
 
 #define DSGL_GLFW_INIT_FAILED		-1
 #define DSGL_WINDOW_POINTER_NULL	-2
-#define DSGL_GLFW_INIT_FAILED		-3
+#define DSGL_GL3W_INIT_FAILED		-3
 
 namespace DSGL {
 	void PrintWorkGroupsCapabilities();
@@ -21,9 +21,9 @@ namespace DSGL {
 	class Context {
 		public:
 			Context(const char * name, int width, int height, int glMajorVersion, int glMinorVersion);
-			Context(const char * name, int width, int height);
+			Context(int width, int height, int glMajorVersion, int glMinorVersion);
 			~Context();
-			void InitSimpleWindow();
+			int InitSimpleWindow();
 
 			int width;
 			int height;
@@ -33,18 +33,18 @@ namespace DSGL {
 			char * name;
 
 			#ifdef DSGL_GLFW
-			GLFWwindow * window;
+				GLFWwindow * window;
 			#endif
 		private:
-			void init(const char * name, int width, int height, int glMajorVersion, int glMinorVersion);
-	}
+			void Init(const char * name, int width, int height, int glMajorVersion, int glMinorVersion);
+	};
 	
 	class Shader {
 		public:
-			DSGLShader(const char * shaderFilename);
-			DSGLShader(const char * shaderFilename, bool verbose);
+			Shader(const char * shaderFilename);
+			Shader(const char * shaderFilename, bool verbose);
 
-			~DSGLShader();
+			~Shader();
 
 			void SetVerbose(bool verbose);
 			void EchoErrors();
@@ -52,11 +52,10 @@ namespace DSGL {
 			
 			char * shaderSource;
 			char * shaderErrorMessages;
-	}
+	};
 
 	class ShaderProgram {
 	
-	}
+	};
 }
 
-#endif

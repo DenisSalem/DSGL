@@ -2,26 +2,35 @@
 
 namespace DSGL {
 	Context::Context(const char * name, int width, int height, int glMajorVersion, int glMinorVersion) {
-		init(name, width, height, glMajorVersion, glMinorVersion);
+		Init(name, width, height, glMajorVersion, glMinorVersion);
 	}
 	
 	Context::Context(int width, int height, int glMajorVersion, int glMinorVersion) {
-		init("", width, height, glMajorVersion, glMinorVersion);
+		Init("", width, height, glMajorVersion, glMinorVersion);
 	}
 	
-	Context::Init(const char * name, int width, int height, int glMajorVersion, int glMinorVersion) {
+	Context::~Context() {
+		#ifdef DSGL_GLFW
+			glfwTerminate();
+		#endif
+		delete this->name;
+		printf("ok\n");
+	}
+	
+	void Context::Init(const char * name, int width, int height, int glMajorVersion, int glMinorVersion) {
 		this->name = new char[strlen(name)+1];
 		strcpy(this->name, name);	
 		this->width = width;
 		this->height = height;
 		this->glMajorVersion = glMajorVersion;
 		this->glMinorVersion = glMinorVersion;
+		this->window = 0;
 	}
 	
 	#ifdef DSGL_GLFW
-		Context::InitSimpleWindow() {
+		int Context::InitSimpleWindow() {
 			if (!glfwInit()) {
-				exit(DSGL_GLFW_INIT_FAILED);
+				return DSGL_GLFW_INIT_FAILED;
 			}
 
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, this->glMajorVersion);
@@ -30,13 +39,13 @@ namespace DSGL {
 			this->window = glfwCreateWindow(this->width, this->height, this->name, NULL, NULL);
   
 			if (!window)  {
-				exit(DSGL_WINDOW_POINTER_NULL);
+				return DSGL_WINDOW_POINTER_NULL;
 			}
 
 			glfwMakeContextCurrent(window);
 
 			if(gl3wInit() != 0) {
-				exit(DSGL_GL3W_INIT_FAILED);
+				return DSGL_GL3W_INIT_FAILED;
 			}
 		}
 	#endif
