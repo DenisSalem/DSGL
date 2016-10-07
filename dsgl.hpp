@@ -14,9 +14,10 @@
 
 #define DSGL_VERSION					"0.0.0"
 
-#define DSGL_VERBOSE					1
-#define DSGL_QUIET						0
-#define DSGL_READ_FROM_STRING			2
+#define DSGL_CLEAN_SHADER_ONLY			true
+#define DSGL_CLEAN_ALL					false
+
+#define DSGL_READ_FROM_STRING			1
 #define DSGL_READ_FROM_FILE				0
 
 #define DSGL_SHADER_ERROR_LENGTH		2048
@@ -28,6 +29,7 @@
 #define DSGL_CANNOT_READ_SHADER_SOURCE  -4
 #define DSGL_ERROR_AT_SHDR_COMPILE_TIME -5
 #define DSGL_CANNOT_CREATE_SHADER		-6
+#define DSGL_CANNOT_CREATE_PROGRAM		-7
 
 
 namespace DSGL {
@@ -66,12 +68,9 @@ namespace DSGL {
 			~Shader();
 
 			void ReadFromFile(const char * shaderFilename);
-			void EchoErrors();
 			
-			bool verbose;
-			
-			char * shaderSource;
-			char * shaderErrorMessages;
+			char * shaderSource = NULL;
+			char * shaderErrorMessages = NULL;
 			
 			int shaderSourceSize;
 			
@@ -83,7 +82,40 @@ namespace DSGL {
 	};
 
 	class ShaderProgram {
-	
+		public:
+				ShaderProgram();
+				ShaderProgram(const char * inputVertexShader, const char * inputFragmentShader);
+				ShaderProgram(
+					const char * inputVertexShader,
+					const char * inputTesselationControlShader,
+					const char * inputTesselationEvaluationShader,
+					const char * inputGeometryShader,
+					const char * inputFragmentShader
+				);
+				
+				~ShaderProgram();
+				
+				void Clean(bool shadersOnly);
+				
+				char * programErrorMessages = NULL;
+
+				Shader * vertex = NULL;
+				Shader * tesselationControl = NULL;
+				Shader * tesselationEvaluation = NULL;
+				Shader * geometry = NULL;
+				Shader * fragment = NULL;
+				
+				GLuint ID;
+				GLint Result;
+
+		private:
+			int Init(
+				const char * inputVertexShader,
+				const char * inputTesselationControlShader,
+				const char * inputTesselationEvaluationShader,
+				const char * inputGeometryShader,
+				const char * inputFragmentShader
+			);
 	};
 }
 
