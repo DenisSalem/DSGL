@@ -1,6 +1,9 @@
 #include "dsgl.hpp"
 
 namespace DSGL {
+	
+	/* ----- Context ----- */
+	
 	Context::Context(const char * name, int width, int height, int glMajorVersion, int glMinorVersion) {
 		Init(name, width, height, glMajorVersion, glMinorVersion);
 	}
@@ -14,7 +17,6 @@ namespace DSGL {
 			glfwTerminate();
 		#endif
 		delete this->name;
-		printf("ok\n");
 	}
 	
 	void Context::Init(const char * name, int width, int height, int glMajorVersion, int glMinorVersion) {
@@ -30,7 +32,7 @@ namespace DSGL {
 	#ifdef DSGL_GLFW
 		int Context::InitSimpleWindow() {
 			if (!glfwInit()) {
-				return DSGL_GLFW_INIT_FAILED;
+				throw DSGL_GLFW_INIT_FAILED;
 			}
 
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, this->glMajorVersion);
@@ -39,17 +41,106 @@ namespace DSGL {
 			this->window = glfwCreateWindow(this->width, this->height, this->name, NULL, NULL);
   
 			if (!window)  {
-				return DSGL_WINDOW_POINTER_NULL;
+				throw DSGL_WINDOW_POINTER_NULL;
 			}
 
 			glfwMakeContextCurrent(window);
 
 			if(gl3wInit() != 0) {
-				return DSGL_GL3W_INIT_FAILED;
+				throw DSGL_GL3W_INIT_FAILED;
 			}
+			
+			return DSGL_END_NICELY;
 		}
 	#endif
 	
+	/* ---- Shader ----- */
+	Shader::Shader(char * inputShader, GLuint shaderType) {
+		Init(inputShader, shaderType, DSGL_QUIET);
+	}
+	
+	Shader::Shader(char * inputShader, GLuint shaderType, int option) {
+		Init(inputShader, shaderType, option);
+	}
+	
+	void Shader::ReadFromFile(const char * shaderFilename) {
+		FILE * shader = fopen (shaderFilename, "r");
+		if (shader == 0) {
+			throw DSGL_CANNOT_READ_SHADER_SOURCE;
+		}
+		this->shaderSourceSize = GetFileSize(shaderFilename)+1;
+		this->shaderSource = new char[this->shaderSourceSize];
+		for (int i=0; i < this->shaderSourceSize; i++) {
+			this->shaderSource[i] = (unsigned char ) fgetc(shader);
+			if (this->shaderSource[i] == EOF) {
+				this->shaderSource[i] = '\0';
+				break;
+			}
+		}
+		
+		fclose(shader);
+	}
+	int Shader::Init(char * inputShader, GLuint shaderType, int option) {
+		this->Result = GL_FALSE;
+		
+		this->verbose = ((option & 1) == 1) ? true : false;
+		
+		if ((option & 2) == 2)  {
+			this->shaderSource = inputShader;
+		}
+		/* Read from file and load into memory */
+		else {
+			ReadFromFile(inputShader);
+		}
+		
+		/* Create shader */		
+		this->ID = glCreateShader(shaderType);
+		if (this->ID == 0) {
+			throw DSGL_CANNOT_CREATE_SHADER;
+		}		
+
+		/* Read from memory and compile */
+		glShaderSource(this->ID, 1, &this->shaderSource, NULL);
+		glCompileShader(this->ID);
+		
+		if (this->verbose) {
+			this->shaderErrorMessages = new char[DSGL_SHADER_ERROR_LENGTH]() ;
+			glGetShaderiv(this->ID, GL_COMPILE_STATUS, &this->Result);
+			glGetShaderInfoLog(this->ID, DSGL_SHADER_ERROR_LENGTH, NULL, this->shaderErrorMessages);
+			if (strlen(this->shaderErrorMessages) != 0 && this->verbose) {
+				std::cout << inputShader << "\n";
+				std::cout <<  this->shaderErrorMessages << "\n" ;
+				delete this->shaderErrorMessages;
+				delete this->shaderSource;
+
+				glDeleteShader(this->ID);
+				throw DSGL_ERROR_AT_SHDR_COMPILE_TIME;
+			}
+			delete this->shaderErrorMessages;
+			delete this->shaderSource;
+
+		}
+		return DSGL_END_NICELY;
+	}
+	
+	Shader::~Shader() {
+		glDeleteShader(this->ID);
+	}
+
+	
+	/* ----- Miscellaneous functions ----- */
+	
+	int GetFileSize(const char * inputFilePath) {
+		// http://www.cplusplus.com/doc/tutorial/files/
+		std::streampos begin, end;
+		std::ifstream inputFile(inputFilePath, std::ios::binary);
+		begin = inputFile.tellg();
+		inputFile.seekg(0, std::ios::end);
+		end = inputFile.tellg();
+		inputFile.close();
+		return int(end - begin);
+	}
+
 	void PrintWorkGroupsCapabilities() {
 		int workgroup_count[3];
 		int workgroup_size[3];
