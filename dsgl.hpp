@@ -32,7 +32,7 @@
 
 namespace DSGL {
 	int GetFileSize(const char * inputFilePath);
-	void PrintWorkGroupsCapabilities();
+	void PrintNicelyWorkGroupsCapabilities();
 	
 	class Context {
 		public:
@@ -60,8 +60,8 @@ namespace DSGL {
 	
 	class Shader {
 		public:
-			Shader(char * inputShader, GLuint shaderType);
-			Shader(char * inputShader, GLuint shaderType, int option);
+			Shader(const char * inputShader, GLuint shaderType);
+			Shader(const char * inputShader, GLuint shaderType, int option);
 
 			~Shader();
 
@@ -79,7 +79,7 @@ namespace DSGL {
 			GLint Result;
 			
 		private:
-			int Init(char * inputShader, GLuint shaderType, int option);
+			int Init(const char * inputShader, GLuint shaderType, int option);
 	};
 
 	class ShaderProgram {

@@ -55,11 +55,11 @@ namespace DSGL {
 	#endif
 	
 	/* ---- Shader ----- */
-	Shader::Shader(char * inputShader, GLuint shaderType) {
+	Shader::Shader(const char * inputShader, GLuint shaderType) {
 		Init(inputShader, shaderType, DSGL_QUIET);
 	}
 	
-	Shader::Shader(char * inputShader, GLuint shaderType, int option) {
+	Shader::Shader(const char * inputShader, GLuint shaderType, int option) {
 		Init(inputShader, shaderType, option);
 	}
 	
@@ -80,13 +80,14 @@ namespace DSGL {
 		
 		fclose(shader);
 	}
-	int Shader::Init(char * inputShader, GLuint shaderType, int option) {
+	int Shader::Init(const char * inputShader, GLuint shaderType, int option) {
 		this->Result = GL_FALSE;
 		
 		this->verbose = ((option & 1) == 1) ? true : false;
 		
 		if ((option & 2) == 2)  {
-			this->shaderSource = inputShader;
+			this->shaderSource = new char[strlen(inputShader)+1];
+			strcpy(this->shaderSource, inputShader);	
 		}
 		/* Read from file and load into memory */
 		else {
@@ -141,7 +142,7 @@ namespace DSGL {
 		return int(end - begin);
 	}
 
-	void PrintWorkGroupsCapabilities() {
+	void PrintNicelyWorkGroupsCapabilities() {
 		int workgroup_count[3];
 		int workgroup_size[3];
 		int workgroup_invocations;
