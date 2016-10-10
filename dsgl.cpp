@@ -3,6 +3,7 @@
 namespace DSGL {
 	
 	/* ----- Exception ----- */
+	
 	Exception::Exception(int code, const char* msg) : Exception(code, msg, NULL) {}
 	
 	Exception::Exception(int code, const char * msg, const char * filename) {
@@ -60,6 +61,122 @@ namespace DSGL {
 			return DSGL_END_NICELY;
 		}
 	#endif
+	
+	/* ----- VertexBufferObject ----- */
+	VertexBufferObject::VertexBufferObject(GLsizeiptr size, const GLvoid * data) : VertexBufferObject(size, data, GL_STATIC_DRAW) {}
+	
+	VertexBufferObject::VertexBufferObject(GLsizeiptr size, const GLvoid * data, GLenum usage) {
+		glGenBuffers(1, &this->ID);
+		glBindBuffer(GL_ARRAY_BUFFER, this->ID);
+			if(glIsBuffer(this->ID)) {
+				glBufferData(GL_ARRAY_BUFFER, size, data, usage);
+			}
+			else {
+				throw Exception(DSGL_CANNOT_CREATE_VBO,"DSGL: VBO creation failed.");
+			}
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+	
+	VertexBufferObject::~VertexBufferObject() {
+		glDeleteBuffers(1, &this->ID);
+	}
+	
+	void VertexBufferObject::Bind() {
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ID);
+		if(!glIsBuffer(this->ID)) {
+			throw Exception(DSGL_VBO_DOESNT_EXIST, "DSGL: VBO doesn't exist.");
+		}
+	}
+	
+	void VertexBufferObject::Unbind() {
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);		
+	}
+	
+	/* ---- VertexArrayObject ----- */
+	
+	VertexArrayObject::VertexArrayObject() : VertexArrayObject(0,0) {}
+	
+	VertexArrayObject::VertexArrayObject(GLuint IBO, GLuint VBO) {
+		glGenVertexArrays(1, &this->ID);
+		glBindVertexArray(this->ID);
+		if(!glIsVertexArray(this->ID)) {
+			throw Exception(DSGL_CANNOT_CREATE_VAO,"DSGL: VAO creation failed.");			
+		}
+		else {
+			this->IBO = IBO;
+			this->VBO = VBO;
+			
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->IBO);
+			if(this->IBO != 0 && !glIsBuffer(this->IBO)) {
+				throw Exception(DSGL_IBO_DOESNT_EXIST, "DSGL: Element buffer doesn't exist.");
+			}
+			glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+			if(this->VBO != 0 && !glIsBuffer(this->IBO)) {
+				throw Exception(DSGL_VBO_DOESNT_EXIST, "DSGL: Vertex Buffer doesn't exist.");
+			}
+			glBindVertexArray(0);
+		}
+	}
+	
+	void VertexArrayObject::Bind() {
+		if(!glIsVertexArray(this->ID)) {
+			throw Exception(DSGL_VAO_DOESNT_EXIST, "DSGL: VAO doesn't exist.");			
+		}
+		else {
+			glBindVertexArray(this->ID);
+		}		
+	}
+	
+	void VertexArrayObject::Unbind() {
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+	
+	void VertexArrayObject::AttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer) {
+		if(!glIsVertexArray(this->ID)) {
+			throw Exception(DSGL_VAO_DOESNT_EXIST, "DSGL: VAO doesn't exist.");			
+		}
+		else {
+			glBindVertexArray(this->ID);
+				glVertexAttribPointer(index, size, type, normalized, stride, pointer);
+				glEnableVertexAttribArray(0);
+			glBindBuffer(GL_ARRAY_BUFFER, 0);
+		}
+	}
+	
+	VertexArrayObject::~VertexArrayObject() {
+		glDeleteVertexArrays(1,&this->ID);
+	}
+	
+	/* ---- Elements ----- */
+	
+	Elements::Elements(GLsizeiptr size, const GLvoid * data) : Elements(size, data, GL_STATIC_DRAW){}
+	
+	Elements::Elements(GLsizeiptr size, const GLvoid * data, GLenum usage) {
+		glGenBuffers(1, &this->ID);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ID);
+			if(glIsBuffer(this->ID)) {
+				glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, usage);
+			}
+			else {
+				throw Exception(DSGL_CANNOT_CREATE_IBO, "DSGL: Element buffer creation failed.");
+			}
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	}
+	
+	Elements::~Elements() {
+		glDeleteBuffers(1, &this->ID);
+	}
+	
+	void Elements::Bind() {
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ID);
+		if(!glIsBuffer(this->ID)) {
+			throw Exception(DSGL_IBO_DOESNT_EXIST, "DSGL: Element buffer creation failed.");
+		}
+	}
+	
+	void Elements::Unbind() {
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);		
+	}
 	
 	/* ---- Shader ----- */
 		
@@ -210,6 +327,15 @@ namespace DSGL {
 	
 	ShaderProgram::~ShaderProgram() {
 		Clean(DSGL_CLEAN_ALL);
+	}
+	
+	void ShaderProgram::Use() {
+		if(glIsProgram(this->ID)) {
+			glUseProgram(this->ID);
+		}
+		else {
+			throw Exception(DSGL_ID_DOESNT_NAME_A_PROGRAM, "DSGL: ID doesn't name a program.");
+		}
 	}
 	
 	void ShaderProgram::Clean(bool shadersOnly) {

@@ -31,6 +31,13 @@
 #define DSGL_ERROR_AT_SHDR_COMPILE_TIME -5
 #define DSGL_CANNOT_CREATE_SHADER		-6
 #define DSGL_CANNOT_CREATE_PROGRAM		-7
+#define DSGL_ID_DOESNT_NAME_A_PROGRAM	-8
+#define DSGL_VAO_DOESNT_EXIST			-11
+#define DSGL_VBO_DOESNT_EXIST			-12
+#define DSGL_IBO_DOESNT_EXIST			-13
+#define DSGL_CANNOT_CREATE_VAO			-14
+#define DSGL_CANNOT_CREATE_VBO			-15
+#define DSGL_CANNOT_CREATE_IBO			-9
 
 
 namespace DSGL {
@@ -67,6 +74,45 @@ namespace DSGL {
 		#endif
 	};
 	
+	struct VertexBufferObject {
+		VertexBufferObject(GLsizeiptr size, const GLvoid * data);
+		VertexBufferObject(GLsizeiptr size, const GLvoid * data, GLenum usage);
+		~VertexBufferObject();
+		
+		void Bind();
+		void Unbind();		
+		
+		GLuint ID = 0;
+	};
+	
+	struct VertexArrayObject {
+		VertexArrayObject();
+		VertexArrayObject(GLuint IBO, GLuint VBO);
+			
+		~VertexArrayObject();
+			
+		void Bind();
+		void Unbind();
+			
+		void AttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer);
+			
+		GLuint ID	= 0;
+		GLuint IBO	= 0;
+		GLuint VBO	= 0;
+	};
+	
+	struct Elements {
+		Elements(GLsizeiptr size,const GLvoid * data, GLenum usage);
+		Elements(GLsizeiptr size,const GLvoid * data);
+		
+		~Elements();
+		
+		void Bind();
+		void Unbind();
+		
+		GLuint ID	= 0;
+	};
+	
 	class Shader {
 		public:
 			Shader(const char * inputShader, GLuint shaderType, int option);
@@ -80,7 +126,7 @@ namespace DSGL {
 			
 			int shaderSourceSize;
 			
-			GLuint ID;
+			GLuint ID = 0;
 			GLint Result;
 		private:
 			char * shaderErrorMessages = NULL;
@@ -103,14 +149,15 @@ namespace DSGL {
 				
 			void Clean(bool shadersOnly);
 				
-
+			void Use();
+	
 			std::shared_ptr<Shader> vertex;
 			std::shared_ptr<Shader> tesselationControl;
 			std::shared_ptr<Shader> tesselationEvaluation;
 			std::shared_ptr<Shader> geometry;
 			std::shared_ptr<Shader> fragment;
 				
-			GLuint ID;
+			GLuint ID = 0;
 			GLint Result;
 		private:
 			char * programErrorMessages = NULL;
