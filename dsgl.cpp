@@ -2,26 +2,25 @@
 
 namespace DSGL {
 	
+	/* ----- Exception ----- */
+	Exception::Exception(int code, const char* msg) : Exception(code, msg, NULL) {}
+	
+	Exception::Exception(int code, const char * msg, const char * filename) {
+		this->code = code;
+		this->msg = std::string(msg);
+		#ifdef DSGL_DEBUG
+			if (filename != NULL) {
+				this->filename = std::string(filename);
+				std::cerr << "DSGL: " << this->filename << "\n";
+			}
+			std::cerr << this->msg << "\n";
+		#endif
+	}
+	
 	/* ----- Context ----- */
 	
 	Context::Context(const char * name, int width, int height, int glMajorVersion, int glMinorVersion) {
-		Init(name, width, height, glMajorVersion, glMinorVersion);
-	}
-	
-	Context::Context(int width, int height, int glMajorVersion, int glMinorVersion) {
-		Init("", width, height, glMajorVersion, glMinorVersion);
-	}
-	
-	Context::~Context() {
-		#ifdef DSGL_GLFW
-			glfwTerminate();
-		#endif
-		delete this->name;
-	}
-	
-	void Context::Init(const char * name, int width, int height, int glMajorVersion, int glMinorVersion) {
-		this->name = new char[strlen(name)+1];
-		strcpy(this->name, name);	
+		this->name = std::string(name);
 		this->width = width;
 		this->height = height;
 		this->glMajorVersion = glMajorVersion;
@@ -29,25 +28,33 @@ namespace DSGL {
 		this->window = 0;
 	}
 	
+	Context::Context(int width, int height, int glMajorVersion, int glMinorVersion) : Context("", width, height, glMajorVersion, glMinorVersion) {}
+	
+	Context::~Context() {
+		#ifdef DSGL_GLFW
+			glfwTerminate();
+		#endif
+	}
+	
 	#ifdef DSGL_GLFW
 		int Context::InitSimpleWindow() {
 			if (!glfwInit()) {
-				throw DSGL_GLFW_INIT_FAILED;
+				throw Exception(DSGL_GLFW_INIT_FAILED, "DSGL: GLFW failed to initialize.");
 			}
 
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, this->glMajorVersion);
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, this->glMinorVersion);
 
-			this->window = glfwCreateWindow(this->width, this->height, this->name, NULL, NULL);
+			this->window = glfwCreateWindow(this->width, this->height, this->name.c_str(), NULL, NULL);
   
 			if (!window)  {
-				throw DSGL_WINDOW_POINTER_NULL;
+				throw Exception(DSGL_WINDOW_POINTER_NULL, "DSGL: Window pointer is null.");
 			}
 
 			glfwMakeContextCurrent(window);
 
 			if(gl3wInit() != 0) {
-				throw DSGL_GL3W_INIT_FAILED;
+				throw Exception(DSGL_GL3W_INIT_FAILED,"DSGL: GL3W failed ti initialize.");
 			}
 			
 			return DSGL_END_NICELY;
@@ -55,50 +62,30 @@ namespace DSGL {
 	#endif
 	
 	/* ---- Shader ----- */
-	Shader::Shader(const char * inputShader, GLuint shaderType) {
-		Init(inputShader, shaderType, DSGL_READ_FROM_FILE);
-	}
-	
-	Shader::Shader(const char * inputShader, GLuint shaderType, int option) {
-		Init(inputShader, shaderType, option);
-	}
-	
-	void Shader::ReadFromFile(const char * shaderFilename) {
-		FILE * shader = fopen (shaderFilename, "r");
-		if (shader == 0) {
-			throw DSGL_CANNOT_READ_SHADER_SOURCE;
-		}
-		this->shaderSourceSize = GetFileSize(shaderFilename)+1;
-		this->shaderSource = new char[this->shaderSourceSize];
-		for (int i=0; i < this->shaderSourceSize; i++) {
-			this->shaderSource[i] = (unsigned char ) fgetc(shader);
-			if (this->shaderSource[i] == EOF) {
-				this->shaderSource[i] = '\0';
-				break;
-			}
-		}
 		
-		fclose(shader);
-	}
-	int Shader::Init(const char * inputShader, GLuint shaderType, int option) {
+	Shader::Shader(const char * inputShader, GLuint shaderType, int option) {
 		if (inputShader == NULL) {
 			this->ID = 0;
-			return DSGL_END_NICELY;
+			return;
 		}
-		
-		
+				
 		this->Result = GL_FALSE;
 		
 		/* Create shader */
 		this->ID = glCreateShader(shaderType);
 		
 		if (this->ID == 0) {
-			throw DSGL_CANNOT_CREATE_SHADER;
+			if ((option & 1) == 0) {
+				throw Exception(DSGL_CANNOT_CREATE_SHADER, "DSGL: Cannot create shader.", inputShader);
+			}
+			else {
+				throw Exception(DSGL_CANNOT_CREATE_SHADER, "DSGL: Cannot create shader.");
+			}
 		}	
 
+		/* Copy from existing string */
 		if ((option & 1) == 1)  {
-			this->shaderSource = new char[strlen(inputShader)+1];
-			strcpy(this->shaderSource, inputShader);	
+			this->shaderSource = std::string(inputShader);
 		}
 
 		/* Read from file and load into memory */
@@ -107,7 +94,8 @@ namespace DSGL {
 		}
 
 		/* Read from memory and compile */
-		glShaderSource(this->ID, 1, &this->shaderSource, NULL);
+		const char * shaderSource_ptr = this->shaderSource.c_str();
+		glShaderSource(this->ID, 1, &shaderSource_ptr, NULL);
 		glCompileShader(this->ID);
 		
 		glGetShaderiv(this->ID, GL_COMPILE_STATUS, &this->Result);
@@ -115,74 +103,50 @@ namespace DSGL {
 		if (!this->Result) {
 			this->shaderErrorMessages = new char[DSGL_SHADER_ERROR_LENGTH]() ;
 			glGetShaderInfoLog(this->ID, DSGL_SHADER_ERROR_LENGTH, NULL, this->shaderErrorMessages);
-			std::cout << inputShader << "\n";
 			std::cout <<  this->shaderErrorMessages << "\n" ;
 			delete[] this->shaderErrorMessages; this->shaderErrorMessages = NULL;
-			delete[] this->shaderSource; this->shaderSource = NULL;
-			throw DSGL_ERROR_AT_SHDR_COMPILE_TIME;
+			if ((option & 1) == 0) {
+				throw Exception(DSGL_ERROR_AT_SHDR_COMPILE_TIME, "DSGL: Cannot compile shader.", inputShader);
+			}
+			else {
+				throw Exception(DSGL_ERROR_AT_SHDR_COMPILE_TIME, "DSGL: Cannot compile shader.");
+			}
 		}
-
-		delete[] this->shaderErrorMessages; this->shaderErrorMessages = NULL;
-		delete[] this->shaderSource; this->shaderSource = NULL;
-
-		return DSGL_END_NICELY;
+	}
+	
+	Shader::Shader(const char * inputShader, GLuint shaderType) : Shader(inputShader, shaderType, DSGL_READ_FROM_FILE) {}
+	
+	void Shader::ReadFromFile(const char * shaderFilename) {
+		FILE * shader = fopen (shaderFilename, "r");
+		char * stringBuffer = NULL;
+		if (shader == 0) {
+			throw Exception(DSGL_CANNOT_READ_SHADER_SOURCE, "DSGL: Cannot read shader source.", shaderFilename);
+		}
+		this->shaderSourceSize = GetFileSize(shaderFilename)+1;
+		stringBuffer = new char[this->shaderSourceSize];
+		for (int i=0; i < this->shaderSourceSize; i++) {
+			stringBuffer[i] = (unsigned char ) fgetc(shader);
+			if (stringBuffer[i] == EOF) {
+				stringBuffer[i] = '\0';
+				break;
+			}
+		}
+		
+		this->shaderSource.assign(stringBuffer, this->shaderSourceSize);
+		
+		fclose(shader);
+		delete[] stringBuffer;
 	}
 	
 	Shader::~Shader() {
-		delete this->shaderErrorMessages;
-		delete this->shaderSource;
 		glDeleteShader(this->ID);
 	}
 
 	/* ----- ShaderProgram ----- */
 	
-	ShaderProgram::ShaderProgram() {
-	}
+	ShaderProgram::ShaderProgram(const char * inputVertexShader, const char * inputFragmentShader) : ShaderProgram(inputVertexShader, NULL, NULL, NULL, inputFragmentShader) {}
 	
-	ShaderProgram::ShaderProgram(const char * inputVertexShader, const char * inputFragmentShader) {
-		Init(inputVertexShader, NULL, NULL, NULL, inputFragmentShader);
-	}
-	
-	ShaderProgram::~ShaderProgram() {
-		Clean(DSGL_CLEAN_ALL);
-	}
-	
-	void ShaderProgram::Clean(bool shadersOnly) {
-		if (glIsShader(this->vertex->ID)) {
-			glDetachShader(this->ID, this->vertex->ID);
-		}
-
-		if (glIsShader(this->tesselationControl->ID)) {
-			glDetachShader(this->ID, this->tesselationControl->ID);
-		}
-		
-		if (glIsShader(this->tesselationEvaluation->ID)) {
-			glDetachShader(this->ID, this->tesselationEvaluation->ID);
-		}
-		
-		if (glIsShader(this->geometry->ID)) {
-			glDetachShader(this->ID, this->geometry->ID);
-		}
-		
-		if (glIsShader(this->fragment->ID)) {
-			glDetachShader(this->ID, this->fragment->ID);
-		}
-		
-		delete[] this->programErrorMessages;
-		delete this->vertex; this->vertex = NULL;
-		delete this->tesselationControl; this->tesselationControl = NULL;
-		delete this->tesselationEvaluation; this->tesselationEvaluation = NULL;
-		delete this->geometry; this->geometry = NULL;
-		delete this->fragment; this->fragment = NULL;
-		
-		if (!shadersOnly) {
-			if (glIsProgram(this->ID)) {
-				glDeleteProgram(this->ID);
-			}			
-		}
-	}
-	
-	int ShaderProgram::Init(
+	ShaderProgram::ShaderProgram(
 		const char * inputVertexShader,
 		const char * inputTesselationControlShader,
 		const char * inputTesselationEvaluationShader,
@@ -194,16 +158,15 @@ namespace DSGL {
 		/* Create program */
 		this->ID = glCreateProgram();
 		if (!glIsProgram(this->ID)) {
-			throw DSGL_CANNOT_CREATE_PROGRAM;
+			throw Exception(DSGL_CANNOT_CREATE_PROGRAM, "DSGL: Cannot create program");
 		}	
 
 		/* Create shaders */
-		this->vertex = new Shader(inputVertexShader, GL_VERTEX_SHADER, DSGL_READ_FROM_FILE);
-		this->tesselationControl = new Shader(inputTesselationControlShader, GL_TESS_CONTROL_SHADER, DSGL_READ_FROM_FILE);
-		this->tesselationEvaluation = new Shader(inputTesselationEvaluationShader, GL_TESS_EVALUATION_SHADER, DSGL_READ_FROM_FILE);
-		this->geometry = new Shader(inputGeometryShader, GL_GEOMETRY_SHADER, DSGL_READ_FROM_FILE);
-		this->fragment = new Shader(inputFragmentShader, GL_FRAGMENT_SHADER, DSGL_READ_FROM_FILE);
-		return 0;
+		this->vertex = std::make_shared<Shader>(inputVertexShader, GL_VERTEX_SHADER, DSGL_READ_FROM_FILE);
+		this->tesselationControl = std::make_shared<Shader>(inputTesselationControlShader, GL_TESS_CONTROL_SHADER, DSGL_READ_FROM_FILE);
+		this->tesselationEvaluation = std::make_shared<Shader>(inputTesselationEvaluationShader, GL_TESS_EVALUATION_SHADER, DSGL_READ_FROM_FILE);
+		this->geometry = std::make_shared<Shader>(inputGeometryShader, GL_GEOMETRY_SHADER, DSGL_READ_FROM_FILE);
+		this->fragment = std::make_shared<Shader>(inputFragmentShader, GL_FRAGMENT_SHADER, DSGL_READ_FROM_FILE);
 
 		/* Link and compile */
 
@@ -226,6 +189,7 @@ namespace DSGL {
 		if (glIsShader(this->fragment->ID)) {
 			glAttachShader(this->ID, this->fragment->ID);
 		}
+		
 		glLinkProgram(this->ID);
 		
 		/* Clean shaders */
@@ -233,17 +197,52 @@ namespace DSGL {
 
 		glGetProgramiv(this->ID, GL_LINK_STATUS, &this->Result);
 
-
 		if (!Result) {
 			glGetProgramiv(this->ID, GL_INFO_LOG_LENGTH, &InfoLogLength);
 			this->programErrorMessages = new char[DSGL_SHADER_ERROR_LENGTH]() ;
 			glGetProgramInfoLog(this->ID, GL_INFO_LOG_LENGTH, NULL, &this->programErrorMessages[0]);
 			std::cout << this->programErrorMessages << "\n";
+			delete[] this->programErrorMessages;
 			Clean(DSGL_CLEAN_ALL);
 			throw DSGL_ERROR_AT_SHDR_COMPILE_TIME;
 		}
+	}	
+	
+	ShaderProgram::~ShaderProgram() {
+		Clean(DSGL_CLEAN_ALL);
+	}
+	
+	void ShaderProgram::Clean(bool shadersOnly) {
+		if (glIsShader(this->vertex->ID)) {
+			glDetachShader(this->ID, this->vertex->ID);
+			glDeleteShader(this->vertex->ID);
+		}
 
-		return DSGL_END_NICELY;
+		if (glIsShader(this->tesselationControl->ID)) {
+			glDetachShader(this->ID, this->tesselationControl->ID);
+			glDeleteShader(this->tesselationControl->ID);
+		}
+		
+		if (glIsShader(this->tesselationEvaluation->ID)) {
+			glDetachShader(this->ID, this->tesselationEvaluation->ID);
+			glDeleteShader(this->tesselationEvaluation->ID);
+		}
+		
+		if (glIsShader(this->geometry->ID)) {
+			glDetachShader(this->ID, this->geometry->ID);
+			glDeleteShader(this->geometry->ID);
+		}
+		
+		if (glIsShader(this->fragment->ID)) {
+			glDetachShader(this->ID, this->fragment->ID);
+			glDeleteShader(this->fragment->ID);
+		}
+		
+		if (!shadersOnly) {
+			if (glIsProgram(this->ID)) {
+				glDeleteProgram(this->ID);
+			}			
+		}
 	}
 	
 	/* ----- Miscellaneous functions ----- */

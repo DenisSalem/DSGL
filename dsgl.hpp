@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <cstring>
+#include <memory>
 #include <iostream>
 #include <fstream>
 #include <GL/gl3w.h>
@@ -36,86 +37,83 @@ namespace DSGL {
 	int GetFileSize(const char * inputFilePath);
 	void PrintNicelyWorkGroupsCapabilities();
 	
-	class Context {
-		public:
-			Context(const char * name, int width, int height, int glMajorVersion, int glMinorVersion);
-			Context(int width, int height, int glMajorVersion, int glMinorVersion);
-			
-			~Context();
-			
-			int InitSimpleWindow();
+	struct Exception {
+			Exception(int code, const char * msg);
+			Exception(int code, const char * msg, const char * filename);
 
-			int width;
-			int height;
-			int glMajorVersion;
-			int glMinorVersion;
+			int code;
 			
-			char * name;
+			std::string msg;
+			std::string filename; 
+	};
+	
+	struct Context {
+		Context(const char * name, int width, int height, int glMajorVersion, int glMinorVersion);
+		Context(int width, int height, int glMajorVersion, int glMinorVersion);
+			
+		~Context();
+			
+		int InitSimpleWindow();
 
-			#ifdef DSGL_GLFW
-				GLFWwindow * window;
-			#endif
+		int width;
+		int height;
+		int glMajorVersion;
+		int glMinorVersion;
 			
-		private:
-			void Init(const char * name, int width, int height, int glMajorVersion, int glMinorVersion);
+		std::string name;
+
+		#ifdef DSGL_GLFW
+			GLFWwindow * window;
+		#endif
 	};
 	
 	class Shader {
 		public:
-			Shader(const char * inputShader, GLuint shaderType);
 			Shader(const char * inputShader, GLuint shaderType, int option);
+			Shader(const char * inputShader, GLuint shaderType);
 
 			~Shader();
 
 			void ReadFromFile(const char * shaderFilename);
 			
-			char * shaderSource = NULL;
-			char * shaderErrorMessages = NULL;
+			std::string shaderSource;
 			
 			int shaderSourceSize;
 			
 			GLuint ID;
 			GLint Result;
-			
 		private:
-			int Init(const char * inputShader, GLuint shaderType, int option);
+			char * shaderErrorMessages = NULL;
+
 	};
 
 	class ShaderProgram {
 		public:
-				ShaderProgram();
-				ShaderProgram(const char * inputVertexShader, const char * inputFragmentShader);
-				ShaderProgram(
-					const char * inputVertexShader,
-					const char * inputTesselationControlShader,
-					const char * inputTesselationEvaluationShader,
-					const char * inputGeometryShader,
-					const char * inputFragmentShader
-				);
-				
-				~ShaderProgram();
-				
-				void Clean(bool shadersOnly);
-				
-				char * programErrorMessages = NULL;
-
-				Shader * vertex = NULL;
-				Shader * tesselationControl = NULL;
-				Shader * tesselationEvaluation = NULL;
-				Shader * geometry = NULL;
-				Shader * fragment = NULL;
-				
-				GLuint ID;
-				GLint Result;
-
-		private:
-			int Init(
+			ShaderProgram();
+			ShaderProgram(const char * inputVertexShader, const char * inputFragmentShader);
+			ShaderProgram(
 				const char * inputVertexShader,
 				const char * inputTesselationControlShader,
 				const char * inputTesselationEvaluationShader,
 				const char * inputGeometryShader,
 				const char * inputFragmentShader
 			);
+				
+			~ShaderProgram();
+				
+			void Clean(bool shadersOnly);
+				
+
+			std::shared_ptr<Shader> vertex;
+			std::shared_ptr<Shader> tesselationControl;
+			std::shared_ptr<Shader> tesselationEvaluation;
+			std::shared_ptr<Shader> geometry;
+			std::shared_ptr<Shader> fragment;
+				
+			GLuint ID;
+			GLint Result;
+		private:
+			char * programErrorMessages = NULL;
 	};
 }
 
