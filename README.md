@@ -87,6 +87,7 @@ and where methods
 
 - __InitSimpleWindow()__ make current context active and create simple window. May issue exception with code *DSGL_GLFW_INIT_FAILED*, *DSGL_WINDOW_POINTER_NULL* and *DSGL_GL3W_INIT_FAILED*.
 - Constructor and deleguates constructors do nothing more than setup object attributes.
+- Default destructor wipe out the whole OpenGL context.
 
 ### VertexBufferObject
 
@@ -118,7 +119,7 @@ and where methods
  - _GL_DYNAMIC_DRAW_
  - _GL_DYNAMIC_READ_
  - _GL_DYNAMIC_COPY_
-- __~VertexBufferObject()__ 
+- __~VertexBufferObject()__ delete VBO named by *ID*.
 - __Bind()__ safely make the VBO active. Thrown exception if *ID* doesn't name existing buffer or if is zero with code *DSGL_VBO_DOESNT_EXIST* or *DSGL_VBO_IS_NULL*.
 - __Unbind__ unbinds any buffer object previously bound.
 
@@ -156,7 +157,7 @@ and where methods
 
  - __VertexArrayObject()__ create a VAO. Thrown exception with code *DSGL_CANNOT_CREATE_VAO* if failed.
  - __VertexArrayObject(GLuint IBO, GLuint VBO)__ create a VAO and bind given IBO and VBO. Like the default constructor it thrown exception with code _DSGL_CANNOT_CREATE_VAO_ if failed. Also it  thrown exception with code _DSGL_IBO_DOESNT_EXIST_ or _DSGL_VBO_DOESNT_EXIST_ if given IBO/VBO doesn't name existing buffer.
- -__~VertexArrayObject()__ delete VAO named by *ID*.
+ - __~VertexArrayObject()__ delete VAO named by *ID*.
  - __AttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer)__ define an array of generic vertex attribute data as defined [there](https://www.opengl.org/sdk/docs/man4/html/glVertexAttribPointer.xhtml) to VAO hold by object. If VAO doesn't exist it will issue exception with code *DSGL_VAO_DOESNT_EXIST*.
  - __Bind()__ safely bind VAO. Issue exception if *ID* doesn't name an existing Vertex Array Object with code *DSGL_VAO_DOESNT_EXIST*.
  - __Unbind()__  break currently VAO binding.
