@@ -80,7 +80,7 @@ namespace DSGL {
 		~VertexBufferObject();
 		
 		void Bind();
-		void Unbind();		
+		static void Unbind();		
 		
 		GLuint ID = 0;
 	};
@@ -92,7 +92,7 @@ namespace DSGL {
 		~VertexArrayObject();
 			
 		void Bind();
-		void Unbind();
+		static void Unbind();
 			
 		void AttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer);
 			
@@ -108,7 +108,7 @@ namespace DSGL {
 		~Elements();
 		
 		void Bind();
-		void Unbind();
+		static void Unbind();
 		
 		GLuint ID	= 0;
 	};
