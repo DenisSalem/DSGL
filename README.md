@@ -45,7 +45,7 @@ Where attributes
  - *DSGL_CANNOT_CREATE_VAO*
  - *DSGL_CANNOT_CREATE_VBO*
  - *DSGL_CANNOT_CREATE_IBO*
-- __msg__ is the message describing the error publicly available through member. If DSGL_DEGUG is defined Exception will print to stderr msg.
+- __msg__ is the message describing the error publicly available through member. If DSGL_DEGUG is defined Exception will print msg to stderr.
 - __filename__ hold, when necessary, the filename related to the exception. For instance this is used to hold shader source filename.
 
 Exception is thrown when error occurs while DSGL perform tasks.
@@ -83,9 +83,27 @@ Where attributes
 
 and where methods
 
-- __InitSimpleWindow()_ make current context active and create simple window.
+- __InitSimpleWindow()__ make current context active and create simple window.
 
 
+### VertexBufferObject
 
+	struct VertexBufferObject {
+		VertexBufferObject(GLsizeiptr size, const GLvoid * data);
+		VertexBufferObject(GLsizeiptr size, const GLvoid * data, GLenum usage);
+		~VertexBufferObject();
+		
+		void Bind();
+		void Unbind();		
+		
+		GLuint ID = 0;
+	};
 
+where attributes
+
+- __ID__ name the VBO created with VertexBufferObject constructor.
+
+and where methods
+
+- __VertexBufferObject(GLsizeiptr size, const GLvoid * data)__ create a VBO fed with _data_ with a size defined by _size_. By default VBO is setup with _GL_STATIC_DRAW_.
 
