@@ -146,3 +146,9 @@ DSGL define VAO as shown below
 where attributes
 
  - __ID__ name the VAO create by
+ - __IBO__ name the IBO given to constructor. It is set to zero if none given.
+ - __VBO__ name the VBO given to constructor. It is set to zero if none given.
+ 
+and where methods
+
+ - __AttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer)__ define an array of generic vertex attribute data as defined [there](https://www.opengl.org/sdk/docs/man4/html/glVertexAttribPointer.xhtml) to VAO hold by object.
