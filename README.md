@@ -151,4 +151,6 @@ where attributes
  
 and where methods
 
+ - __VertexArrayObject()__ create a VAO. Thrown exception with code DSGL_CANNOT_CREATE_VAO if failed.
+ - __VertexArrayObject(GLuint IBO, GLuint VBO)__ create a VAO and bind given IBO and VBO. Like the default constructor it thrown exception with code DSGL_CANNOT_CREATE_VAO if failed. Also it  thrown exception with code DSGL_IBO_DOESNT_EXIST or DSGL_IBO_DOESNT_EXIST if given IBO/VBO doesn't name existing buffer.
  - __AttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer)__ define an array of generic vertex attribute data as defined [there](https://www.opengl.org/sdk/docs/man4/html/glVertexAttribPointer.xhtml) to VAO hold by object.
