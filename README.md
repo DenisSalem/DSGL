@@ -99,7 +99,7 @@ and where methods
 		GLuint ID = 0;
 	};
 
-where attributes
+where attribute
 
 - __ID__ name the VBO created with VertexBufferObject constructor.
 
@@ -119,9 +119,11 @@ and where methods
 - __Bind()__ make the VBO active.
 - __Unbind__ unbinds any buffer object previously bound.
 
+If VBO is not succefully created while instancing class then exception is throw with code error _DSGL_CANNOT_CREATE_VBO_. Attempt to bind VBO that doesn't exist anymore within the object will thrown exception with code error _DSGL_VBO_DOESNT_EXIST_.
+
 ### VertexArrayObject
 
-[Vertex Array](https://www.opengl.org/wiki/Vertex_Specification#Vertex_Array_Object) Object store and gather defined states and data passed to your GPU.
+[Vertex Array Object](https://www.opengl.org/wiki/Vertex_Specification#Vertex_Array_Object) store and gather defined states and data passed to your GPU.
 
 DSGL define VAO as shown below
 
@@ -140,3 +142,7 @@ DSGL define VAO as shown below
 		GLuint IBO	= 0;
 		GLuint VBO	= 0;
 	};
+	
+where attributes
+
+ - __ID__ name the VAO create by
