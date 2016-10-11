@@ -38,6 +38,8 @@
 #define DSGL_CANNOT_CREATE_VAO			-14
 #define DSGL_CANNOT_CREATE_VBO			-15
 #define DSGL_CANNOT_CREATE_IBO			-9
+#define DSGL_VBO_IS_NULL				-16
+#define DSGL_IBO_IS_NULL				-17
 
 
 namespace DSGL {

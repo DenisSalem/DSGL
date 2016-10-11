@@ -82,9 +82,14 @@ namespace DSGL {
 	}
 	
 	void VertexBufferObject::Bind() {
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ID);
-		if(!glIsBuffer(this->ID)) {
-			throw Exception(DSGL_VBO_DOESNT_EXIST, "DSGL: VBO doesn't exist.");
+		if(this->ID != 0) {
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ID);
+			if(!glIsBuffer(this->ID)) {
+				throw Exception(DSGL_VBO_DOESNT_EXIST, "DSGL: VBO doesn't exist.");
+			}
+		}
+		else {
+			throw Exception(DSGL_VBO_IS_NULL, "DSGL: VBO is null.");
 		}
 	}
 	
@@ -128,7 +133,7 @@ namespace DSGL {
 	}
 	
 	void VertexArrayObject::Unbind() {
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		glBindVertexArray(0);
 	}
 	
 	void VertexArrayObject::AttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer) {
@@ -168,9 +173,14 @@ namespace DSGL {
 	}
 	
 	void Elements::Bind() {
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ID);
-		if(!glIsBuffer(this->ID)) {
-			throw Exception(DSGL_IBO_DOESNT_EXIST, "DSGL: Element buffer creation failed.");
+		if (this->ID != 0) {
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ID);
+			if(!glIsBuffer(this->ID)) {
+				throw Exception(DSGL_IBO_DOESNT_EXIST, "DSGL: Element buffer creation failed.");
+			}
+		}
+		else {
+			throw Exception(DSGL_IBO_IS_NULL, "DSGL: IBO is null.");
 		}
 	}
 	
