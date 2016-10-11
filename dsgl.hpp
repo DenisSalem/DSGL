@@ -40,6 +40,7 @@
 #define DSGL_CANNOT_CREATE_IBO			-9
 #define DSGL_VBO_IS_NULL				-16
 #define DSGL_IBO_IS_NULL				-17
+#define DSGL_INSTANCE_DOESNT_EXIST		-18
 
 
 namespace DSGL {
@@ -82,6 +83,7 @@ namespace DSGL {
 		~VertexBufferObject();
 		
 		void Bind();
+
 		static void Unbind();		
 		
 		GLuint ID = 0;
@@ -94,13 +96,17 @@ namespace DSGL {
 		~VertexArrayObject();
 			
 		void Bind();
+		void SetInstance(GLuint instance);
+
 		static void Unbind();
 			
 		void AttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer);
-			
+		void InstanceAttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer, GLuint divisor);
+		
 		GLuint ID	= 0;
 		GLuint IBO	= 0;
 		GLuint VBO	= 0;
+		GLuint instance = 0;
 	};
 	
 	struct Elements {

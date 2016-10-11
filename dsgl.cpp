@@ -132,6 +132,20 @@ namespace DSGL {
 		}		
 	}
 	
+	void VertexArrayObject::SetInstance(GLuint instance) {
+		glBindVertexArray(this->ID);
+		if(!glIsVertexArray(this->ID)) {
+			throw Exception(DSGL_VAO_DOESNT_EXIST, "DSGL: VAO doesn't exist.");			
+		}
+		else {
+			glBindBuffer(GL_ARRAY_BUFFER, instance);
+			if(instance != 0 && !glIsBuffer(instance)) {
+				throw Exception(DSGL_INSTANCE_DOESNT_EXIST, "DSGL: instance buffer doesn't exist.");
+			}
+			this->instance = instance;
+		}		
+	}
+	
 	void VertexArrayObject::Unbind() {
 		glBindVertexArray(0);
 	}
@@ -142,9 +156,31 @@ namespace DSGL {
 		}
 		else {
 			glBindVertexArray(this->ID);
+				glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+				if(!glIsBuffer(this->VBO)) {
+					throw Exception(DSGL_VBO_DOESNT_EXIST, "DSGL: Vertex buffer doesn't exist.");
+				}
+				glEnableVertexAttribArray(index);
 				glVertexAttribPointer(index, size, type, normalized, stride, pointer);
-				glEnableVertexAttribArray(0);
-			glBindBuffer(GL_ARRAY_BUFFER, 0);
+			glBindVertexArray(0);
+
+		}
+	}
+	
+	void VertexArrayObject::InstanceAttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer, GLuint divisor) {
+		if(!glIsVertexArray(this->ID)) {
+			throw Exception(DSGL_VAO_DOESNT_EXIST, "DSGL: VAO doesn't exist.");			
+		}
+		else {
+			glBindVertexArray(this->ID);
+				glBindBuffer(GL_ARRAY_BUFFER, this->instance);
+				if(!glIsBuffer(this->instance)) {
+					throw Exception(DSGL_INSTANCE_DOESNT_EXIST, "DSGL: instance buffer doesn't exist.");
+				}
+				glEnableVertexAttribArray(index);
+				glVertexAttribPointer(index, size, type, normalized, stride, pointer);
+				glVertexAttribDivisor(index, divisor);
+			glBindVertexArray(0);
 		}
 	}
 	
