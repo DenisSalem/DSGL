@@ -17,15 +17,16 @@ Each classes and functions are defined within the DSGL namespace.
 
 If DSGL_DEGUG is defined Exception will produce verbose output related to the current error.
 
-_struct Exception {
-		Exception(int code, const char * msg);
-		Exception(int code, const char * msg, const char * filename);
+*struct Exception {
+	Exception(int code, const char * msg);
+	Exception(int code, const char * msg, const char * filename);
 
-		int code;
+	int code;
 			
-		std::string msg;
-		std::string filename; 
-};_
+	std::string msg;
+	
+	std::string filename; 
+};*
 	
 Where
 
