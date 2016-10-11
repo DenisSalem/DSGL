@@ -121,3 +121,22 @@ and where methods
 
 ### VertexArrayObject
 
+[Vertex Array](https://www.opengl.org/wiki/Vertex_Specification#Vertex_Array_Object) Object store and gather defined states and data passed to your GPU.
+
+DSGL define VAO as shown below
+
+	struct VertexArrayObject {
+		VertexArrayObject();
+		VertexArrayObject(GLuint IBO, GLuint VBO);
+			
+		~VertexArrayObject();
+			
+		void Bind();
+		static void Unbind();
+			
+		void AttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer);
+			
+		GLuint ID	= 0;
+		GLuint IBO	= 0;
+		GLuint VBO	= 0;
+	};
