@@ -1,4 +1,4 @@
-# DSGL 0.0.0
+# DSGL
 
 Damn Simple OpenGL
 
@@ -164,6 +164,8 @@ and where methods
  - __VertexArrayObject()__ create a VAO. Thrown exception with code *DSGL_CANNOT_CREATE_VAO* if failed.
  - __VertexArrayObject(GLuint IBO, GLuint VBO)__ create a VAO and bind given IBO and VBO. Like the default constructor it thrown exception with code _DSGL_CANNOT_CREATE_VAO_ if failed. Also it  thrown exception with code _DSGL_IBO_DOESNT_EXIST_ or _DSGL_VBO_DOESNT_EXIST_ if given IBO/VBO doesn't name existing buffer.
  - __~VertexArrayObject()__ delete VAO named by *ID*.
- - __AttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer)__ define an array of generic vertex attribute data as defined [there](https://www.opengl.org/sdk/docs/man4/html/glVertexAttribPointer.xhtml) to VAO hold by object. If VAO doesn't exist it will issue exception with code *DSGL_VAO_DOESNT_EXIST*.
+ - __AttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer)__ define an array of generic vertex attribute data as defined [there](https://www.opengl.org/sdk/docs/man4/html/glVertexAttribPointer.xhtml) to VAO hold by object. If VAO or VBO doesn't exist it will issue exception with code *DSGL_VAO_DOESNT_EXIST* or _DSGL_VBO_DOESNT_EXIST_.
+ - __InstanceAttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer, GLuint divisor)__ allow programmer to setup instance buffer attributes. If VAO or instance buffer doesn't exist it will issue exception with code *DSGL_VAO_DOESNT_EXIST* or _DSGL_INSTANCE_DOESNT_EXIST_.
  - __Bind()__ safely bind VAO. Issue exception if *ID* doesn't name an existing Vertex Array Object with code *DSGL_VAO_DOESNT_EXIST*.
+ - __SetInstance(GLuint instance)__ Bind Instance buffer to VAO. If VAO or instance buffer doesn't exist it will issue exception with code *DSGL_VAO_DOESNT_EXIST* or _DSGL_INSTANCE_DOESNT_EXIST_.
  - __Unbind()__  break currently VAO binding.
