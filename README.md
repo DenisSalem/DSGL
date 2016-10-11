@@ -106,7 +106,7 @@ where attributes
 and where methods
 
 - __VertexBufferObject(GLsizeiptr size, const GLvoid * data)__ create a VBO fed with _data_ with a size defined by _size_. By default VBO is setup with _GL_STATIC_DRAW_.
-- __VertexBufferObject(GLsizeiptr size, const GLvoid * data, GLenum usage)__ Same as above but setup VBO usage with _usage_, where _usage_ may be one of the following ([]see glBufferData man page](https://www.opengl.org/sdk/docs/man4/html/glBufferData.xhtml)):
+- __VertexBufferObject(GLsizeiptr size, const GLvoid * data, GLenum usage)__ Same as above but setup VBO usage with _usage_, where _usage_ may be one of the following ([see glBufferData man page](https://www.opengl.org/sdk/docs/man4/html/glBufferData.xhtml)):
  - _GL_STREAM_DRAW_
  - _GL_STREAM_READ_
  - _GL_STREAM_COPY_
