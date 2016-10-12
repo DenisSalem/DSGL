@@ -21,6 +21,8 @@ DSGL rely on [gl3w](https://github.com/skaslev/gl3w) to work. That mean's that b
 
 ## Installation and compilation
 
+DSGL use [gl3w](https://github.com/skaslev/gl3w) and [glm](http://glm.g-truc.net/0.9.8/index.html), be sure theses libraries are available on your system.
+
 ## API
 
 Each classes and functions are defined within the DSGL namespace.
