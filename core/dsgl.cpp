@@ -38,9 +38,9 @@ namespace DSGL {
 	}
 	
 	void Context::InitSimpleWindow() {
-		#ifdef DSGL_GLFW
+		#if defined(DSGL_GLFW)
 			if (!glfwInit()) {
-				throw Exception(DSGL_GLFW_INIT_FAILED, "DSGL: GLFW failed to initialize.");
+				throw Exception(DSGL_GLFW_INIT_FAILED, "DSGL: GLFW initialization failed.");
 			}
 
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, this->glMajorVersion);
@@ -55,7 +55,7 @@ namespace DSGL {
 			glfwMakeContextCurrent(window);
 
 			if(gl3wInit() != 0) {
-				throw Exception(DSGL_GL3W_INIT_FAILED,"DSGL: GL3W failed ti initialize.");
+				throw Exception(DSGL_GL3W_INIT_FAILED,"DSGL: GL3W initialization failed.");
 			}
 		#endif
 	}

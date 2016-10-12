@@ -21,7 +21,9 @@ DSGL rely on [gl3w](https://github.com/skaslev/gl3w) to work. That mean's that b
 
 ## Installation and compilation
 
-DSGL use [gl3w](https://github.com/skaslev/gl3w) and [glm](http://glm.g-truc.net/0.9.8/index.html), be sure theses libraries are available on your system.
+DSGL support some nice libraries you may want to use by passing to compiler some option depending of what you want.
+- [glfw](http://glm.g-truc.net/0.9.8/index.html) : compile with *-D DSGL_GLFW*
+
 
 Include [dsgl.hpp](https://github.com/DenisSalem/DSGL/blob/master/core/dsgl.hpp) and [dsgl.cpp](https://github.com/DenisSalem/DSGL/blob/master/core/dsgl.cpp) from [core](https://github.com/DenisSalem/DSGL/tree/master/core) in your project.
 
@@ -187,3 +189,7 @@ and where methods
  - __SetVertex(GLuint vertex)__ Bind vertex buffer to VAO. If VAO or VBO doesn't exist it will issue exception with code *DSGL_VAO_DOESNT_EXIST* or _DSGL_VBO_DOESNT_EXIST_.
 
  - __Unbind()__  break currently VAO binding.
+
+# FAQ
+
+## I do not want to use gl3w

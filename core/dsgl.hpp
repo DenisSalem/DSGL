@@ -3,10 +3,11 @@
 #include <memory>
 #include <iostream>
 #include <fstream>
+
 #include <GL/gl3w.h>
 
-#ifdef DSGL_GLFW
-#include <GLFW/glfw3.h>
+#if defined(DSGL_GLFW)
+	#include <GLFW/glfw3.h>
 #endif
 
 #include <glm/glm.hpp>
@@ -74,8 +75,10 @@ namespace DSGL {
 			
 		std::string name;
 
-		#ifdef DSGL_GLFW
-			GLFWwindow * window;
+		#if defined(DSGL_GLFW)
+			GLFWwindow * window = 0;
+		#else
+			void * window = 0;
 		#endif
 	};
 	
