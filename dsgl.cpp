@@ -37,8 +37,8 @@ namespace DSGL {
 		#endif
 	}
 	
-	#ifdef DSGL_GLFW
-		int Context::InitSimpleWindow() {
+	void Context::InitSimpleWindow() {
+		#ifdef DSGL_GLFW
 			if (!glfwInit()) {
 				throw Exception(DSGL_GLFW_INIT_FAILED, "DSGL: GLFW failed to initialize.");
 			}
@@ -57,10 +57,8 @@ namespace DSGL {
 			if(gl3wInit() != 0) {
 				throw Exception(DSGL_GL3W_INIT_FAILED,"DSGL: GL3W failed ti initialize.");
 			}
-			
-			return DSGL_END_NICELY;
-		}
-	#endif
+		#endif
+	}
 	
 	/* ----- VertexBufferObject ----- */
 	VertexBufferObject::VertexBufferObject(GLsizeiptr size, const GLvoid * data) : VertexBufferObject(size, data, GL_STATIC_DRAW) {}
@@ -89,7 +87,7 @@ namespace DSGL {
 			}
 		}
 		else {
-			throw Exception(DSGL_VBO_IS_NULL, "DSGL: VBO is null.");
+			throw Exception(DSGL_VBO_IS_NULL, DSGL_MSG_VBO_IS_NULL);
 		}
 	}
 	
@@ -133,7 +131,7 @@ namespace DSGL {
 	void VertexArrayObject::SetVertex(GLuint vertex) {
 		this->Bind();
 			if (vertex == 0) {
-				throw Exception(DSGL_VBO_IS_NULL,"DSGL: Vertex Buffer name is null.");
+				throw Exception(DSGL_VBO_IS_NULL, DSGL_MSG_VBO_IS_NULL);
 			}
 			glBindBuffer(GL_ARRAY_BUFFER, vertex);
 			if(!glIsBuffer(vertex)) {

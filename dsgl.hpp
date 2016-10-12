@@ -43,6 +43,7 @@
 #define DSGL_INSTANCES_IS_NULL			-17
 #define DSGL_INSTANCES_DOESNT_EXIST		-18
 
+#define DSGL_MSG_VBO_IS_NULL			"DSGL: Vertex Buffer name is null."
 
 namespace DSGL {
 	int GetFileSize(const char * inputFilePath);
@@ -64,7 +65,7 @@ namespace DSGL {
 			
 		~Context();
 			
-		int InitSimpleWindow();
+		void InitSimpleWindow();
 
 		int width;
 		int height;

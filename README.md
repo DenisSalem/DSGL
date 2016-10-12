@@ -2,6 +2,16 @@
 
 Damn Simple OpenGL
 
+- [About](https://github.com/DenisSalem/DSGL#about)
+- [Installation and compilation](https://github.com/DenisSalem/DSGL#installation-and-compilation)
+- [API](https://github.com/DenisSalem/DSGL#api)
+ -[Exception](https://github.com/DenisSalem/DSGL#exception)
+ -[Context](https://github.com/DenisSalem/DSGL#context)
+ -[VertexBufferObject](https://github.com/DenisSalem/DSGL#vertexbufferobject)
+ -[VertexArrayObject](https://github.com/DenisSalem/DSGL#vertexarrayobject)
+-[Examples](#)
+-[FAQ](#)
+
 ## About
 
 DSGL is a tiny and simple modern OpenGL wrapper libraries written in C++ and intented to do not hide OpenGL but simply
@@ -62,7 +72,7 @@ Exception is thrown when error occurs while DSGL perform tasks.
 			
 		~Context();
 			
-		int InitSimpleWindow();
+		void InitSimpleWindow();
 
 		int width;
 		int height;
