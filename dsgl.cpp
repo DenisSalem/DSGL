@@ -449,21 +449,17 @@ namespace DSGL {
 		int workgroup_size[3];
 		int workgroup_invocations;
 
-		glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 0, &workgroup_count[0]);
-		glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 1, &workgroup_count[1]);
-		glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, 2, &workgroup_count[2]);
+		for (int i=0; i < 3; i++) {	glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_COUNT, i, &workgroup_count[i]); }
 
-		printf ("MAXIMUM WORK GROUP COUNT:\n\tx:%u\n\ty:%u\n\tz:%u\n",
+		printf ("DSGL: MAXIMUM WORK GROUP COUNT:\n\tx:%u\n\ty:%u\n\tz:%u\n",
 		workgroup_size[0], workgroup_size[1], workgroup_size[2]);
 		
-		glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 0, &workgroup_size[0]);
-		glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 1, &workgroup_size[1]);
-		glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, 2, &workgroup_size[2]);
+		for (int i=0; i < 3; i++) { glGetIntegeri_v(GL_MAX_COMPUTE_WORK_GROUP_SIZE, i, &workgroup_size[i]); }
 
-		printf ("MAXIMUM WORK GROUP SIZE:\n\tx:%u\n\ty:%u\n\tz:%u\n",
+		printf ("DSGL: MAXIMUM WORK GROUP SIZE:\n\tx:%u\n\ty:%u\n\tz:%u\n",
 		workgroup_size[0], workgroup_size[1], workgroup_size[2]);
 
 		glGetIntegerv (GL_MAX_COMPUTE_WORK_GROUP_INVOCATIONS, &workgroup_invocations);
-		printf ("MAXIMUM WORK GROUP INVOCATIONS:\n\t%u\n", workgroup_invocations);
+		printf ("DSGL: MAXIMUM WORK GROUP INVOCATIONS:\n\t%u\n", workgroup_invocations);
 	}
 }
