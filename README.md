@@ -2,15 +2,15 @@
 
 Damn Simple OpenGL
 
-* [About](https://github.com/DenisSalem/DSGL#about)
-* [Installation and compilation](https://github.com/DenisSalem/DSGL#installation-and-compilation)
-* [API](https://github.com/DenisSalem/DSGL#api)
-	*[Exception](https://github.com/DenisSalem/DSGL#exception)
-	*[Context](https://github.com/DenisSalem/DSGL#context)
-	*[VertexBufferObject](https://github.com/DenisSalem/DSGL#vertexbufferobject)
-	*[VertexArrayObject](https://github.com/DenisSalem/DSGL#vertexarrayobject)
-* [Examples](#)
-* [FAQ](#)
+1. [About](https://github.com/DenisSalem/DSGL#about)
+2. [Installation and compilation](https://github.com/DenisSalem/DSGL#installation-and-compilation)
+3. [API](https://github.com/DenisSalem/DSGL#api)
+	1. [Exception](https://github.com/DenisSalem/DSGL#exception)
+	2. [Context](https://github.com/DenisSalem/DSGL#context)
+	3. [VertexBufferObject](https://github.com/DenisSalem/DSGL#vertexbufferobject)
+	4. [VertexArrayObject](https://github.com/DenisSalem/DSGL#vertexarrayobject)
+4. [Examples](#)
+5. [FAQ](#)
 
 ## About
 
