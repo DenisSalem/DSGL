@@ -108,8 +108,8 @@ namespace DSGL {
 	VertexArrayObject::VertexArrayObject(GLuint IBO, GLuint VBO) {
 		glGenVertexArrays(1, &this->ID);
 		this->Bind();			
-			this->SetVertex(this->VBO);
-			this->SetElements(this->IBO);
+			this->SetVertex(VBO);
+			this->SetElements(IBO);
 		this->Unbind();	
 	}
 	
