@@ -17,13 +17,11 @@ Damn Simple OpenGL
 DSGL is a tiny and simple modern OpenGL wrapper libraries written in C++ and intented to do not hide OpenGL but simply
 make the programmer's life easier by providing some general purpose classes.
 
-DSGL rely on [gl3w](https://github.com/skaslev/gl3w) to work. That mean's that by using DSGL you actually running [core profile](https://www.opengl.org/wiki/Core_And_Compatibility_in_Contexts) OpenGL.
-
 ## Installation and compilation
 
 DSGL support some nice libraries you may want to use by passing to compiler some option depending of what you want.
-- [glfw](http://glm.g-truc.net/0.9.8/index.html) : compile with *-D DSGL_GLFW*
-
+- [glfw](http://www.glfw.org/) : compile with *-D DSGL_GLFW*
+- [gl3w](https://github.com/skaslev/gl3w) : compile with *-D DSGL_GL3W*
 
 Include [dsgl.hpp](https://github.com/DenisSalem/DSGL/blob/master/core/dsgl.hpp) and [dsgl.cpp](https://github.com/DenisSalem/DSGL/blob/master/core/dsgl.cpp) from [core](https://github.com/DenisSalem/DSGL/tree/master/core) in your project.
 
