@@ -155,11 +155,11 @@ namespace DSGL {
 	void VertexArrayObject::SetInstances(GLuint instances) {
 		this->Bind();
 			if (instances == 0) {
-				throw Exception(DSGL_INSTANCE_IS_NULL, "DSGL: instance buffer name is null.");
+				throw Exception(DSGL_INSTANCES_IS_NULL, "DSGL: instance buffer name is null.");
 			}
 			glBindBuffer(GL_ARRAY_BUFFER, instances);
 			if(!glIsBuffer(instances)) {
-				throw Exception(DSGL_INSTANCE_DOESNT_EXIST, "DSGL: instances buffer doesn't exist.");
+				throw Exception(DSGL_INSTANCES_DOESNT_EXIST, "DSGL: instances buffer doesn't exist.");
 			}
 			this->instances = instances;
 		this->Unbind();
@@ -190,7 +190,7 @@ namespace DSGL {
 		glBindVertexArray(this->ID);
 			glBindBuffer(GL_ARRAY_BUFFER, this->instances);
 			if(!glIsBuffer(this->instances)) {
-				throw Exception(DSGL_INSTANCE_DOESNT_EXIST, "DSGL: instances buffer doesn't exist.");
+				throw Exception(DSGL_INSTANCES_DOESNT_EXIST, "DSGL: instances buffer doesn't exist.");
 			}
 			glEnableVertexAttribArray(index);
 			glVertexAttribPointer(index, size, type, normalized, stride, pointer);

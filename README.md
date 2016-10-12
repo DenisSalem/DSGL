@@ -47,7 +47,8 @@ Where attributes
  - *DSGL_CANNOT_CREATE_IBO*
  - *DSGL_VBO_IS_NULL*
  - *DSGL_IBO_IS_NULL*
- - *DSGL_INSTANCE_DOESNT_EXIST*
+ - *DSGL_INSTANCES_IS_NULL*
+ - *DSGL_INSTANCES_DOESNT_EXIST*
 - __msg__ is the message describing the error publicly available through member. If DSGL_DEGUG is defined Exception will print msg to stderr.
 - __filename__ hold, when necessary, the filename related to the exception. For instance this is used to hold shader source filename.
 
@@ -144,12 +145,12 @@ DSGL define VAO as shown below
 		static void Unbind();
 			
 		void AttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer);
-		void InstanceAttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer, GLuint divisor);
+		void InstancesAttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer, GLuint divisor);
 		
 		GLuint ID	= 0;
 		GLuint IBO	= 0;
 		GLuint VBO	= 0;
-		GLuint Instance = 0;
+		GLuint Instances = 0;
 
 	};
 	
