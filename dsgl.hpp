@@ -32,15 +32,16 @@
 #define DSGL_CANNOT_CREATE_SHADER		-6
 #define DSGL_CANNOT_CREATE_PROGRAM		-7
 #define DSGL_ID_DOESNT_NAME_A_PROGRAM	-8
-#define DSGL_VAO_DOESNT_EXIST			-11
-#define DSGL_VBO_DOESNT_EXIST			-12
-#define DSGL_IBO_DOESNT_EXIST			-13
-#define DSGL_CANNOT_CREATE_VAO			-14
-#define DSGL_CANNOT_CREATE_VBO			-15
-#define DSGL_CANNOT_CREATE_IBO			-9
-#define DSGL_VBO_IS_NULL				-16
-#define DSGL_IBO_IS_NULL				-17
-#define DSGL_INSTANCE_DOESNT_EXIST		-18
+#define DSGL_VAO_DOESNT_EXIST			-9
+#define DSGL_VBO_DOESNT_EXIST			-10
+#define DSGL_IBO_DOESNT_EXIST			-11
+#define DSGL_CANNOT_CREATE_VAO			-12
+#define DSGL_CANNOT_CREATE_VBO			-13
+#define DSGL_CANNOT_CREATE_IBO			-14
+#define DSGL_VBO_IS_NULL				-15
+#define DSGL_IBO_IS_NULL				-16
+#define DSGL_INSTANCES_IS_NULL			-17
+#define DSGL_INSTANCES_DOESNT_EXIST		-18
 
 
 namespace DSGL {
@@ -92,21 +93,24 @@ namespace DSGL {
 	struct VertexArrayObject {
 		VertexArrayObject();
 		VertexArrayObject(GLuint IBO, GLuint VBO);
+		VertexArrayObject(GLuint IBO, GLuint VBO, GLuint instances);
 			
 		~VertexArrayObject();
 			
 		void Bind();
-		void SetInstance(GLuint instance);
+		void SetVertex(GLuint vertex);
+		void SetElements(GLuint elements);
+		void SetInstances(GLuint instance);
 
 		static void Unbind();
 			
 		void AttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer);
-		void InstanceAttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer, GLuint divisor);
+		void InstancesAttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer, GLuint divisor);
 		
 		GLuint ID	= 0;
 		GLuint IBO	= 0;
 		GLuint VBO	= 0;
-		GLuint instance = 0;
+		GLuint instances = 0;
 	};
 	
 	struct Elements {

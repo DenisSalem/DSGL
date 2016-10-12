@@ -99,51 +99,70 @@ namespace DSGL {
 	
 	/* ---- VertexArrayObject ----- */
 	
-	VertexArrayObject::VertexArrayObject() : VertexArrayObject(0,0) {}
+	VertexArrayObject::VertexArrayObject() {
+		glGenVertexArrays(1, &this->ID);
+		this->Bind();
+		this->Unbind();	
+	}
 	
 	VertexArrayObject::VertexArrayObject(GLuint IBO, GLuint VBO) {
 		glGenVertexArrays(1, &this->ID);
-		glBindVertexArray(this->ID);
-		if(!glIsVertexArray(this->ID)) {
-			throw Exception(DSGL_CANNOT_CREATE_VAO,"DSGL: VAO creation failed.");			
-		}
-		else {
-			this->IBO = IBO;
-			this->VBO = VBO;
-			
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->IBO);
-			if(this->IBO != 0 && !glIsBuffer(this->IBO)) {
-				throw Exception(DSGL_IBO_DOESNT_EXIST, "DSGL: Element buffer doesn't exist.");
-			}
-			glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-			if(this->VBO != 0 && !glIsBuffer(this->IBO)) {
-				throw Exception(DSGL_VBO_DOESNT_EXIST, "DSGL: Vertex Buffer doesn't exist.");
-			}
-			glBindVertexArray(0);
-		}
+		this->Bind();			
+			this->SetVertex(this->VBO);
+			this->SetElements(this->IBO);
+		this->Unbind();	
+	}
+	
+	VertexArrayObject::VertexArrayObject(GLuint IBO, GLuint VBO, GLuint instances) {
+		glGenVertexArrays(1, &this->ID);
+		this->Bind();			
+			this->SetVertex(VBO);
+			this->SetElements(IBO);
+			this->SetInstances(instances);
+		this->Unbind();	
+		
 	}
 	
 	void VertexArrayObject::Bind() {
-		if(!glIsVertexArray(this->ID)) {
-			throw Exception(DSGL_VAO_DOESNT_EXIST, "DSGL: VAO doesn't exist.");			
-		}
-		else {
-			glBindVertexArray(this->ID);
-		}		
-	}
-	
-	void VertexArrayObject::SetInstance(GLuint instance) {
 		glBindVertexArray(this->ID);
 		if(!glIsVertexArray(this->ID)) {
 			throw Exception(DSGL_VAO_DOESNT_EXIST, "DSGL: VAO doesn't exist.");			
 		}
-		else {
-			glBindBuffer(GL_ARRAY_BUFFER, instance);
-			if(instance != 0 && !glIsBuffer(instance)) {
-				throw Exception(DSGL_INSTANCE_DOESNT_EXIST, "DSGL: instance buffer doesn't exist.");
+	}
+	
+	void VertexArrayObject::SetVertex(GLuint vertex) {
+		this->Bind();
+			if (vertex == 0) {
+				throw Exception(DSGL_VBO_IS_NULL,"DSGL: Vertex Buffer name is null.");
 			}
-			this->instance = instance;
-		}		
+			glBindBuffer(GL_ARRAY_BUFFER, vertex);
+			if(!glIsBuffer(vertex)) {
+				throw Exception(DSGL_VBO_DOESNT_EXIST, "DSGL: Vertex buffer doesn't exist.");
+			}
+			this->VBO = vertex;
+		this->Unbind();	
+	}
+	void VertexArrayObject::SetElements(GLuint elements) {
+		this->Bind();
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elements);
+			if(elements != 0 && !glIsBuffer(elements)) {
+				throw Exception(DSGL_IBO_DOESNT_EXIST, "DSGL: Elements buffer doesn't exist.");
+			}
+			this->IBO = elements;
+		this->Unbind();
+	}
+	
+	void VertexArrayObject::SetInstances(GLuint instances) {
+		this->Bind();
+			if (instances == 0) {
+				throw Exception(DSGL_INSTANCE_IS_NULL, "DSGL: instance buffer name is null.");
+			}
+			glBindBuffer(GL_ARRAY_BUFFER, instances);
+			if(!glIsBuffer(instances)) {
+				throw Exception(DSGL_INSTANCE_DOESNT_EXIST, "DSGL: instances buffer doesn't exist.");
+			}
+			this->instances = instances;
+		this->Unbind();
 	}
 	
 	void VertexArrayObject::Unbind() {
@@ -154,34 +173,29 @@ namespace DSGL {
 		if(!glIsVertexArray(this->ID)) {
 			throw Exception(DSGL_VAO_DOESNT_EXIST, "DSGL: VAO doesn't exist.");			
 		}
-		else {
-			glBindVertexArray(this->ID);
-				glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
-				if(!glIsBuffer(this->VBO)) {
-					throw Exception(DSGL_VBO_DOESNT_EXIST, "DSGL: Vertex buffer doesn't exist.");
-				}
-				glEnableVertexAttribArray(index);
-				glVertexAttribPointer(index, size, type, normalized, stride, pointer);
-			glBindVertexArray(0);
-
-		}
+		glBindVertexArray(this->ID);
+			glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+			if(!glIsBuffer(this->VBO)) {
+				throw Exception(DSGL_VBO_DOESNT_EXIST, "DSGL: Vertex buffer doesn't exist.");
+			}
+			glEnableVertexAttribArray(index);
+			glVertexAttribPointer(index, size, type, normalized, stride, pointer);
+		glBindVertexArray(0);
 	}
 	
-	void VertexArrayObject::InstanceAttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer, GLuint divisor) {
+	void VertexArrayObject::InstancesAttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer, GLuint divisor) {
 		if(!glIsVertexArray(this->ID)) {
 			throw Exception(DSGL_VAO_DOESNT_EXIST, "DSGL: VAO doesn't exist.");			
 		}
-		else {
-			glBindVertexArray(this->ID);
-				glBindBuffer(GL_ARRAY_BUFFER, this->instance);
-				if(!glIsBuffer(this->instance)) {
-					throw Exception(DSGL_INSTANCE_DOESNT_EXIST, "DSGL: instance buffer doesn't exist.");
-				}
-				glEnableVertexAttribArray(index);
-				glVertexAttribPointer(index, size, type, normalized, stride, pointer);
-				glVertexAttribDivisor(index, divisor);
-			glBindVertexArray(0);
-		}
+		glBindVertexArray(this->ID);
+			glBindBuffer(GL_ARRAY_BUFFER, this->instances);
+			if(!glIsBuffer(this->instances)) {
+				throw Exception(DSGL_INSTANCE_DOESNT_EXIST, "DSGL: instances buffer doesn't exist.");
+			}
+			glEnableVertexAttribArray(index);
+			glVertexAttribPointer(index, size, type, normalized, stride, pointer);
+			glVertexAttribDivisor(index, divisor);
+		glBindVertexArray(0);
 	}
 	
 	VertexArrayObject::~VertexArrayObject() {
@@ -199,7 +213,7 @@ namespace DSGL {
 				glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, usage);
 			}
 			else {
-				throw Exception(DSGL_CANNOT_CREATE_IBO, "DSGL: Element buffer creation failed.");
+				throw Exception(DSGL_CANNOT_CREATE_IBO, "DSGL: Elements buffer creation failed.");
 			}
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
@@ -212,7 +226,7 @@ namespace DSGL {
 		if (this->ID != 0) {
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ID);
 			if(!glIsBuffer(this->ID)) {
-				throw Exception(DSGL_IBO_DOESNT_EXIST, "DSGL: Element buffer creation failed.");
+				throw Exception(DSGL_IBO_DOESNT_EXIST, "DSGL: Elements buffer creation failed.");
 			}
 		}
 		else {
