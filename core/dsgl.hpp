@@ -51,6 +51,15 @@
 #define DSGL_MSG_VBO_IS_NULL			"DSGL: Vertex Buffer name is null."
 
 namespace DSGL {
+	
+	namespace Mesh {
+		GLfloat Triangle[9] = {
+				0.0,	1.0,	0.0,
+				-1.0,	-1.0,	0.0,
+				1.0,	-1.0,	0.0
+		};		
+	}
+	
 	int GetFileSize(const char * inputFilePath);
 	void PrintNicelyWorkGroupsCapabilities();
 	
