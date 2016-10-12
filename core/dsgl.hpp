@@ -4,7 +4,11 @@
 #include <iostream>
 #include <fstream>
 
-#include <GL/gl3w.h>
+#if defined(DSGL_GL3W)
+	#include <GL/gl3w.h>
+#else
+	/* PUT YOUR ALTERNATIVE LIBRARY THERE */
+#endif
 
 #if defined(DSGL_GLFW)
 	#include <GLFW/glfw3.h>

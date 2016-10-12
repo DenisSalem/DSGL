@@ -187,9 +187,10 @@ and where methods
  - __Bind()__ safely bind VAO. Issue exception if *ID* doesn't name an existing Vertex Array Object with code *DSGL_VAO_DOESNT_EXIST*.
  - __SetInstance(GLuint instances)__ Bind Instance buffer to VAO. If VAO or instance buffer doesn't exist it will issue exception with code *DSGL_VAO_DOESNT_EXIST* or _DSGL_INSTANCE_DOESNT_EXIST_.
  - __SetVertex(GLuint vertex)__ Bind vertex buffer to VAO. If VAO or VBO doesn't exist it will issue exception with code *DSGL_VAO_DOESNT_EXIST* or _DSGL_VBO_DOESNT_EXIST_.
-
  - __Unbind()__  break currently VAO binding.
 
 # FAQ
 
 ## I do not want to use gl3w
+
+Well then, you must include by yourself headers of your alternative library __IN__ dsgl.hpp. Also you might want to pass some callback to [Context](https://github.com/DenisSalem/DSGL#context) constructor in order to load function pointer automatically.
