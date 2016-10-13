@@ -6,9 +6,17 @@
 
 struct Triangle {
 	GLfloat		vertex[9];
-	GLuint		index[3];.0, 0.0,
-				-1.0, -1.0, 0.0,
-				1.0, -1.0, 0.0
+	GLuint		index[3];
+	}
+}
+
+namespace DSGL {
+	namespace Meshes {
+		Triangle triangle = {
+			{		
+				0.0,	1.0,	0.0,
+				-1.0,	-1.0,	0.0,
+				1.0,	-1.0,	0.0
 			},
 			{0,1,2}
 		};
