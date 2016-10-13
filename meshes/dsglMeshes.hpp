@@ -1,7 +1,7 @@
 #if defined(DSGL_GL3W)
 	#include <GL/gl3w.h>
 #else
-	#include <GL/gl3w.h>
+	/* INCLUDE ALTERNATIVE LIBRARY HERE */
 #endif
 
 struct Triangle {
