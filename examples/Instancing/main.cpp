@@ -1,6 +1,9 @@
 #include "dsgl.hpp"
+
 #include <sstream>
 #include <unistd.h>
+
+#include <glm/glm.hpp>
 
 int main() {
 	DSGL::Context context("DSGL SIMPLE WINDOW PROGRAM",640,480,4,3);

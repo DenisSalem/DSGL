@@ -47,23 +47,24 @@ namespace DSGL {
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, this->glMinorVersion);
 
 			this->window = glfwCreateWindow(this->width, this->height, this->name.c_str(), NULL, NULL);
-  
+
 			if (!window)  {
 				throw Exception(DSGL_WINDOW_POINTER_NULL, "DSGL: Window pointer is null.");
 			}
 
 			glfwMakeContextCurrent(window);
-			#if defined(DSGL_SOMETHING)
-			#else
-				if(gl3wInit() != 0) {
-					throw Exception(DSGL_GL3W_INIT_FAILED,"DSGL: GL3W initialization failed.");
-				}
-			#endif
+		#endif
+		#if defined(DSGL_GL3W)
+		  if(gl3wInit() != 0) {
+		    throw Exception(DSGL_GL3W_INIT_FAILED,"DSGL: GL3W initialization failed.");
+		  }
+                #else
 		#endif
 	}
 	
 	/* ----- VertexBufferObject ----- */
-	VertexBufferObject::VertexBufferObject(GLsizeiptr size, const GLvoid * data) : VertexBufferObject(size, data, GL_STATIC_DRAW) {}
+	
+        VertexBufferObject::VertexBufferObject(GLsizeiptr size, const GLvoid * data) : VertexBufferObject(size, data, GL_STATIC_DRAW) {}
 	
 	VertexBufferObject::VertexBufferObject(GLsizeiptr size, const GLvoid * data, GLenum usage) {
 		glGenBuffers(1, &this->ID);
