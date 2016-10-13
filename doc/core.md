@@ -1,6 +1,6 @@
 # CORE
 
-To use DSGL core features just include dsgl.hpp and dsgl.cpp in your project.
+To use DSGL core features just include [dsgl.hpp](https://github.com/DenisSalem/DSGL/blob/master/core/dsgl.hpp) and [dsgl.cpp](https://github.com/DenisSalem/DSGL/blob/master/core/dsgl.cpp) in your project.
 
 ### Exception
 
@@ -88,7 +88,7 @@ and where methods
 		void Bind();
 		static void Unbind();		
 		
-		GLuint ID = 0;
+		GLuint ID;
 	};
 
 where attribute
@@ -134,10 +134,10 @@ DSGL define VAO as shown below
 		void AttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer);
 		void InstancesAttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer, GLuint divisor);
 		
-		GLuint ID	= 0;
-		GLuint IBO	= 0;
-		GLuint VBO	= 0;
-		GLuint Instances = 0;
+		GLuint ID;
+		GLuint IBO;
+		GLuint VBO;
+		GLuint Instances;
 
 	};
 	
