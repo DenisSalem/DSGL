@@ -7,16 +7,14 @@
 #if defined(DSGL_GL3W)
 	#include <GL/gl3w.h>
 #else
-	/* PUT YOUR ALTERNATIVE LIBRARY THERE */
+	#include <GL/gl3w.h>
 #endif
 
 #if defined(DSGL_GLFW)
 	#include <GLFW/glfw3.h>
+#else
+	#include <GLFW/glfw3.h>
 #endif
-
-#include <glm/glm.hpp>
-#include <glm/gtx/transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 
 #define DSGL_VERSION					"0.0.0"
 
@@ -51,15 +49,6 @@
 #define DSGL_MSG_VBO_IS_NULL			"DSGL: Vertex Buffer name is null."
 
 namespace DSGL {
-	
-	namespace Mesh {
-		GLfloat Triangle[9] = {
-				0.0,	1.0,	0.0,
-				-1.0,	-1.0,	0.0,
-				1.0,	-1.0,	0.0
-		};		
-	}
-	
 	int GetFileSize(const char * inputFilePath);
 	void PrintNicelyWorkGroupsCapabilities();
 	

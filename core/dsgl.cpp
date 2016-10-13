@@ -20,7 +20,6 @@ namespace DSGL {
 	
 	/* ----- Context ----- */
 	
-	// TODO: ADD callback to load available function pointers
 	Context::Context(const char * name, int width, int height, int glMajorVersion, int glMinorVersion) {
 		this->name = std::string(name);
 		this->width = width;
@@ -54,7 +53,8 @@ namespace DSGL {
 			}
 
 			glfwMakeContextCurrent(window);
-			#if defined(DSGL_GL3W)
+			#if defined(DSGL_SOMETHING)
+			#else
 				if(gl3wInit() != 0) {
 					throw Exception(DSGL_GL3W_INIT_FAILED,"DSGL: GL3W initialization failed.");
 				}

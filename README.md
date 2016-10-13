@@ -20,8 +20,9 @@ make the programmer's life easier by providing some general purpose classes.
 ## Installation and compilation
 
 DSGL support some nice libraries you may want to use by passing to compiler some option depending of what you want.
-- [glfw](http://www.glfw.org/) : compile with *-D DSGL_GLFW*
-- [gl3w](https://github.com/skaslev/gl3w) : compile with *-D DSGL_GL3W*
+
+- [glfw](http://www.glfw.org/) : compile with *-D DSGL_GLFW* (not mandatory since it's the default window manager).
+- [gl3w](https://github.com/skaslev/gl3w) : compile with *-D DSGL_GL3W* (Not mandatory since it's the default extension loader).
 
 Include [dsgl.hpp](https://github.com/DenisSalem/DSGL/blob/master/core/dsgl.hpp) and [dsgl.cpp](https://github.com/DenisSalem/DSGL/blob/master/core/dsgl.cpp) from [core](https://github.com/DenisSalem/DSGL/tree/master/core) in your project.
 
