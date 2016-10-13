@@ -9,6 +9,7 @@ Damn Simple OpenGL
 4. [Examples](https://github.com/DenisSalem/DSGL/tree/master/examples)
 5. [FAQ](https://github.com/DenisSalem/DSGL/blob/master/README.md#faq)
 	1. [How do I use my extensions loader](https://github.com/DenisSalem/DSGL/blob/master/README.md#how-do-i-use-my-extensions-loader)
+
 ## About
 
 DSGL is a tiny and simple modern OpenGL wrapper libraries written in C++ and intented to do not hide OpenGL but simply
@@ -24,11 +25,11 @@ DSGL support some nice libraries you may want to use by passing to compiler some
 
 Include [dsgl.hpp](https://github.com/DenisSalem/DSGL/blob/master/core/dsgl.hpp) and [dsgl.cpp](https://github.com/DenisSalem/DSGL/blob/master/core/dsgl.cpp) from [core](https://github.com/DenisSalem/DSGL/tree/master/core) in your project.
 
-If you do not use one of the option specified above you must take care of extentions loading by including your alternative library in each DSGL headers included in your project.
-
 ## API
 
 Each classes and functions are defined within the DSGL namespace.
+
+- [core](https://github.com/DenisSalem/DSGL/blob/master/doc/core.md) contains main DSGL features.
 
 ## FAQ
 

@@ -1,34 +1,6 @@
-# DSGL
+# CORE
 
-Damn Simple OpenGL
-
-1. [About](https://github.com/DenisSalem/DSGL#about)
-2. [Installation and compilation](https://github.com/DenisSalem/DSGL#installation-and-compilation)
-3. [API](https://github.com/DenisSalem/DSGL#api)
-	1. [Exception](https://github.com/DenisSalem/DSGL#exception)
-	2. [Context](https://github.com/DenisSalem/DSGL#context)
-	3. [VertexBufferObject](https://github.com/DenisSalem/DSGL#vertexbufferobject)
-	4. [VertexArrayObject](https://github.com/DenisSalem/DSGL#vertexarrayobject)
-4. [Examples](#)
-5. [FAQ](#)
-
-## About
-
-DSGL is a tiny and simple modern OpenGL wrapper libraries written in C++ and intented to do not hide OpenGL but simply
-make the programmer's life easier by providing some general purpose classes.
-
-## Installation and compilation
-
-DSGL support some nice libraries you may want to use by passing to compiler some option depending of what you want.
-
-- [glfw](http://www.glfw.org/) : compile with *-D DSGL_GLFW* (not mandatory since it's the default window manager).
-- [gl3w](https://github.com/skaslev/gl3w) : compile with *-D DSGL_GL3W* (Not mandatory since it's the default extension loader).
-
-Include [dsgl.hpp](https://github.com/DenisSalem/DSGL/blob/master/core/dsgl.hpp) and [dsgl.cpp](https://github.com/DenisSalem/DSGL/blob/master/core/dsgl.cpp) from [core](https://github.com/DenisSalem/DSGL/tree/master/core) in your project.
-
-## API
-
-Each classes and functions are defined within the DSGL namespace.
+To use DSGL core features just include dsgl.hpp and dsgl.cpp in your project.
 
 ### Exception
 
@@ -187,9 +159,3 @@ and where methods
  - __SetInstance(GLuint instances)__ Bind Instance buffer to VAO. If VAO or instance buffer doesn't exist it will issue exception with code *DSGL_VAO_DOESNT_EXIST* or _DSGL_INSTANCE_DOESNT_EXIST_.
  - __SetVertex(GLuint vertex)__ Bind vertex buffer to VAO. If VAO or VBO doesn't exist it will issue exception with code *DSGL_VAO_DOESNT_EXIST* or _DSGL_VBO_DOESNT_EXIST_.
  - __Unbind()__  break currently VAO binding.
-
-# FAQ
-
-## I do not want to use gl3w
-
-Well then, you must include by yourself headers of your alternative library __IN__ dsgl.hpp. Also you might want to pass some callback to [Context](https://github.com/DenisSalem/DSGL#context) constructor in order to load function pointer automatically.
