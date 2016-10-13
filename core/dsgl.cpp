@@ -58,7 +58,6 @@ namespace DSGL {
 		  if(gl3wInit() != 0) {
 		    throw Exception(DSGL_GL3W_INIT_FAILED,"DSGL: GL3W initialization failed.");
 		  }
-                #else
 		#endif
 	}
 	
