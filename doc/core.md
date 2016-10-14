@@ -285,4 +285,6 @@ and where methods
 - __ShaderProgram(const char * inputVertexShader, const char * inputTesselationControlShader, const char * inputTesselationEvaluationShader, const char * inputGeometryShader, const char * inputFragmentShader)__ same as above but take as inuput every type of shader from the rendering pipeline. Some shaders might be null and will be ignored.
 - __~ShaderProgram()__ Drop shader program.
 - __Clean(bool shadersOnly)__ Depending of shaderOnly it will drop everything create by object or will erase instanciated shaders. shadersOnly may be *DSGL_CLEAN_ALL* or *DSGL_CLEAN_SHADERS_ONLY*.
-- __Use()__ is equivalent to *glUseProgram( ID )* where *ID* is the member of the class.
+- __Use()__ is equivalent to *glUseProgram( ID )* where *ID* is the member of the class. It will issue exception with code *DSGL_ID_DOESNT_NAME_A_PROGRAM* if *ID* doesn't name an existing program.
+
+
