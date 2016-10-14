@@ -99,8 +99,17 @@ where attribute
 
 and where methods
 
-- __VertexBufferObject(GLsizeiptr size, const GLvoid * data)__ create a VBO fed with _data_ with a size defined by _size_. By default VBO is setup with _GL_STATIC_DRAW_. Throw exception with code *DSG_CANNOT_CREATE_VBO* if failed.
-- __VertexBufferObject(GLsizeiptr size, const GLvoid * data, GLenum usage)__ Same as above but setup VBO usage with _usage_, where _usage_ may be one of the following defined there ([glBufferData man page](https://www.opengl.org/sdk/docs/man4/html/glBufferData.xhtml)). Throw exception with code *DSG_CANNOT_CREATE_VBO* if failed.
+- __VertexBufferObject(GLsizeiptr size, const GLvoid * data)__ create a VBO fed with _data_ with a size defined by _size_. By default VBO is setup with _GL_STATIC_DRAW_.
+- __VertexBufferObject(GLsizeiptr size, const GLvoid * data, GLenum usage)__ Same as above but setup VBO usage with _usage_, where _usage_ may be one of the following ([see glBufferData man page](https://www.opengl.org/sdk/docs/man4/html/glBufferData.xhtml)):
+ - _GL_STREAM_DRAW_
+ - _GL_STREAM_READ_
+ - _GL_STREAM_COPY_
+ - _GL_STATIC_DRAW_
+ - _GL_STATIC_READ_
+ - _GL_STATIC_COPY_
+ - _GL_DYNAMIC_DRAW_
+ - _GL_DYNAMIC_READ_
+ - _GL_DYNAMIC_COPY_
 - __~VertexBufferObject()__ delete VBO named by *ID*.
 - __Bind()__ safely make the VBO active. Thrown exception if *ID* doesn't name existing buffer or if is zero with code *DSGL_VBO_DOESNT_EXIST* or *DSGL_VBO_IS_NULL*.
 - __Unbind__ unbinds any buffer object previously bound.
@@ -120,7 +129,10 @@ DSGL define VAO as shown below
 		~VertexArrayObject();
 			
 		void Bind();
-		void SetInstance(GLuint instance);
+
+		void SetVertex(GLuint vertex);
+		void SetElements(GLuint elements);
+		void SetInstances(GLuint instances);
 		
 		static void Unbind();
 			
@@ -149,6 +161,7 @@ and where methods
  - __AttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer)__ define an array of generic vertex attribute data as defined [there](https://www.opengl.org/sdk/docs/man4/html/glVertexAttribPointer.xhtml) to VAO hold by object. If VAO or VBO doesn't exist it will issue exception with code *DSGL_VAO_DOESNT_EXIST* or _DSGL_VBO_DOESNT_EXIST_. If VBO is null exception with code DSGL_VBO_IS_NULL is raised.
  - __InstancesAttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer, GLuint divisor)__ allow programmer to setup instance buffer attributes. If VAO or instance buffer doesn't exist it will issue exception with code *DSGL_VAO_DOESNT_EXIST* or _DSGL_INSTANCE_DOESNT_EXIST_. If instances is null exception with code DSGL_INSTANCES_IS_NULL is raised.
  - __Bind()__ safely bind VAO. Issue exception if *ID* doesn't name an existing Vertex Array Object with code *DSGL_VAO_DOESNT_EXIST*.
- - __SetInstance(GLuint instances)__ Bind Instance buffer to VAO. If VAO or instance buffer doesn't exist it will issue exception with code *DSGL_VAO_DOESNT_EXIST* or _DSGL_INSTANCE_DOESNT_EXIST_.
- - __SetVertex(GLuint vertex)__ Bind vertex buffer to VAO. If VAO or VBO doesn't exist it will issue exception with code *DSGL_VAO_DOESNT_EXIST* or _DSGL_VBO_DOESNT_EXIST_.
+ - __SetInstances(GLuint instances)__ Bind instances buffer to VAO. If VAO or instances buffer doesn't exist it will issue exception with code *DSGL_VAO_DOESNT_EXIST*, *DSGL_INSTANCES_IS_NULL*  or _DSGL_INSTANCES_DOESNT_EXIST_.
+ - __SetElementsGLuint elements)__ Bind elements buffer to VAO. If VAO or elements buffer doesn't exist it will issue exception with code *DSGL_VAO_DOESNT_EXIST*, *DSGL_IBO_IS_NULL* or _DSGL_IBO_DOESNT_EXIST_.
+ - __SetVertex(GLuint vertex)__ Bind vertex buffer to VAO. If VAO or VBO doesn't exist it will issue exception with code *DSGL_VAO_DOESNT_EXIST*, *DSGL_VBO_IS_NULL* or _DSGL_VBO_DOESNT_EXIST_.
  - __Unbind()__  break currently VAO binding.
