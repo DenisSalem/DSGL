@@ -58,8 +58,10 @@ Exception is thrown when error occurs while DSGL perform tasks.
 			
 		std::string name;
 
-		#ifdef DSGL_GLFW
+		#if defined(DSGL_GLFW)
 			GLFWwindow * window;
+		#else
+			void * window;
 		#endif
 	};
 	
@@ -97,17 +99,8 @@ where attribute
 
 and where methods
 
-- __VertexBufferObject(GLsizeiptr size, const GLvoid * data)__ create a VBO fed with _data_ with a size defined by _size_. By default VBO is setup with _GL_STATIC_DRAW_.
-- __VertexBufferObject(GLsizeiptr size, const GLvoid * data, GLenum usage)__ Same as above but setup VBO usage with _usage_, where _usage_ may be one of the following ([see glBufferData man page](https://www.opengl.org/sdk/docs/man4/html/glBufferData.xhtml)):
- - _GL_STREAM_DRAW_
- - _GL_STREAM_READ_
- - _GL_STREAM_COPY_
- - _GL_STATIC_DRAW_
- - _GL_STATIC_READ_
- - _GL_STATIC_COPY_
- - _GL_DYNAMIC_DRAW_
- - _GL_DYNAMIC_READ_
- - _GL_DYNAMIC_COPY_
+- __VertexBufferObject(GLsizeiptr size, const GLvoid * data)__ create a VBO fed with _data_ with a size defined by _size_. By default VBO is setup with _GL_STATIC_DRAW_. Throw exception with code *DSG_CANNOT_CREATE_VBO* if failed.
+- __VertexBufferObject(GLsizeiptr size, const GLvoid * data, GLenum usage)__ Same as above but setup VBO usage with _usage_, where _usage_ may be one of the following defined there ([glBufferData man page](https://www.opengl.org/sdk/docs/man4/html/glBufferData.xhtml)). Throw exception with code *DSG_CANNOT_CREATE_VBO* if failed.
 - __~VertexBufferObject()__ delete VBO named by *ID*.
 - __Bind()__ safely make the VBO active. Thrown exception if *ID* doesn't name existing buffer or if is zero with code *DSGL_VBO_DOESNT_EXIST* or *DSGL_VBO_IS_NULL*.
 - __Unbind__ unbinds any buffer object previously bound.

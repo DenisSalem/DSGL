@@ -45,6 +45,8 @@
 #define DSGL_INSTANCES_IS_NULL			-17
 #define DSGL_INSTANCES_DOESNT_EXIST		-18
 
+#define DSGL_MSG_GLFW_INIT_FAILED               "DSGL: GLFW initialization failed."
+#define DSGL_MSG_WINDOW_POINTER_NULL            "DSGL: Window pointer is null." 
 #define DSGL_MSG_VBO_IS_NULL			"DSGL: Vertex Buffer name is null."
 
 namespace DSGL {

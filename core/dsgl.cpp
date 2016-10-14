@@ -40,7 +40,7 @@ namespace DSGL {
 	void Context::InitSimpleWindow() {
 		#if defined(DSGL_GLFW)
 			if (!glfwInit()) {
-				throw Exception(DSGL_GLFW_INIT_FAILED, "DSGL: GLFW initialization failed.");
+				throw Exception(DSGL_GLFW_INIT_FAILED, DSGL_MSG_GLFW_INIT_FAILED);
 			}
 
 			glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, this->glMajorVersion);
@@ -49,7 +49,7 @@ namespace DSGL {
 			this->window = glfwCreateWindow(this->width, this->height, this->name.c_str(), NULL, NULL);
 
 			if (!window)  {
-				throw Exception(DSGL_WINDOW_POINTER_NULL, "DSGL: Window pointer is null.");
+				throw Exception(DSGL_WINDOW_POINTER_NULL, DSGL_MSG_WINDOW_POINTER_NULL);
 			}
 
 			glfwMakeContextCurrent(window);
