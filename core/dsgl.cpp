@@ -142,6 +142,7 @@ namespace DSGL {
 			this->VBO = vertex;
 		this->Unbind();	
 	}
+
 	void VertexArrayObject::SetElements(GLuint elements) {
 		this->Bind();
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elements);
