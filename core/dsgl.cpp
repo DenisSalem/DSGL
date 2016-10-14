@@ -313,7 +313,7 @@ namespace DSGL {
 	}
 
 	/* ----- ShaderProgram ----- */
-	
+
 	ShaderProgram::ShaderProgram(const char * inputVertexShader, const char * inputFragmentShader) : ShaderProgram(inputVertexShader, NULL, NULL, NULL, inputFragmentShader) {}
 	
 	ShaderProgram::ShaderProgram(
@@ -363,7 +363,7 @@ namespace DSGL {
 		glLinkProgram(this->ID);
 		
 		/* Clean shaders */
-		Clean(DSGL_CLEAN_SHADER_ONLY);
+		Clean(DSGL_CLEAN_SHADERS_ONLY);
 
 		glGetProgramiv(this->ID, GL_LINK_STATUS, &this->Result);
 

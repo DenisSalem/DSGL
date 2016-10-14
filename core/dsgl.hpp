@@ -17,7 +17,7 @@
 
 #define DSGL_VERSION				"0.0.0"
 
-#define DSGL_CLEAN_SHADER_ONLY			true
+#define DSGL_CLEAN_SHADERS_ONLY			true
 #define DSGL_CLEAN_ALL				false
 
 #define DSGL_READ_FROM_STRING			1
@@ -152,7 +152,6 @@ namespace DSGL {
 
 	class ShaderProgram {
 		public:
-			ShaderProgram();
 			ShaderProgram(const char * inputVertexShader, const char * inputFragmentShader);
 			ShaderProgram(
 				const char * inputVertexShader,

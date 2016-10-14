@@ -236,4 +236,53 @@ and where methods
 
 If shader cannot be created or compiled exception is thrown with code *DSGL_CANNOT_CREATE_SHADER*.
 
+### ShaderProgram
 
+Hold program from linked shader. ShaderProgram is defined as follow
+
+	class ShaderProgram {
+		public:
+			ShaderProgram(const char * inputVertexShader, const char * inputFragmentShader);
+			ShaderProgram(
+				const char * inputVertexShader,
+				const char * inputTesselationControlShader,
+				const char * inputTesselationEvaluationShader,
+				const char * inputGeometryShader,
+				const char * inputFragmentShader
+			);
+				
+			~ShaderProgram();
+				
+			void Clean(bool shadersOnly);
+				
+			void Use();
+	
+			std::shared_ptr<Shader> vertex;
+			std::shared_ptr<Shader> tesselationControl;
+			std::shared_ptr<Shader> tesselationEvaluation;
+			std::shared_ptr<Shader> geometry;
+			std::shared_ptr<Shader> fragment;
+				
+			GLuint ID;
+			GLint Result;
+		private:
+			char * programErrorMessages = NULL;
+	};
+
+where attributes
+
+- __vertex__ store instance of shader initialized with *GL_VERTEX_SHADER*.
+- __tesselationControl__ store instance of shader initialized with *GL_TESS_CONTROL_SHADER*.
+- __tesselationEvaluation__ store instance of shader initialized with *GL_TELL_EVALUATION_SHADER*.
+- __geometry__ store instance of shader initialized with *GL_GEOMETRY_SHADER*.
+- __fragment__ store instance of shader initialized with *GL_FRAGMENT_SHADER*.
+- __ID__ name the shader program created with constructor.
+- __Result__ store a boolean telling if linking successfully complete or not.
+
+and where methods
+
+- __ShaderProgram(const char * inputVertexShader, const char * inputFragmentShader)__ create a shader program with minimal materials given by inputVertexShader and inputFragmentShader. If failed it will issue exception wih code *DSGL_CANNOT_CREATE_PROGRAM* or *DSGL_ERROR_AT_SHDR_COMPILE_TIME*.
+- __ShaderProgram(const char * inputVertexShader, const char * inputTesselationControlShader, const char * inputTesselationEvaluationShader, const char * inputGeometryShader, const char * inputFragmentShader)__ same as above but take as inuput every type of shader from the rendering pipeline. Some shaders might be null and will be ignored.
+- __~ShaderProgram()__ Drop shader program.
+- __Clean(bool shadersOnly)__ Depending of shaderOnly it will drop everything create by object or will erase instanciated shaders. shadersOnly may be *DSGL_CLEAN_ALL* or *DSGL_CLEAN_SHADERS_ONLY*.
+- __Use()__ is equivalent to *glUseProgram( ID )* where *ID* is the member of the class.
