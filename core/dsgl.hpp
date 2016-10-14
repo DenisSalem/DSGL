@@ -109,7 +109,6 @@ namespace DSGL {
 		void SetElements(GLuint elements);
 		void SetInstances(GLuint instance);
 
-		static void Unbind();
 			
 		void AttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer);
 		void InstancesAttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer, GLuint divisor);
@@ -127,7 +126,6 @@ namespace DSGL {
 		~Elements();
 		
 		void Bind();
-		static void Unbind();
 		
 		GLuint ID;
 	};

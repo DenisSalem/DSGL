@@ -82,13 +82,15 @@ and where methods
 
 ### VertexBufferObject
 
+Hold Vertex buffer object.
+
 	struct VertexBufferObject {
-		VertexBufferObject(GLsizeiptr size, const GLvoid * data);
+
+VertexBufferObject(GLsizeiptr size, const GLvoid * data);
 		VertexBufferObject(GLsizeiptr size, const GLvoid * data, GLenum usage);
 		~VertexBufferObject();
 		
 		void Bind();
-		static void Unbind();		
 		
 		GLuint ID;
 	};
@@ -112,7 +114,6 @@ and where methods
  - _GL_DYNAMIC_COPY_
 - __~VertexBufferObject()__ delete VBO named by *ID*.
 - __Bind()__ safely make the VBO active. Thrown exception if *ID* doesn't name existing buffer or if is zero with code *DSGL_VBO_DOESNT_EXIST* or *DSGL_VBO_IS_NULL*.
-- __Unbind__ unbinds any buffer object previously bound.
 
 If VBO is not succefully created while instancing class then exception is throw with code error _DSGL_CANNOT_CREATE_VBO_. Attempt to bind VBO that doesn't exist anymore within the object will thrown exception with code error _DSGL_VBO_DOESNT_EXIST_.
 
@@ -148,7 +149,7 @@ DSGL define VAO as shown below
 	
 where attributes
 
- - __ID__ name the VAO create by
+ - __ID__ name the VAO create by VertexArrayObject constructor.
  - __IBO__ name the IBO given to constructor. It is set to zero if none given.
  - __VBO__ name the VBO given to constructor. It is set to zero if none given.
  
@@ -165,3 +166,74 @@ and where methods
  - __SetElementsGLuint elements)__ Bind elements buffer to VAO. If VAO or elements buffer doesn't exist it will issue exception with code *DSGL_VAO_DOESNT_EXIST*, *DSGL_IBO_IS_NULL* or _DSGL_IBO_DOESNT_EXIST_.
  - __SetVertex(GLuint vertex)__ Bind vertex buffer to VAO. If VAO or VBO doesn't exist it will issue exception with code *DSGL_VAO_DOESNT_EXIST*, *DSGL_VBO_IS_NULL* or _DSGL_VBO_DOESNT_EXIST_.
  - __Unbind()__  break currently VAO binding.
+
+### Elements
+
+Hold elements buffer.
+
+	struct Elements {
+		Elements(GLsizeiptr size,const GLvoid * data, GLenum usage);
+		Elements(GLsizeiptr size,const GLvoid * data);
+		
+		~Elements();
+		
+		void Bind();
+		static void Unbind();
+		
+		GLuint ID;
+	};
+
+where attributes
+
+ - __ID__ name the elements buffer created by Elements constructor.
+
+and where methods
+
+- __Elements(GLsizeiptr size,const GLvoid * data, GLenum usage)__ create an index buffer and send date to it. *size* specifies the actual size of the buffer ans *usage* specifies the usage pattern of the date store (see [glBufferData](https://www.opengl.org/sdk/docs/man4/html/glBufferData.xhtml)).
+- __Elements(GLsizeiptr size,const GLvoid * data) same as above but set usage to GL_STATIC_DRAW by default.
+- __~Elements()__ wipe out buffer named by *ID*.
+- __Bind()__ make buffer current.
+
+If elements cannot be creates exception is thrown with code *DSGL_CANNOT_CREATE_IBO*. 
+
+### Shader
+
+Hold a single shader of any kind.
+
+	class Shader {
+		public:
+			Shader(const char * inputShader, GLuint shaderType, int option);
+			Shader(const char * inputShader, GLuint shaderType);
+
+			~Shader();
+
+			void ReadFromFile(const char * shaderFilename);
+			
+			std::string shaderSource;
+			
+			int shaderSourceSize;
+			
+			GLuint ID;
+			GLint Result;
+		private:
+			char * shaderErrorMessages = NULL;
+
+	};
+
+where attributes
+
+ - __ID__ name the shader create Shader constructor.
+ - __Result__ store a boolean telling us if shader compilation successfully complete or not.
+ - __shaderSource__ store shader source.
+ - __shaderSourceSize__ store shader source size.
+
+and where methods
+
+ - __Shader(const char * inputShader, GLuint shaderType, int option)__ Read input shader create and compile it. Depending of option shader may be read from file or _const char *_ with *DSGL_READ_FROM_FILE* and *DSGL_READ_FROM_STRING*. 
+ - __Shader(const char * inputShader, GLuint shaderType)__ Same as above but read shader from _const char *_ by default.
+ - __~Shader()__ Delete shader.
+ - __ReadFromFile(const char * shaderFilename)__ read shader source and copy its content in member shaderSource.
+
+If shader cannot be created or compiled exception is thrown with code *DSGL_CANNOT_CREATE_SHADER*.
+
+

@@ -93,10 +93,6 @@ namespace DSGL {
 		}
 	}
 	
-	void VertexBufferObject::Unbind() {
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);		
-	}
-	
 	/* ---- VertexArrayObject ----- */
 	
 	VertexArrayObject::VertexArrayObject() {
@@ -233,10 +229,6 @@ namespace DSGL {
 		else {
 			throw Exception(DSGL_IBO_IS_NULL, "DSGL: IBO is null.");
 		}
-	}
-	
-	void Elements::Unbind() {
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);		
 	}
 	
 	/* ---- Shader ----- */
