@@ -44,7 +44,7 @@ Where attributes
  - *DSGL_IBO_IS_NULL*
  - *DSGL_INSTANCES_IS_NULL*
  - *DSGL_INSTANCES_DOESNT_EXIST*
-- __msg__ is the message describing the error publicly available through member. If DSGL_DEGUG is defined Exception will print msg to stderr.
+- __msg__ is the message describing the error publicly available through member. If *DSGL_DEGUG* is defined Exception will print msg to stderr.
 - __filename__ hold, when necessary, the filename related to the exception. For instance this is used to hold shader source filename.
 
 Exception is thrown when error occurs while DSGL perform tasks.
@@ -93,8 +93,7 @@ and where methods
 Hold Vertex buffer object.
 
 	struct VertexBufferObject {
-
-VertexBufferObject(GLsizeiptr size, const GLvoid * data);
+		VertexBufferObject(GLsizeiptr size, const GLvoid * data);
 		VertexBufferObject(GLsizeiptr size, const GLvoid * data, GLenum usage);
 		~VertexBufferObject();
 		
@@ -123,7 +122,7 @@ and where methods
 - __~VertexBufferObject()__ delete VBO named by *ID*.
 - __Bind()__ safely make the VBO active. Thrown exception if *ID* doesn't name existing buffer or if is zero with code *DSGL_VBO_DOESNT_EXIST* or *DSGL_VBO_IS_NULL*.
 
-If VBO is not succefully created while instancing class then exception is throw with code error _DSGL_CANNOT_CREATE_VBO_. Attempt to bind VBO that doesn't exist anymore within the object will thrown exception with code error _DSGL_VBO_DOESNT_EXIST_.
+If VBO is not succefully created while instancing class then exception is throw with code error _DSGL_CANNOT_CREATE_VBO_. Attempt to bind VBO that doesn't exist anymore within the object will thrown exception with code error *DSGL_VBO_DOESNT_EXIST*.
 
 ### VertexArrayObject
 
@@ -290,7 +289,7 @@ where attributes
 and where methods
 
 - __ShaderProgram(const char * inputVertexShader, const char * inputFragmentShader)__ create a shader program with minimal materials given by inputVertexShader and inputFragmentShader. If failed it will issue exception wih code *DSGL_CANNOT_CREATE_PROGRAM* or *DSGL_ERROR_AT_SHDR_COMPILE_TIME*.
-- __ShaderProgram(const char * inputVertexShader, const char * inputTesselationControlShader, const char * inputTesselationEvaluationShader, const char * inputGeometryShader, const char * inputFragmentShader)__ same as above but take as inuput every type of shader from the rendering pipeline. Some shaders might be null and will be ignored.
+- __ShaderProgram(const char * inputVertexShader, const char * inputTesselationControlShader, const char * inputTesselationEvaluationShader, const char * inputGeometryShader, const char * inputFragmentShader)__ same as above but take as input every type of shader from the rendering pipeline. Some shaders might be null and will be ignored.
 - __~ShaderProgram()__ Drop shader program.
 - __Clean(bool shadersOnly)__ Depending of shaderOnly it will drop everything create by object or will erase instanciated shaders. shadersOnly may be *DSGL_CLEAN_ALL* or *DSGL_CLEAN_SHADERS_ONLY*.
 - __Use()__ is equivalent to *glUseProgram( ID )* where *ID* is the member of the class. It will issue exception with code *DSGL_ID_DOESNT_NAME_A_PROGRAM* if *ID* doesn't name an existing program.
