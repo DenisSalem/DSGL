@@ -15,6 +15,9 @@
 	#include <GLFW/glfw3.h>
 #endif
 
+#ifndef DSGL_CORE_INCLUDED
+#define DSGL_CORE_INCLUDED
+
 #define DSGL_VERSION				"0.0.0"
 
 #define DSGL_CLEAN_SHADERS_ONLY			true
@@ -95,6 +98,18 @@ namespace DSGL {
 		static void Unbind();		
 		
 		GLuint ID;
+	};
+
+	struct Textures {
+		Textures();
+		Textures(GLuint target, GLuint width, GLuint height, GLvoid * rawData);
+		void SetNormalMap(GLvoid * rawData);
+
+		GLuint textureID;
+		int width;
+		int height;
+		GLvoid * rawData;
+		GLuint normalMapID;
 	};
 	
 	struct VertexArrayObject {
@@ -180,3 +195,4 @@ namespace DSGL {
 	};
 }
 
+#endif

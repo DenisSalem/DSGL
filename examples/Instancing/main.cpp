@@ -74,7 +74,7 @@ int main() {
 
 		glDrawElementsInstanced(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_SHORT, (GLvoid *) 0, 100);
 
-		VAO.Unbind(); /* Optional since we're using only one VAO */
+		glBindBuffer(GL_ARRAY_BUFFER, 0); /* Optional since we're using only one VAO */
 
 		glUseProgram(0); /* Optional since we're using only one shader program */
 

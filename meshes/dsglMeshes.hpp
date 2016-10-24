@@ -4,8 +4,27 @@
 	/* INCLUDE ALTERNATIVE LIBRARY HERE */
 #endif
 
-struct Triangle {
-	GLfloat		vertex[9];
-	GLuint		index[3];
+#ifndef DSGL_MESHES_INCLUDED
+#define DSGL_MESHES_INCLUDED
+
+namespace DSGL {
+	namespace Meshes {
+		struct Triangle {
+		  	Triangle();
+			Triangle(GLfloat x, GLfloat y, GLfloat z);
+
+			GLfloat		vertex[9];
+			GLuint		index[3];
+		};
+
+		struct Quad {
+		  	Quad();
+			Quad(GLfloat x, GLfloat y, GLfloat z);
+			
+			GLfloat		vertex[12];
+			GLuint		index[4];
+		};
 	}
 }
+
+#endif

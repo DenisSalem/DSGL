@@ -92,21 +92,45 @@ namespace DSGL {
 			throw Exception(DSGL_VBO_IS_NULL, DSGL_MSG_VBO_IS_NULL);
 		}
 	}
-	
+
+	/* ---- Textures ----- */
+
+	Textures::Textures() {
+		glGenTextures(1, &this->textureID);
+	}
+
+	Textures::Textures(GLuint target, GLuint width, GLuint height, GLvoid * rawData) : Textures() {
+	  	this->width = width;
+		this->height = height;
+		this-> rawData = rawData;
+
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, this->textureID);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glGenerateMipmap(GL_TEXTURE_2D);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, this->width, this->height, 0, GL_RGBA, GL_FLOAT, this->rawData);
+			glBindImageTexture (0, this->textureID, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+		glBindImageTexture (0, 0, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
 	/* ---- VertexArrayObject ----- */
 	
 	VertexArrayObject::VertexArrayObject() {
 		glGenVertexArrays(1, &this->ID);
 		this->Bind();
-		this->Unbind();	
+		glBindVertexArray(0);
 	}
-	
+
 	VertexArrayObject::VertexArrayObject(GLuint IBO, GLuint VBO) {
 		glGenVertexArrays(1, &this->ID);
 		this->Bind();			
 			this->SetVertex(VBO);
 			this->SetElements(IBO);
-		this->Unbind();	
+		glBindVertexArray(0);
 	}
 	
 	VertexArrayObject::VertexArrayObject(GLuint IBO, GLuint VBO, GLuint instances) {
@@ -115,7 +139,7 @@ namespace DSGL {
 			this->SetVertex(VBO);
 			this->SetElements(IBO);
 			this->SetInstances(instances);
-		this->Unbind();	
+		glBindVertexArray(0);
 		
 	}
 	
@@ -136,7 +160,7 @@ namespace DSGL {
 				throw Exception(DSGL_VBO_DOESNT_EXIST, "DSGL: Vertex buffer doesn't exist.");
 			}
 			this->VBO = vertex;
-		this->Unbind();	
+		glBindVertexArray(0);
 	}
 
 	void VertexArrayObject::SetElements(GLuint elements) {
@@ -146,7 +170,7 @@ namespace DSGL {
 				throw Exception(DSGL_IBO_DOESNT_EXIST, "DSGL: Elements buffer doesn't exist.");
 			}
 			this->IBO = elements;
-		this->Unbind();
+		glBindVertexArray(0);
 	}
 	
 	void VertexArrayObject::SetInstances(GLuint instances) {
@@ -159,10 +183,6 @@ namespace DSGL {
 				throw Exception(DSGL_INSTANCES_DOESNT_EXIST, "DSGL: instances buffer doesn't exist.");
 			}
 			this->instances = instances;
-		this->Unbind();
-	}
-	
-	void VertexArrayObject::Unbind() {
 		glBindVertexArray(0);
 	}
 	
