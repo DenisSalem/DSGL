@@ -117,6 +117,18 @@ namespace DSGL {
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
+	void Textures::Bind() {
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, this->textureID);
+		glBindImageTexture (0, this->textureID, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+	}
+
+	void Textures::Unbind() {
+		glBindImageTexture (0, 0, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+    		glBindTexture(GL_TEXTURE_2D, 0);
+		glActiveTexture(0);
+	}
+
 	/* ---- VertexArrayObject ----- */
 	
 	VertexArrayObject::VertexArrayObject() {
@@ -163,6 +175,8 @@ namespace DSGL {
 		glBindVertexArray(0);
 	}
 
+	
+
 	void VertexArrayObject::SetElements(GLuint elements) {
 		this->Bind();
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elements);
@@ -186,18 +200,22 @@ namespace DSGL {
 		glBindVertexArray(0);
 	}
 	
-	void VertexArrayObject::AttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer) {
+	void VertexArrayObject::AttribPointer(GLuint buffer, GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer) {
 		if(!glIsVertexArray(this->ID)) {
 			throw Exception(DSGL_VAO_DOESNT_EXIST, "DSGL: VAO doesn't exist.");			
 		}
 		glBindVertexArray(this->ID);
-			glBindBuffer(GL_ARRAY_BUFFER, this->VBO);
+			glBindBuffer(GL_ARRAY_BUFFER, buffer);
 			if(!glIsBuffer(this->VBO)) {
 				throw Exception(DSGL_VBO_DOESNT_EXIST, "DSGL: Vertex buffer doesn't exist.");
 			}
 			glEnableVertexAttribArray(index);
 			glVertexAttribPointer(index, size, type, normalized, stride, pointer);
 		glBindVertexArray(0);
+	}
+
+	void VertexArrayObject::AttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer) {
+		this->AttribPointer(this->VBO, index, size, type, normalized, stride, pointer);
 	}
 	
 	void VertexArrayObject::InstancesAttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer, GLuint divisor) {
@@ -443,7 +461,37 @@ namespace DSGL {
 			}			
 		}
 	}
-	
+
+	void ShaderProgram::Uniformf(const char * uniformName, GLfloat v0) {
+		GLint loc = glGetUniformLocation(this->ID, uniformName);
+		if (loc != -1) {
+			glUniform1f(this->ID, v0);
+		}
+		else {
+		  throw Exception(DSGL_UNIFORM_LOCATION_DOESNT_EXISTS, DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS);
+		}
+	}
+
+	void ShaderProgram::Uniformf(const char * uniformName, GLfloat v0, GLfloat v1) {
+		GLint loc = glGetUniformLocation(this->ID, uniformName);
+		if (loc != -1) {
+			glUniform2f(this->ID, v0, v1);
+		}
+		else {
+		  throw Exception(DSGL_UNIFORM_LOCATION_DOESNT_EXISTS, DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS);
+		}
+	}
+
+	void ShaderProgram::Uniformf(const char * uniformName, GLfloat v0, GLfloat v1, GLfloat v2) {
+		GLint loc = glGetUniformLocation(this->ID, uniformName);
+		if (loc != -1) {
+			glUniform3f(this->ID, v0, v1, v2);
+		}
+		else {
+		  throw Exception(DSGL_UNIFORM_LOCATION_DOESNT_EXISTS, DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS);
+		}
+	}
+
 	/* ----- Miscellaneous functions ----- */
 	
 	int GetFileSize(const char * inputFilePath) {

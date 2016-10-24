@@ -22,6 +22,7 @@ namespace DSGL {
 			Quad(GLfloat x, GLfloat y, GLfloat z);
 			
 			GLfloat		vertex[12];
+			GLfloat		texCoords[8];
 			GLuint		index[4];
 		};
 	}

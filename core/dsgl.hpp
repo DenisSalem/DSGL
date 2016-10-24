@@ -47,10 +47,12 @@
 #define DSGL_IBO_IS_NULL			-16
 #define DSGL_INSTANCES_IS_NULL			-17
 #define DSGL_INSTANCES_DOESNT_EXIST		-18
+#define DSGL_UNIFORM_LOCATION_DOESNT_EXISTS	-19
 
 #define DSGL_MSG_GLFW_INIT_FAILED               "DSGL: GLFW initialization failed."
 #define DSGL_MSG_WINDOW_POINTER_NULL            "DSGL: Window pointer is null." 
 #define DSGL_MSG_VBO_IS_NULL			"DSGL: Vertex Buffer name is null."
+#define DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS	"DSGL: Uniform location doesn't exist."
 
 namespace DSGL {
 	int GetFileSize(const char * inputFilePath);
@@ -103,7 +105,10 @@ namespace DSGL {
 	struct Textures {
 		Textures();
 		Textures(GLuint target, GLuint width, GLuint height, GLvoid * rawData);
+
 		void SetNormalMap(GLvoid * rawData);
+		void Bind();
+		void Unbind();
 
 		GLuint textureID;
 		int width;
@@ -126,6 +131,7 @@ namespace DSGL {
 
 			
 		void AttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer);
+		void AttribPointer(GLuint buffer, GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer);
 		void InstancesAttribPointer(GLuint index,GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid * pointer, GLuint divisor);
 		
 		GLuint ID;
@@ -179,6 +185,10 @@ namespace DSGL {
 			~ShaderProgram();
 				
 			void Clean(bool shadersOnly);
+
+			void Uniformf(const char * uniformName, GLfloat v0);
+			void Uniformf(const char * uniformName, GLfloat v0, GLfloat v1);
+			void Uniformf(const char * uniformName, GLfloat v0, GLfloat v1, GLfloat v2);
 				
 			void Use();
 	
@@ -190,6 +200,7 @@ namespace DSGL {
 				
 			GLuint ID;
 			GLint Result;
+
 		private:
 			char * programErrorMessages = NULL;
 	};
