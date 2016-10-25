@@ -1,7 +1,6 @@
 #include "dsgl.hpp"
 
 namespace DSGL {
-	
 	/* ----- Exception ----- */
 	
 	Exception::Exception(int code, const char* msg) : Exception(code, msg, NULL) {}
@@ -56,11 +55,23 @@ namespace DSGL {
 		#endif
 		#if defined(DSGL_GL3W)
 		  if(gl3wInit() != 0) {
-		    throw Exception(DSGL_GL3W_INIT_FAILED,"DSGL: GL3W initialization failed.");
+		    throw Exception(DSGL_GL3W_INIT_FAILED, DSGL_MSG_GL3W_INIT_FAILED);
 		  }
 		#endif
 	}
 	
+	/* FrameBufferObject */
+
+	FrameBufferObject::FrameBufferObject(GLuint width, GLuint height) : FrameBufferObject(width, height, DSGL_FBO_NO_DEPTH) {}
+
+	FrameBufferObject::FrameBufferObject(GLuint width, GLuint height, bool option) {
+		glGenFramebuffers(1, &this->ID);
+		glBindFramebuffer(GL_FRAMEBUFFER, this->ID);
+		if (!glIsBuffer(this->ID)) {
+			throw Exception(DSGL_CANNOT_CREATE_FBO, DSGL_MSG_CANNOT_CREATE_FBO);
+		}
+	}
+
 	/* ----- VertexBufferObject ----- */
 	
         VertexBufferObject::VertexBufferObject(GLsizeiptr size, const GLvoid * data) : VertexBufferObject(size, data, GL_STATIC_DRAW) {}
@@ -72,7 +83,7 @@ namespace DSGL {
 				glBufferData(GL_ARRAY_BUFFER, size, data, usage);
 			}
 			else {
-				throw Exception(DSGL_CANNOT_CREATE_VBO,"DSGL: VBO creation failed.");
+				throw Exception(DSGL_CANNOT_CREATE_VBO, DSGL_MSG_CANNOT_CREATE_VBO);
 			}
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
@@ -284,10 +295,10 @@ namespace DSGL {
 		
 		if (this->ID == 0) {
 			if ((option & 1) == 0) {
-				throw Exception(DSGL_CANNOT_CREATE_SHADER, "DSGL: Cannot create shader.", inputShader);
+				throw Exception(DSGL_CANNOT_CREATE_SHADER, DSGL_MSG_CANNOT_CREATE_SHADER, inputShader);
 			}
 			else {
-				throw Exception(DSGL_CANNOT_CREATE_SHADER, "DSGL: Cannot create shader.");
+				throw Exception(DSGL_CANNOT_CREATE_SHADER, DSGL_MSG_CANNOT_CREATE_SHADER);
 			}
 		}	
 
@@ -314,10 +325,10 @@ namespace DSGL {
 			std::cout <<  this->shaderErrorMessages << "\n" ;
 			delete[] this->shaderErrorMessages; this->shaderErrorMessages = NULL;
 			if ((option & 1) == 0) {
-				throw Exception(DSGL_ERROR_AT_SHDR_COMPILE_TIME, "DSGL: Cannot compile shader.", inputShader);
+				throw Exception(DSGL_ERROR_AT_SHDR_COMPILE_TIME, DSGL_MSG_ERROR_AT_SHDR_COMPILE_TIME, inputShader);
 			}
 			else {
-				throw Exception(DSGL_ERROR_AT_SHDR_COMPILE_TIME, "DSGL: Cannot compile shader.");
+				throw Exception(DSGL_ERROR_AT_SHDR_COMPILE_TIME, DSGL_MSG_ERROR_AT_SHDR_COMPILE_TIME);
 			}
 		}
 	}

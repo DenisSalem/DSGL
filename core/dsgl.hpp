@@ -23,6 +23,9 @@
 #define DSGL_CLEAN_SHADERS_ONLY			true
 #define DSGL_CLEAN_ALL				false
 
+#define DSGL_FBO_NO_DEPTH			false
+#define DSGL_FBO_DEPTH				true
+
 #define DSGL_READ_FROM_STRING			1
 #define DSGL_READ_FROM_FILE			0
 
@@ -48,12 +51,17 @@
 #define DSGL_INSTANCES_IS_NULL			-17
 #define DSGL_INSTANCES_DOESNT_EXIST		-18
 #define DSGL_UNIFORM_LOCATION_DOESNT_EXISTS	-19
+#define DSGL_CANNOT_CREATE_FBO			-20
 
 #define DSGL_MSG_GLFW_INIT_FAILED               "DSGL: GLFW initialization failed."
+#define DSGL_MSG_GL3W_INIT_FAILED		"DSGL: GL3W initialization failed."
 #define DSGL_MSG_WINDOW_POINTER_NULL            "DSGL: Window pointer is null." 
 #define DSGL_MSG_VBO_IS_NULL			"DSGL: Vertex Buffer name is null."
 #define DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS	"DSGL: Uniform location doesn't exist."
-
+#define DSGL_MSG_CANNOT_CREATE_FBO		"DSGL: Cannot create frame buffer object."
+#define DSGL_MSG_CANNOT_CREATE_VBO		"DSGL: VBO creation failed."
+#define DSGL_MSG_CANNOT_CREATE_SHADER		"DSGL: Cannot create shader."
+#define DSGL_MSG_ERROR_AT_SHDR_COMPILE_TIME	"DSGL: Cannot compile shader."
 namespace DSGL {
 	int GetFileSize(const char * inputFilePath);
 	void PrintNicelyWorkGroupsCapabilities();
@@ -90,6 +98,16 @@ namespace DSGL {
 		#endif
 	};
 	
+	struct FrameBufferObject {
+	  	FrameBufferObject(GLuint width, GLuint height);
+	  	FrameBufferObject(GLuint width, GLuint height, bool option);
+	  	static GLenum glColorAttachmentN;
+		GLuint ID;
+		GLuint depthBufferID;
+		GLuint width;
+		GLuint height;
+	};
+
 	struct VertexBufferObject {
 		VertexBufferObject(GLsizeiptr size, const GLvoid * data);
 		VertexBufferObject(GLsizeiptr size, const GLvoid * data, GLenum usage);
