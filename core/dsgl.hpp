@@ -52,6 +52,8 @@
 #define DSGL_INSTANCES_DOESNT_EXIST		-18
 #define DSGL_UNIFORM_LOCATION_DOESNT_EXISTS	-19
 #define DSGL_CANNOT_CREATE_FBO			-20
+#define DSGL_CANNOT_CREATE_TEXTURE		-21
+#define DSGL_CANNOT_CREATE_DEPTH_BUFFER		-22
 
 #define DSGL_MSG_GLFW_INIT_FAILED               "DSGL: GLFW initialization failed."
 #define DSGL_MSG_GL3W_INIT_FAILED		"DSGL: GL3W initialization failed."
@@ -61,7 +63,12 @@
 #define DSGL_MSG_CANNOT_CREATE_FBO		"DSGL: Cannot create frame buffer object."
 #define DSGL_MSG_CANNOT_CREATE_VBO		"DSGL: VBO creation failed."
 #define DSGL_MSG_CANNOT_CREATE_SHADER		"DSGL: Cannot create shader."
+#define DSGL_MSG_CANNOT_CREATE_DEPTH_BUFFER	"DSGL: Cannot create depth buffer."
 #define DSGL_MSG_ERROR_AT_SHDR_COMPILE_TIME	"DSGL: Cannot compile shader."
+#define DSGL_MSG_CANNOT_CREATE_TEXTURE		"DSGL: Cannot create texture."
+#define DSGL_MSG_VBO_DOESNT_EXIST		"DSGL: VBO doesn't exist."
+#define DSGL_MSG_ID_DOESNT_NAME_A_PROGRAM	"DSGL: ID doesn't name a program."
+
 namespace DSGL {
 	int GetFileSize(const char * inputFilePath);
 	void PrintNicelyWorkGroupsCapabilities();
@@ -101,8 +108,11 @@ namespace DSGL {
 	struct FrameBufferObject {
 	  	FrameBufferObject(GLuint width, GLuint height);
 	  	FrameBufferObject(GLuint width, GLuint height, bool option);
-	  	static GLenum glColorAttachmentN;
+	  	
+		static GLenum glColorAttachmentN;
+		
 		GLuint ID;
+		GLuint textureID;
 		GLuint depthBufferID;
 		GLuint width;
 		GLuint height;

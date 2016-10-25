@@ -62,14 +62,34 @@ namespace DSGL {
 	
 	/* FrameBufferObject */
 
-	FrameBufferObject::FrameBufferObject(GLuint width, GLuint height) : FrameBufferObject(width, height, DSGL_FBO_NO_DEPTH) {}
+	FrameBufferObject::FrameBufferObject(GLuint width, GLuint height) : FrameBufferObject(width, height, DSGL_FBO_DEPTH, GL_RGB) {}
 
-	FrameBufferObject::FrameBufferObject(GLuint width, GLuint height, bool option) {
+	FrameBufferObject::FrameBufferObject(GLuint width, GLuint height, bool option, GLenum bufferType) {
+	  	/* Create FBO */
+	  	this->width = width;
+		this->height = height;
+
 		glGenFramebuffers(1, &this->ID);
 		glBindFramebuffer(GL_FRAMEBUFFER, this->ID);
 		if (!glIsBuffer(this->ID)) {
 			throw Exception(DSGL_CANNOT_CREATE_FBO, DSGL_MSG_CANNOT_CREATE_FBO);
 		}
+		/* Create destination texture */
+		glGenTextures(1, &this->textureID);
+		glBindTexture(GL_TEXTURE_2D, this->textureID);
+		if(!glIsTexture(this->textureID)) {
+			throw Exception(DSGL_CANNOT_CREATE_TEXTURE, DSGL_MSG_CANNOT_CREATE_TEXTURE);
+		}
+		glTexImage2D(GL_TEXTURE_2D, 0,bufferType, with, height, 0, bufferType, GL_UNSIGNED_BYTE, 0);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	
+		/* Optional depth buffer */
+		glGenRenderbuffers(1, &this->depthBufferID);
+		glBindRenderbuffer(GL_RENDERBUFFER, this->depthBufferID);
+		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
+		
 	}
 
 	/* ----- VertexBufferObject ----- */
@@ -96,7 +116,7 @@ namespace DSGL {
 		if(this->ID != 0) {
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ID);
 			if(!glIsBuffer(this->ID)) {
-				throw Exception(DSGL_VBO_DOESNT_EXIST, "DSGL: VBO doesn't exist.");
+				throw Exception(DSGL_VBO_DOESNT_EXIST, DSGL_MSG_VBO_DOESNT_EXIST);
 			}
 		}
 		else {
@@ -108,13 +128,17 @@ namespace DSGL {
 
 	Textures::Textures() {
 		glGenTextures(1, &this->textureID);
+		glBindTexture(GL_TEXTURE_2D, this->textureID);
+		if(!glIsTexture(this->textureID)) {
+			throw Exception(DSGL_CANNOT_CREATE_TEXTURE, DSGL_MSG_CANNOT_CREATE_TEXTURE);
+		}
+		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	Textures::Textures(GLuint target, GLuint width, GLuint height, GLvoid * rawData) : Textures() {
 	  	this->width = width;
 		this->height = height;
 		this-> rawData = rawData;
-
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, this->textureID);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -436,7 +460,7 @@ namespace DSGL {
 			glUseProgram(this->ID);
 		}
 		else {
-			throw Exception(DSGL_ID_DOESNT_NAME_A_PROGRAM, "DSGL: ID doesn't name a program.");
+			throw Exception(DSGL_ID_DOESNT_NAME_A_PROGRAM, DSGL_MSG_ID_DOESNT_NAME_A_PROGRAM);
 		}
 	}
 	
