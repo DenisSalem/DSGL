@@ -70,7 +70,7 @@ namespace DSGL {
 		this->height = height;
 
 		glGenFramebuffers(1, &this->ID);
-		glBindFramebuffer(GL_FRAMEBUFFER, this->ID);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->ID);
 		if (!glIsBuffer(this->ID)) {
 			throw Exception(DSGL_CANNOT_CREATE_FBO, DSGL_MSG_CANNOT_CREATE_FBO);
 		}
@@ -106,7 +106,7 @@ namespace DSGL {
 	}
 
 	void FrameBufferObject::DrawBind() {
-		glBindFramebuffer(GL_FRAMEBUFFER, this->ID);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, this->ID);
 		if (!glIsBuffer(this->ID)) {
 			throw Exception(DSGL_FBO_DOESNT_EXIST, DSGL_MSG_CANNOT_CREATE_FBO);
 		}
