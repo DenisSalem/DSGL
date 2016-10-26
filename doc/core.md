@@ -10,6 +10,9 @@ To use DSGL core features just include [dsgl.hpp](https://github.com/DenisSalem/
 - [Shader](https://github.com/DenisSalem/DSGL/blob/master/doc/core.md#shader)
 - [ShaderProgram](https://github.com/DenisSalem/DSGL/blob/master/doc/core.md#shaderprogram)
 
+### DSGL_TRACE
+	#define DSGL_TRACE { std::cerr << "glError: " << glGetError() << ",\t" << __FILE__ << ", " << __LINE__ << "\n"; } 
+
 ### Exception
 
 	struct Exception {

@@ -7,6 +7,8 @@
 #ifndef DSGL_MESHES_INCLUDED
 #define DSGL_MESHES_INCLUDED
 
+#define DSGL_TRACE { std::cerr << "glError: " << glGetError() << ",\t" << __FILE__ << ", " << __LINE__ << "\n"; } 
+
 namespace DSGL {
 	namespace Meshes {
 		struct Triangle {
