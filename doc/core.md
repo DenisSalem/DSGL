@@ -2,6 +2,7 @@
 
 To use DSGL core features just include [dsgl.hpp](https://github.com/DenisSalem/DSGL/blob/master/core/dsgl.hpp) and [dsgl.cpp](https://github.com/DenisSalem/DSGL/blob/master/core/dsgl.cpp) in your project.
 
+- [DSGL_TRACE](https://github.com/DenisSalem/DSGL/blob/master/doc/core.md#dsgl_trace)
 - [Exception](https://github.com/DenisSalem/DSGL/blob/master/doc/core.md#exception)
 - [Context](https://github.com/DenisSalem/DSGL/blob/master/doc/core.md#context)
 - [VertexBufferObject](https://github.com/DenisSalem/DSGL/blob/master/doc/core.md#vertexbufferobject)
