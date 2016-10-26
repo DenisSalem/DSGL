@@ -18,6 +18,8 @@
 #ifndef DSGL_CORE_INCLUDED
 #define DSGL_CORE_INCLUDED
 
+#define DSGL_TRACE { std::cerr << "glError: " << glGetError() << ",\t" << __FILE__ << ", " << __LINE__ << "\n"; } 
+
 #define DSGL_VERSION				"0.0.0"
 
 #define DSGL_CLEAN_SHADERS_ONLY			true
