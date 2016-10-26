@@ -64,7 +64,7 @@ namespace DSGL {
 
 	FrameBufferObject::FrameBufferObject(GLuint width, GLuint height) : FrameBufferObject(width, height, DSGL_FBO_DEPTH, GL_RGB) {}
 
-	FrameBufferObject::FrameBufferObject(GLuint width, GLuint height, bool option, GLenum bufferType) {
+	FrameBufferObject::FrameBufferObject(GLuint width, GLuint height, bool withDepthBuffer, GLenum bufferType) {
 	  	/* Create FBO */
 	  	this->width = width;
 		this->height = height;
@@ -80,16 +80,52 @@ namespace DSGL {
 		if(!glIsTexture(this->textureID)) {
 			throw Exception(DSGL_CANNOT_CREATE_TEXTURE, DSGL_MSG_CANNOT_CREATE_TEXTURE);
 		}
-		glTexImage2D(GL_TEXTURE_2D, 0,bufferType, with, height, 0, bufferType, GL_UNSIGNED_BYTE, 0);
+		glTexImage2D(GL_TEXTURE_2D, 0,bufferType, width, height, 0, bufferType, GL_UNSIGNED_BYTE, 0);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	
 		/* Optional depth buffer */
-		glGenRenderbuffers(1, &this->depthBufferID);
-		glBindRenderbuffer(GL_RENDERBUFFER, this->depthBufferID);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthrenderbuffer);
-		
+		if (withDepthBuffer) {
+			glGenRenderbuffers(1, &this->depthBufferID);
+			glBindRenderbuffer(GL_RENDERBUFFER, this->depthBufferID);
+			glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+			glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, this->depthBufferID);
+		}
+
+		glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, this->textureID, 0);
+		GLenum DrawBuffers[1] = {GL_COLOR_ATTACHMENT0};
+		glDrawBuffers(1, DrawBuffers);
+
+		if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+			throw Exception(DSGL_CANNOT_CREATE_FBO, DSGL_MSG_CANNOT_CREATE_FBO);
+		}
+
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void FrameBufferObject::DrawBind() {
+		glBindFramebuffer(GL_FRAMEBUFFER, this->ID);
+		if (!glIsBuffer(this->ID)) {
+			throw Exception(DSGL_FBO_DOESNT_EXIST, DSGL_MSG_CANNOT_CREATE_FBO);
+		}
+		glViewport(0,0,this->width,this->height);
+	}
+	void FrameBufferObject::Bind() {
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, this->textureID);
+		glBindImageTexture (0, this->textureID, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+	}
+
+	void FrameBufferObject::DrawUnbind() {
+		glBindRenderbuffer(GL_RENDERBUFFER, 0);
+		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void FrameBufferObject::Unbind() {
+    		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
 	/* ----- VertexBufferObject ----- */

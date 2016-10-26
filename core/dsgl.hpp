@@ -54,6 +54,7 @@
 #define DSGL_CANNOT_CREATE_FBO			-20
 #define DSGL_CANNOT_CREATE_TEXTURE		-21
 #define DSGL_CANNOT_CREATE_DEPTH_BUFFER		-22
+#define DSGL_FBO_DOESNT_EXIST			-23
 
 #define DSGL_MSG_GLFW_INIT_FAILED               "DSGL: GLFW initialization failed."
 #define DSGL_MSG_GL3W_INIT_FAILED		"DSGL: GL3W initialization failed."
@@ -68,6 +69,7 @@
 #define DSGL_MSG_CANNOT_CREATE_TEXTURE		"DSGL: Cannot create texture."
 #define DSGL_MSG_VBO_DOESNT_EXIST		"DSGL: VBO doesn't exist."
 #define DSGL_MSG_ID_DOESNT_NAME_A_PROGRAM	"DSGL: ID doesn't name a program."
+#define DSGL_MSG_FBO_DOESNT_EXIST		"DSGL: FBO doesn't exist."
 
 namespace DSGL {
 	int GetFileSize(const char * inputFilePath);
@@ -80,7 +82,7 @@ namespace DSGL {
 		int code;
 		
 		std::string msg;
-		std::string filename; 
+		std::string filename;
 	};
 	
 	struct Context {
@@ -107,9 +109,13 @@ namespace DSGL {
 	
 	struct FrameBufferObject {
 	  	FrameBufferObject(GLuint width, GLuint height);
-	  	FrameBufferObject(GLuint width, GLuint height, bool option);
+	  	FrameBufferObject(GLuint width, GLuint height, bool option, GLenum buffertype);
 	  	
-		static GLenum glColorAttachmentN;
+		void DrawBind();
+		void Bind();
+		
+		static void DrawUnbind();
+		static void Unbind();
 		
 		GLuint ID;
 		GLuint textureID;
