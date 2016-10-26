@@ -45,13 +45,13 @@ namespace DSGL {
 			this->index[3] = 3;
 
 			this->texCoords[0] = 0.0f;
- 			this->texCoords[1] = 0.0f;
+ 			this->texCoords[1] = 1.0f;
 			this->texCoords[2] = 0.0f;
-			this->texCoords[3] = 1.0f;
+			this->texCoords[3] = 0.0f;
 			this->texCoords[4] = 1.0f;
-			this->texCoords[5] = 0.0f;
+			this->texCoords[5] = 1.0f;
 			this->texCoords[6] = 1.0f;
-			this->texCoords[7] = 1.0f;
+			this->texCoords[7] = 0.0f;
 		}
 	}
 }

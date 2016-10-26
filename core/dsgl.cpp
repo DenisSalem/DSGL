@@ -536,7 +536,7 @@ namespace DSGL {
 	void ShaderProgram::Uniformf(const char * uniformName, GLfloat v0) {
 		GLint loc = glGetUniformLocation(this->ID, uniformName);
 		if (loc != -1) {
-			glUniform1f(this->ID, v0);
+			glUniform1f(loc, v0);
 		}
 		else {
 		  throw Exception(DSGL_UNIFORM_LOCATION_DOESNT_EXISTS, DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS);
@@ -546,7 +546,7 @@ namespace DSGL {
 	void ShaderProgram::Uniformf(const char * uniformName, GLfloat v0, GLfloat v1) {
 		GLint loc = glGetUniformLocation(this->ID, uniformName);
 		if (loc != -1) {
-			glUniform2f(this->ID, v0, v1);
+			glUniform2f(loc, v0, v1);
 		}
 		else {
 		  throw Exception(DSGL_UNIFORM_LOCATION_DOESNT_EXISTS, DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS);
@@ -556,7 +556,7 @@ namespace DSGL {
 	void ShaderProgram::Uniformf(const char * uniformName, GLfloat v0, GLfloat v1, GLfloat v2) {
 		GLint loc = glGetUniformLocation(this->ID, uniformName);
 		if (loc != -1) {
-			glUniform3f(this->ID, v0, v1, v2);
+			glUniform3f(loc, v0, v1, v2);
 		}
 		else {
 		  throw Exception(DSGL_UNIFORM_LOCATION_DOESNT_EXISTS, DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS);
