@@ -162,28 +162,29 @@ namespace DSGL {
 
 	/* ---- Textures ----- */
 
-	Textures::Textures() {
+	Textures::Textures(GLuint target) {
 		glGenTextures(1, &this->textureID);
-		glBindTexture(GL_TEXTURE_2D, this->textureID);
+		glBindTexture(target, this->textureID);
 		if(!glIsTexture(this->textureID)) {
 			throw Exception(DSGL_CANNOT_CREATE_TEXTURE, DSGL_MSG_CANNOT_CREATE_TEXTURE);
 		}
-		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTexture(target, 0);
 	}
 
-	Textures::Textures(GLuint target, GLuint width, GLuint height, GLvoid * rawData) : Textures() {
+	Textures::Textures(GLuint target, GLuint width, GLuint height, GLvoid * rawData) : Textures(target) {
 	  	this->width = width;
 		this->height = height;
 		this-> rawData = rawData;
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, this->textureID);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glGenerateMipmap(GL_TEXTURE_2D);
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, this->width, this->height, 0, GL_RGBA, GL_FLOAT, this->rawData);
+		glBindTexture(target, this->textureID); {
+			glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glGenerateMipmap(target);
+			glTexImage2D(target, 0, GL_RGBA32F, this->width, this->height, 0, GL_RGBA, GL_FLOAT, this->rawData);
 			glBindImageTexture (0, this->textureID, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+		}
 		glBindImageTexture (0, 0, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
@@ -210,18 +211,20 @@ namespace DSGL {
 
 	VertexArrayObject::VertexArrayObject(GLuint IBO, GLuint VBO) {
 		glGenVertexArrays(1, &this->ID);
-		this->Bind();			
+		this->Bind(); {	
 			this->SetVertex(VBO);
 			this->SetElements(IBO);
+		}
 		glBindVertexArray(0);
 	}
 	
 	VertexArrayObject::VertexArrayObject(GLuint IBO, GLuint VBO, GLuint instances) {
 		glGenVertexArrays(1, &this->ID);
-		this->Bind();			
+		this->Bind(); {	
 			this->SetVertex(VBO);
 			this->SetElements(IBO);
 			this->SetInstances(instances);
+		}
 		glBindVertexArray(0);
 		
 	}
@@ -234,7 +237,7 @@ namespace DSGL {
 	}
 	
 	void VertexArrayObject::SetVertex(GLuint vertex) {
-		this->Bind();
+		this->Bind(); {
 			if (vertex == 0) {
 				throw Exception(DSGL_VBO_IS_NULL, DSGL_MSG_VBO_IS_NULL);
 			}
@@ -243,23 +246,25 @@ namespace DSGL {
 				throw Exception(DSGL_VBO_DOESNT_EXIST, "DSGL: Vertex buffer doesn't exist.");
 			}
 			this->VBO = vertex;
+		}
 		glBindVertexArray(0);
 	}
 
 	
 
 	void VertexArrayObject::SetElements(GLuint elements) {
-		this->Bind();
+		this->Bind(); {
 			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, elements);
 			if(elements != 0 && !glIsBuffer(elements)) {
 				throw Exception(DSGL_IBO_DOESNT_EXIST, "DSGL: Elements buffer doesn't exist.");
 			}
 			this->IBO = elements;
+		}
 		glBindVertexArray(0);
 	}
 	
 	void VertexArrayObject::SetInstances(GLuint instances) {
-		this->Bind();
+		this->Bind(); {
 			if (instances == 0) {
 				throw Exception(DSGL_INSTANCES_IS_NULL, "DSGL: instance buffer name is null.");
 			}
@@ -268,6 +273,7 @@ namespace DSGL {
 				throw Exception(DSGL_INSTANCES_DOESNT_EXIST, "DSGL: instances buffer doesn't exist.");
 			}
 			this->instances = instances;
+		}
 		glBindVertexArray(0);
 	}
 	
@@ -275,13 +281,14 @@ namespace DSGL {
 		if(!glIsVertexArray(this->ID)) {
 			throw Exception(DSGL_VAO_DOESNT_EXIST, "DSGL: VAO doesn't exist.");			
 		}
-		glBindVertexArray(this->ID);
+		glBindVertexArray(this->ID); {
 			glBindBuffer(GL_ARRAY_BUFFER, buffer);
 			if(!glIsBuffer(this->VBO)) {
 				throw Exception(DSGL_VBO_DOESNT_EXIST, "DSGL: Vertex buffer doesn't exist.");
 			}
 			glEnableVertexAttribArray(index);
 			glVertexAttribPointer(index, size, type, normalized, stride, pointer);
+		}
 		glBindVertexArray(0);
 	}
 
@@ -293,7 +300,7 @@ namespace DSGL {
 		if(!glIsVertexArray(this->ID)) {
 			throw Exception(DSGL_VAO_DOESNT_EXIST, "DSGL: VAO doesn't exist.");			
 		}
-		glBindVertexArray(this->ID);
+		glBindVertexArray(this->ID); {
 			glBindBuffer(GL_ARRAY_BUFFER, this->instances);
 			if(!glIsBuffer(this->instances)) {
 				throw Exception(DSGL_INSTANCES_DOESNT_EXIST, "DSGL: instances buffer doesn't exist.");
@@ -301,6 +308,7 @@ namespace DSGL {
 			glEnableVertexAttribArray(index);
 			glVertexAttribPointer(index, size, type, normalized, stride, pointer);
 			glVertexAttribDivisor(index, divisor);
+		}
 		glBindVertexArray(0);
 	}
 	
@@ -314,13 +322,14 @@ namespace DSGL {
 	
 	Elements::Elements(GLsizeiptr size, const GLvoid * data, GLenum usage) {
 		glGenBuffers(1, &this->ID);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ID);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->ID); {
 			if(glIsBuffer(this->ID)) {
 				glBufferData(GL_ELEMENT_ARRAY_BUFFER, size, data, usage);
 			}
 			else {
 				throw Exception(DSGL_CANNOT_CREATE_IBO, "DSGL: Elements buffer creation failed.");
 			}
+		}
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 	
