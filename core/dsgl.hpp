@@ -139,7 +139,7 @@ namespace DSGL {
 	};
 
 	struct Textures {
-		Textures();
+		Textures(GLuint target);
 		Textures(GLuint target, GLuint width, GLuint height, GLvoid * rawData);
 
 		void SetNormalMap(GLvoid * rawData);
