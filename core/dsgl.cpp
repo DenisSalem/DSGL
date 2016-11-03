@@ -430,6 +430,46 @@ namespace DSGL {
 		glDeleteShader(this->ID);
 	}
 
+	/* ComputeShader */
+
+	ComputeShader::ComputeShader(const char * inputShader, int option) : Shader(inputShader, GL_COMPUTE_SHADER, option) {
+		GLint InfoLogLength = 0;
+		
+		this->programID = glCreateProgram();
+		glAttachShader(this->programID, this->ID);
+  		glLinkProgram(this->programID);
+		glDeleteShader(this->ID);
+		
+		glGetProgramiv(this->programID, GL_LINK_STATUS, &this->Result);
+
+		if (!Result) {
+			glGetProgramiv(this->programID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+			this->programErrorMessages = new char[DSGL_SHADER_ERROR_LENGTH]() ;
+			glGetProgramInfoLog(this->programID, GL_INFO_LOG_LENGTH, NULL, &this->programErrorMessages[0]);
+			std::cout << this->programErrorMessages << "\n";
+			delete[] this->programErrorMessages;
+			
+			if (glIsProgram(this->programID)) {
+				glDeleteProgram(this->programID);
+			}			
+			
+			throw DSGL_ERROR_AT_SHDR_COMPILE_TIME;
+		}
+	}
+
+	ComputeShader::ComputeShader(const char * inputShader) : ComputeShader(inputShader, DSGL_READ_FROM_STRING) {}
+
+	ComputeShader::~ComputeShader() {
+		glDeleteShader(this->ID);
+		if (glIsProgram(this->programID)) {
+			glDeleteProgram(this->programID);
+		}			
+	}
+
+	void ComputeShader::Use(GLuint x, GLuint y, GLuint z) {
+		glDispatchCompute(x,y,z);
+	}
+
 	/* ----- ShaderProgram ----- */
 
 	ShaderProgram::ShaderProgram(const char * inputVertexShader, const char * inputFragmentShader) : ShaderProgram(inputVertexShader, NULL, NULL, NULL, inputFragmentShader) {}

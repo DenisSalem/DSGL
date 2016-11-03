@@ -1,16 +1,20 @@
 #include "dsgl.hpp"
 
+#define DSGL_CUBEMAP_BRUSHES_MAX_NUMBER 64
+#define DSGL_CUBEMAP_BRUSHES_COUNT 1
+
 namespace DSGL {
 	namespace Cubemap {
-	  	struct StamperOnCubeCorner{
-		  	StamperOnCubeCorner(GLuint localFace);
+		struct Brushes() {
+		  	Brushes();
+			PickARandomBrushe();
+			GLuint brushes[DSGL_CUBEMAP_BRUSHES_MAX_NUMBER];
+		};
 
-			Stamp(Gluint horizontalNeighbourFace, Gluin verticalNeighbourFace, GLuint stamp, unsigned int x, unsigned y, unsigned int octave);
-			
-			GLuint stampShaderID;
-  			GLuint stampProgramID;
-
-			const char * stampShaderSource = ""; 
-		}
+	  	struct StamperOnCubeCorner {
+		  	StamperOnCubeCorner(GLuint localFace, GLuint north, GLuint south, GLuint west, GLuint east);
+			SetBrushes(Brushes * brushes);
+			Stamp(unsigned int * coordsAttribs, unsigned int size);
+		};
 	}
 }

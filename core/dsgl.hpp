@@ -206,6 +206,17 @@ namespace DSGL {
 			char * shaderErrorMessages = NULL;
 
 	};
+	class ComputeShader : public Shader {
+		public:
+			ComputeShader(const char * inputShader);
+			ComputeShader(const char * inputShader, int option);
+			~ComputeShader();
+			void Use(GLuint x, GLuint y, GLuint z);
+
+			GLuint programID;
+		private:
+			char * programErrorMessages = NULL;
+	};
 
 	class ShaderProgram {
 		public:
