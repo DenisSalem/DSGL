@@ -1,13 +1,12 @@
 #include "dsgl.hpp"
 
-#define DSGL_CUBEMAP_BRUSHES_MAX_NUMBER 64
+#define DSGL_CUBEMAP_BRUSHES_MAX_NUMBER 24
 #define DSGL_CUBEMAP_BRUSHES_COUNT 1
 
 namespace DSGL {
 	namespace Cubemap {
 		struct Brushes() {
 		  	Brushes();
-			PickARandomBrushe();
 			GLuint brushes[DSGL_CUBEMAP_BRUSHES_MAX_NUMBER];
 		};
 

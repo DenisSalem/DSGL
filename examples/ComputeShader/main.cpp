@@ -42,6 +42,10 @@ int main(int argc, char ** argv) {
     	texture.Unbind();
 	glUseProgram(0);
 
+	int texture_units;
+	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &texture_units);
+	std::cout << "Limit: " << texture_units << "\n";
+
 	/* ----- Render loop ----- */
 	while(true) {
 		glEnable(GL_CULL_FACE);
