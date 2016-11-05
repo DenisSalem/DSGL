@@ -24,6 +24,8 @@ Damn Simple OpenGL
 DSGL is a tiny and simple modern OpenGL wrapper libraries written in C++ and intented to do not hide OpenGL but simply
 make the programmer's life easier by providing some general purpose classes.
 
+__Careful by the way, DSGL is highly experimental and for instance documentation isn't complete, also there is no official release. Feedback and bug reports will be appreciated!__
+
 ## Installation and compilation
 
 DSGL support some nice libraries you may want to use by passing to compiler some option depending of what you want.

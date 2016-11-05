@@ -198,7 +198,6 @@ namespace DSGL {
 	void Textures::Unbind() {
 		glBindImageTexture (0, 0, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
     		glBindTexture(GL_TEXTURE_2D, 0);
-		glActiveTexture(0);
 	}
 
 	/* ---- VertexArrayObject ----- */
@@ -457,7 +456,7 @@ namespace DSGL {
 		}
 	}
 
-	ComputeShader::ComputeShader(const char * inputShader) : ComputeShader(inputShader, DSGL_READ_FROM_STRING) {}
+	ComputeShader::ComputeShader(const char * inputShader) : ComputeShader(inputShader, DSGL_READ_FROM_FILE) {}
 
 	ComputeShader::~ComputeShader() {
 		glDeleteShader(this->ID);
@@ -467,7 +466,13 @@ namespace DSGL {
 	}
 
 	void ComputeShader::Use(GLuint x, GLuint y, GLuint z) {
-		glDispatchCompute(x,y,z);
+		if(glIsProgram(this->programID)) {
+			glUseProgram(this->programID);
+			glDispatchCompute(x,y,z);
+		}
+		else {
+			throw Exception(DSGL_ID_DOESNT_NAME_A_PROGRAM, DSGL_MSG_ID_DOESNT_NAME_A_PROGRAM);
+		}
 	}
 
 	/* ----- ShaderProgram ----- */
