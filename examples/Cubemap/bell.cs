@@ -1,1 +1,0 @@
-../../cubemap/bell.cs
