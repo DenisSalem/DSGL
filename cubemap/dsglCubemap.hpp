@@ -1,6 +1,6 @@
 #include "dsgl.hpp"
 
-#define DSGL_CUBEMAP_BRUSHES_MAX_NUMBER 24
+#define DSGL_CUBEMAP_BRUSHES_MAX_NUMBER 32
 #define DSGL_CUBEMAP_BRUSHES_COUNT 1
 
 namespace DSGL {

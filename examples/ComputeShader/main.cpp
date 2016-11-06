@@ -19,7 +19,7 @@ int main(int argc, char ** argv) {
 	DSGL::ShaderProgram shaderProgram("vertex.shader","fragment.shader");
 	DSGL::ComputeShader computeShader("compute.shader");
 
-	/* DSGL provide built in simple triangle for playing and debugging. */
+	/* DSGL provide built in simple quad for playing with and debugging. */
 	DSGL::Meshes::Quad quad;
 
 	/* Create buffers */
@@ -41,10 +41,6 @@ int main(int argc, char ** argv) {
         glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
     	texture.Unbind();
 	glUseProgram(0);
-
-	int texture_units;
-	glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &texture_units);
-	std::cout << "Limit: " << texture_units << "\n";
 
 	/* ----- Render loop ----- */
 	while(true) {

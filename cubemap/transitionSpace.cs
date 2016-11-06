@@ -18,6 +18,9 @@ uniform mat4 changeOfBasis;
 void main() {
   	vec4 localElevation;
 	for (int i = 0; i < coordsNumber; i++) {
-		localElevation = imageLoad(brushes, coords[i].x, coords.y + brusheScale * coords.z
+		localElevation = imageLoad(brushes, gl_GlobalInvocationID.x, gl_GlobalInvocationID.y + brusheScale * imageLoad(coords,i).z);
+		if (localElevation.x  > 0.0) { // Pixel is not null let's do the math!
+
+		}
 	}; 
 }
