@@ -6,15 +6,18 @@ layout (rgba32f, binding = 0) uniform image2D bell;
 
 uniform uint brushScale; // should always be a power of two
 
-float Interporlate(float t) {
+float Interpolate(float t) {
 	return 6 * pow(t,5) - 15 * pow(t,4) + 10 * pow(t,3);
 }
 
 vec3 GetElevation(uvec2 coord) {
-	float radius = sqrt(pow(coord.x - (brushScale >> 1),2) + pow(coord.y - (brushScale >> 1),2)) / (brushScake >> 1)
-	return 1.0 - Interpolate(radius);
+  	int halfScale = int(brushScale >> 1);
+  	int x = int(coord.x - halfScale);
+	int y = int(coord.y - halfScale);
+	float radius = sqrt(x*x + y*y) / halfScale;
+	return vec3(1.0 - Interpolate(radius));
 }
 
 void main() {
-	imageStore(bell, coords, vec3(GetElevation(gl_GlobalInvocatioID.xy),1.0));
+	imageStore(bell, ivec2(gl_GlobalInvocationID.xy), vec4(GetElevation(gl_GlobalInvocationID.xy),1.0));
 }
