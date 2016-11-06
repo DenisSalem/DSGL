@@ -17,7 +17,7 @@ int main(int argc, char ** argv) {
 	
 	/* Regular and compute shaders */
 	DSGL::PipelineProgram pipelineProgram("vertex.shader","fragment.shader");
-	//DSGL::ComputeProgram computeProgram("compute.shader");
+	DSGL::ComputeProgram computeProgram("compute.shader");
 
 	/* DSGL provide built in simple quad for playing with and debugging. */
 	DSGL::Meshes::Quad quad;
@@ -36,12 +36,12 @@ int main(int argc, char ** argv) {
   	VAO.AttribPointer(texCoords.ID, 1, 2, GL_FLOAT, GL_FALSE, 2*sizeof(GLfloat), 0);
 	
 	/* ----- Run Compute shader ----- */
-    	/*texture.Bind();
-        computeShader.Use(40,30,1);
+    	texture.Bind();
+        computeProgram.Use(40,30,1);
         glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
     	texture.Unbind();
 	glUseProgram(0);
-*/
+
 	/* ----- Render loop ----- */
 	while(true) {
 		glEnable(GL_CULL_FACE);

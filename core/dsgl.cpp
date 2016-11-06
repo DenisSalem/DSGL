@@ -431,14 +431,16 @@ namespace DSGL {
 	}
 
 	/* ComputeShader */
-/*
+
 	ComputeProgram::ComputeProgram(const char * inputShader, int option) {
+		this->compute = std::make_shared<Shader>(inputShader, GL_COMPUTE_SHADER, option);
+		
 		GLint InfoLogLength = 0;
 		
 		this->ID = glCreateProgram();
-		glAttachShader(this->ID, this->shaderID);
+		glAttachShader(this->ID, this->compute->ID);
   		glLinkProgram(this->ID);
-		glDeleteShader(this->shaderID);
+		glDeleteShader(this->compute->ID);
 		
 		glGetProgramiv(this->ID, GL_LINK_STATUS, &this->Result);
 
@@ -457,14 +459,20 @@ namespace DSGL {
 		}
 	}
 
-	ComputeProgram::ComputeProgram(const char * inputShader) {
-	}
+	ComputeProgram::ComputeProgram(const char * inputShader) : ComputeProgram(inputShader, DSGL_READ_FROM_FILE) {}
 
 	ComputeProgram::~ComputeProgram() {
-		glDeleteShader(this->ID);
-		if (glIsProgram(this->programID)) {
-			glDeleteProgram(this->programID);
+		if (glIsShader(this->compute->ID)) {
+			glDetachShader(this->ID, this->compute->ID);
+			glDeleteShader(this->compute->ID);
+		}
+		if (glIsProgram(this->ID)) {
+			glDeleteProgram(this->ID);
 		}			
+	}
+
+	void ComputeProgram::Use() {
+		this->Use(1,1,1);
 	}
 
 	void ComputeProgram::Use(GLuint x, GLuint y, GLuint z) {
@@ -475,7 +483,7 @@ namespace DSGL {
 		else {
 			throw Exception(DSGL_ID_DOESNT_NAME_A_PROGRAM, DSGL_MSG_ID_DOESNT_NAME_A_PROGRAM);
 		}
-	}*/
+	}
 
 	/* ----- PipelineProgram ----- */
 

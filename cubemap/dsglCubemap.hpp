@@ -2,6 +2,7 @@
 
 #define DSGL_CUBEMAP_BRUSHES_MAX_NUMBER 1
 #define DSGL_CUBEMAP_BRUSHES_COUNT 1
+#define DSGL_CUBEMAP_BRUSH_BELL 0
 
 namespace DSGL {
 	namespace Cubemap {

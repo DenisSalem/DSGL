@@ -3,7 +3,7 @@
 namespace DSGL {
 	namespace Cubemap {
 		Brushes::Brushes() {
-			DSGL::ComputeShader("bell.cs");	  
+			DSGL::ComputeProgram bell("bell.cs");	  
 		}
 	}
 }

@@ -255,6 +255,7 @@ namespace DSGL {
 			
 			~ComputeProgram();
 
+			void Use();
 			void Use(GLuint x, GLuint y, GLuint z);
 			
 			std::shared_ptr<Shader> compute;
