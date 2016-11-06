@@ -359,6 +359,7 @@ namespace DSGL {
 		this->Result = GL_FALSE;
 		
 		/* Create shader */
+
 		this->ID = glCreateShader(shaderType);
 		
 		if (this->ID == 0) {
@@ -430,56 +431,57 @@ namespace DSGL {
 	}
 
 	/* ComputeShader */
-
-	ComputeShader::ComputeShader(const char * inputShader, int option) : Shader(inputShader, GL_COMPUTE_SHADER, option) {
+/*
+	ComputeProgram::ComputeProgram(const char * inputShader, int option) {
 		GLint InfoLogLength = 0;
 		
-		this->programID = glCreateProgram();
-		glAttachShader(this->programID, this->ID);
-  		glLinkProgram(this->programID);
-		glDeleteShader(this->ID);
+		this->ID = glCreateProgram();
+		glAttachShader(this->ID, this->shaderID);
+  		glLinkProgram(this->ID);
+		glDeleteShader(this->shaderID);
 		
-		glGetProgramiv(this->programID, GL_LINK_STATUS, &this->Result);
+		glGetProgramiv(this->ID, GL_LINK_STATUS, &this->Result);
 
 		if (!Result) {
-			glGetProgramiv(this->programID, GL_INFO_LOG_LENGTH, &InfoLogLength);
+			glGetProgramiv(this->ID, GL_INFO_LOG_LENGTH, &InfoLogLength);
 			this->programErrorMessages = new char[DSGL_SHADER_ERROR_LENGTH]() ;
-			glGetProgramInfoLog(this->programID, GL_INFO_LOG_LENGTH, NULL, &this->programErrorMessages[0]);
+			glGetProgramInfoLog(this->ID, GL_INFO_LOG_LENGTH, NULL, &this->programErrorMessages[0]);
 			std::cout << this->programErrorMessages << "\n";
 			delete[] this->programErrorMessages;
 			
-			if (glIsProgram(this->programID)) {
-				glDeleteProgram(this->programID);
+			if (glIsProgram(this->ID)) {
+				glDeleteProgram(this->ID);
 			}			
 			
 			throw DSGL_ERROR_AT_SHDR_COMPILE_TIME;
 		}
 	}
 
-	ComputeShader::ComputeShader(const char * inputShader) : ComputeShader(inputShader, DSGL_READ_FROM_FILE) {}
+	ComputeProgram::ComputeProgram(const char * inputShader) {
+	}
 
-	ComputeShader::~ComputeShader() {
+	ComputeProgram::~ComputeProgram() {
 		glDeleteShader(this->ID);
 		if (glIsProgram(this->programID)) {
 			glDeleteProgram(this->programID);
 		}			
 	}
 
-	void ComputeShader::Use(GLuint x, GLuint y, GLuint z) {
-		if(glIsProgram(this->programID)) {
-			glUseProgram(this->programID);
+	void ComputeProgram::Use(GLuint x, GLuint y, GLuint z) {
+		if(glIsProgram(this->ID)) {
+			glUseProgram(this->ID);
 			glDispatchCompute(x,y,z);
 		}
 		else {
 			throw Exception(DSGL_ID_DOESNT_NAME_A_PROGRAM, DSGL_MSG_ID_DOESNT_NAME_A_PROGRAM);
 		}
-	}
+	}*/
 
-	/* ----- ShaderProgram ----- */
+	/* ----- PipelineProgram ----- */
 
-	ShaderProgram::ShaderProgram(const char * inputVertexShader, const char * inputFragmentShader) : ShaderProgram(inputVertexShader, NULL, NULL, NULL, inputFragmentShader) {}
+	PipelineProgram::PipelineProgram(const char * inputVertexShader, const char * inputFragmentShader) : PipelineProgram(inputVertexShader, NULL, NULL, NULL, inputFragmentShader) {}
 	
-	ShaderProgram::ShaderProgram(
+	PipelineProgram::PipelineProgram(
 		const char * inputVertexShader,
 		const char * inputTesselationControlShader,
 		const char * inputTesselationEvaluationShader,
@@ -541,11 +543,11 @@ namespace DSGL {
 		}
 	}	
 	
-	ShaderProgram::~ShaderProgram() {
+	PipelineProgram::~PipelineProgram() {
 		Clean(DSGL_CLEAN_ALL);
 	}
 	
-	void ShaderProgram::Use() {
+	void PipelineProgram::Use() {
 		if(glIsProgram(this->ID)) {
 			glUseProgram(this->ID);
 		}
@@ -554,7 +556,7 @@ namespace DSGL {
 		}
 	}
 	
-	void ShaderProgram::Clean(bool shadersOnly) {
+	void PipelineProgram::Clean(bool shadersOnly) {
 		if (glIsShader(this->vertex->ID)) {
 			glDetachShader(this->ID, this->vertex->ID);
 			glDeleteShader(this->vertex->ID);
@@ -584,6 +586,17 @@ namespace DSGL {
 			if (glIsProgram(this->ID)) {
 				glDeleteProgram(this->ID);
 			}			
+		}
+	}
+
+	/* Shader Program */
+	void ShaderProgram::Uniformui(const char * uniformName, GLuint v0) {
+		GLint loc = glGetUniformLocation(this->ID, uniformName);
+		if (loc != -1) {
+			glUniform1ui(loc, v0);
+		}
+		else {
+		  throw Exception(DSGL_UNIFORM_LOCATION_DOESNT_EXISTS, DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS);
 		}
 	}
 

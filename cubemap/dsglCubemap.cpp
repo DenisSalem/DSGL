@@ -1,3 +1,4 @@
+#include "dsglCubemap.hpp"
 
 namespace DSGL {
 	namespace Cubemap {

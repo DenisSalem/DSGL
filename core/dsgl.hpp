@@ -206,50 +206,58 @@ namespace DSGL {
 			char * shaderErrorMessages = NULL;
 
 	};
-	class ComputeShader : public Shader {
-		public:
-			ComputeShader(const char * inputShader);
-			ComputeShader(const char * inputShader, int option);
-			~ComputeShader();
-			void Use(GLuint x, GLuint y, GLuint z);
 
-			GLuint programID;
-		private:
-			char * programErrorMessages = NULL;
-	};
+
 
 	class ShaderProgram {
 		public:
-			ShaderProgram(const char * inputVertexShader, const char * inputFragmentShader);
-			ShaderProgram(
+			void Uniformui(const char * uniformName, GLuint v0);
+			void Uniformf(const char * uniformName, GLfloat v0);
+			void Uniformf(const char * uniformName, GLfloat v0, GLfloat v1);
+			void Uniformf(const char * uniformName, GLfloat v0, GLfloat v1, GLfloat v2);
+				
+			virtual void Use() = 0;
+	
+			GLuint ID;
+			GLint Result;
+
+			char * programErrorMessages = NULL;
+	};
+
+	class PipelineProgram : public ShaderProgram {
+		public:
+			PipelineProgram(const char * inputVertexShader, const char * inputFragmentShader);
+			PipelineProgram(
 				const char * inputVertexShader,
 				const char * inputTesselationControlShader,
 				const char * inputTesselationEvaluationShader,
 				const char * inputGeometryShader,
 				const char * inputFragmentShader
 			);
-				
-			~ShaderProgram();
-				
-			void Clean(bool shadersOnly);
 
-			void Uniformf(const char * uniformName, GLfloat v0);
-			void Uniformf(const char * uniformName, GLfloat v0, GLfloat v1);
-			void Uniformf(const char * uniformName, GLfloat v0, GLfloat v1, GLfloat v2);
-				
+			~PipelineProgram();
+			
 			void Use();
-	
+			
+			void Clean(bool shadersOnly);
+			
 			std::shared_ptr<Shader> vertex;
 			std::shared_ptr<Shader> tesselationControl;
 			std::shared_ptr<Shader> tesselationEvaluation;
 			std::shared_ptr<Shader> geometry;
 			std::shared_ptr<Shader> fragment;
-				
-			GLuint ID;
-			GLint Result;
+	};
 
-		private:
-			char * programErrorMessages = NULL;
+	class ComputeProgram : public ShaderProgram {
+		public:
+			ComputeProgram(const char * inputShader);
+			ComputeProgram(const char * inputShader, int option);
+			
+			~ComputeProgram();
+
+			void Use(GLuint x, GLuint y, GLuint z);
+			
+			std::shared_ptr<Shader> compute;
 	};
 }
 
