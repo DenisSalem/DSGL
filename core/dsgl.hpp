@@ -59,6 +59,8 @@
 #define DSGL_FBO_DOESNT_EXIST			-23
 #define DSGL_IMAGES_CANNOT_OPEN_IMAGE_FILE	-24
 #define DSGL_IMAGES_INPUT_IMAGE_CORRUPTED	-25
+#define DSGL_IMAGES_UNSUPPORTED_BIT_DEPTH	-26
+#define DSGL_IMAGES_UNSUPPORTED_COLOR_TYPE	-27
 
 #define DSGL_MSG_GLFW_INIT_FAILED               "DSGL: GLFW initialization failed."
 #define DSGL_MSG_GL3W_INIT_FAILED		"DSGL: GL3W initialization failed."
@@ -76,6 +78,8 @@
 #define DSGL_MSG_FBO_DOESNT_EXIST		"DSGL: FBO doesn't exist."
 #define DSGL_IMAGES_MSG_CANNOT_OPEN_IMAGE_FILE	"DSGL: Cannot open image file."
 #define DSGL_IMAGES_MSG_INPUT_IMAGE_CORRUPTED	"DSGL: Input image is corrupted"
+#define DSGL_IMAGES_MSG_UNSUPPORTED_BIT_DEPTH	"DSGL: Unsupported Bit depth."
+#define DSGL_IMAGES_MSG_UNSUPPORTED_COLOR_TYPE	"DSGL: Unsupported Color Type."
 
 namespace DSGL {
 	int GetFileSize(const char * inputFilePath);
@@ -145,6 +149,7 @@ namespace DSGL {
 	struct Textures {
 		Textures(GLuint target);
 		Textures(GLuint target, GLuint width, GLuint height, GLvoid * rawData);
+		Textures(GLuint target, GLuint width, GLuint height, GLvoid * rawData, GLint internalFormat, GLenum format, GLenum type);
 
 		void SetNormalMap(GLvoid * rawData);
 		void Bind();

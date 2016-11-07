@@ -44,8 +44,6 @@ int main() {
 		glBindBuffer(GL_ARRAY_BUFFER, 0); /* Optional since we're using only one VAO */
 
 		glUseProgram(0); /* Optional since we're using only one shader program */
-
-		glfwSwapBuffers(context.window);
 	}
 
 	return DSGL_END_NICELY;

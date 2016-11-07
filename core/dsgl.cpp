@@ -171,7 +171,9 @@ namespace DSGL {
 		glBindTexture(target, 0);
 	}
 
-	Textures::Textures(GLuint target, GLuint width, GLuint height, GLvoid * rawData) : Textures(target) {
+	Textures::Textures(GLuint target, GLuint width, GLuint height, GLvoid * rawData) : Textures(target, width, height, rawData, GL_RGBA32F, GL_RGBA, GL_FLOAT) {}
+
+	Textures::Textures(GLuint target, GLuint width, GLuint height, GLvoid * rawData, GLint internalFormat, GLenum format, GLenum type) : Textures(target) {
 	  	this->width = width;
 		this->height = height;
 		this-> rawData = rawData;
@@ -182,10 +184,10 @@ namespace DSGL {
 			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glGenerateMipmap(target);
-			glTexImage2D(target, 0, GL_RGBA32F, this->width, this->height, 0, GL_RGBA, GL_FLOAT, this->rawData);
-			glBindImageTexture (0, this->textureID, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+			glTexImage2D(target, 0, internalFormat, this->width, this->height, 0, format, type, this->rawData);
+			glBindImageTexture (0, this->textureID, 0, GL_FALSE, 0, GL_WRITE_ONLY, internalFormat);
 		}
-		glBindImageTexture (0, 0, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+		glBindImageTexture (0, 0, 0, GL_FALSE, 0, GL_WRITE_ONLY, internalFormat);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 

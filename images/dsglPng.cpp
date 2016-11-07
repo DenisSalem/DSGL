@@ -7,6 +7,8 @@ namespace DSGL {
 		}
 
 		Png::~Png() {
+			delete[] this->pngStruct.IHDR.Data;
+			delete[] this->rawData;
 		}
 
 		void Png::Read(const char * file) {
@@ -33,7 +35,7 @@ namespace DSGL {
 				this->pngStruct.IHDR.Type[3] = (unsigned char) SafeFGetC(inputImage);
 				this->pngStruct.IHDR.Type[4] = 0;
 
-				this->pngStruct.IHDR.Data = (unsigned char *) malloc(sizeof( unsigned char ) * this->pngStruct.IHDR.DataLength);
+				this->pngStruct.IHDR.Data = new unsigned char[this->pngStruct.IHDR.DataLength];
 	
        				((IHDRCHUNK *) (this->pngStruct.IHDR.Data))->Width = (unsigned int) (SafeFGetC(inputImage) << 24);
        				((IHDRCHUNK *) (this->pngStruct.IHDR.Data))->Width += (unsigned int) (SafeFGetC(inputImage) << 16);
@@ -56,6 +58,7 @@ namespace DSGL {
        				this->pngStruct.IHDR.Crc += (unsigned char) SafeFGetC(inputImage) << 8;
        				this->pngStruct.IHDR.Crc += (unsigned char) SafeFGetC(inputImage);
 			}
+
 			catch(DSGL::Exception e) {
 				fclose(inputImage);
 				if (e.code == DSGL_IMAGES_INPUT_IMAGE_CORRUPTED) {
@@ -64,6 +67,54 @@ namespace DSGL {
 			}
 			
 			fclose(inputImage);
+
+			if ( ((IHDRCHUNK *) (this->pngStruct.IHDR.Data))->BitDepth != 8) {
+				throw Exception(DSGL_IMAGES_UNSUPPORTED_BIT_DEPTH, DSGL_IMAGES_MSG_UNSUPPORTED_BIT_DEPTH);
+			}
+			
+			png_image image;
+			memset(&image, 0, (sizeof image));
+			image.version = PNG_IMAGE_VERSION;
+
+			if (png_image_begin_read_from_file(&image, file) != 0 ) {
+
+				switch ( ((IHDRCHUNK *) (this->pngStruct.IHDR.Data))->ColorType) {
+					case 2:
+						image.format = PNG_FORMAT_RGB;
+						break;
+					case 6:
+						image.format = PNG_FORMAT_RGBA;
+						break;
+						
+				  	default:
+						throw Exception(DSGL_IMAGES_UNSUPPORTED_COLOR_TYPE, DSGL_IMAGES_MSG_UNSUPPORTED_COLOR_TYPE);
+				}
+				this->rawData = new png_bytep[PNG_IMAGE_SIZE(image)];
+				if (this->rawData != NULL && png_image_finish_read(&image, NULL, this->rawData, 0, NULL) !=0) {
+					this->rawDataSize = PNG_IMAGE_SIZE(image);
+                		}
+        		}
+		}
+
+		GLenum Png::GetInternalFormat() {
+			switch ( ((IHDRCHUNK *) (this->pngStruct.IHDR.Data))->ColorType) {
+				case 2:
+					return GL_RGB8;
+				default:
+					return GL_RGBA8;
+			}
+		}
+		GLenum Png::GetFormat() {
+			switch ( ((IHDRCHUNK *) (this->pngStruct.IHDR.Data))->ColorType) {
+				case 2:
+					return GL_RGB;
+				default:
+					return GL_RGBA;
+			}
+		}
+
+		GLenum Png::GetType() {
+			return GL_UNSIGNED_BYTE;
 		}
 
 		unsigned int Png::Width() {

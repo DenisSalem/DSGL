@@ -3,6 +3,13 @@
 
 namespace DSGL {
 	namespace Images {
+		typedef struct RGB8 {
+			GLubyte Red;      
+			GLubyte Green;    
+			GLubyte Blue;
+			GLubyte Alpha;
+		} rgb8;
+
 		typedef struct RGBA8 {
 			GLubyte Red;      
 			GLubyte Green;    

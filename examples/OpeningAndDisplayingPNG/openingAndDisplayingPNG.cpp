@@ -1,4 +1,5 @@
 #include <iostream>
+#include <unistd.h>
 #include "dsgl.hpp"
 #include "dsglMeshes.hpp"
 #include "dsglPng.hpp"
@@ -12,7 +13,7 @@ int main(int argc, char ** argv) {
 	DSGL::Images::Png png(argv[1]);
 
 	/* OpenGL context */
-	DSGL::Context context("DAMN SIMPLE COMPUTE SHADER WITH DSGL", png.Width(), png.Height(), 4, 3);
+	DSGL::Context context("OPEN AND DISPLAY IMAGE WITH DSGL", png.Width(), png.Height(), 4, 3);
 	context.InitSimpleWindow();
 	
 	/* Regular and compute shaders */
@@ -22,7 +23,7 @@ int main(int argc, char ** argv) {
 	DSGL::Meshes::Quad quad;
 
 	/* Create buffers */
-	DSGL::Textures texture(GL_TEXTURE_2D, 640,480, NULL);
+	DSGL::Textures texture(GL_TEXTURE_2D, png.Width(),png.Height(), png.rawData,png.GetInternalFormat(),png.GetFormat(),png.GetType());
 	DSGL::Elements elements(4 * sizeof(GLuint), quad.index);
 	DSGL::VertexBufferObject VBO(sizeof(GLfloat) * 12, quad.vertex);
 	DSGL::VertexBufferObject texCoords(sizeof(GLfloat) * 8, quad.texCoords);
@@ -36,6 +37,10 @@ int main(int argc, char ** argv) {
 	
 	/* ----- Render loop ----- */
 	while(!glfwWindowShouldClose(context.window)) {
+		glfwSwapBuffers(context.window);
+
+		glfwPollEvents();
+		
 		glEnable(GL_CULL_FACE);
     		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -48,15 +53,15 @@ int main(int argc, char ** argv) {
 		texture.Bind();
     
 		glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_INT, (GLvoid *) 0);
+		
+		usleep(40000); /* Let the GPU take a breath */
     
 		texture.Unbind();
             
 		glBindVertexArray(0);
     
 		glUseProgram(0);
-
-		glfwSwapBuffers(context.window);
 	}
 
-	return 0;
+	return DSGL_END_NICELY;
 }

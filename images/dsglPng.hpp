@@ -42,11 +42,16 @@ namespace DSGL {
 				void Read(const char * file);
 				void Write(const char * file);
 
+				GLenum GetInternalFormat();
+				GLenum GetFormat();
+				GLenum GetType();
 				unsigned int Width();
 				unsigned int Height();
 
-				std::shared_ptr<std::vector<rgba8>> image;
 				PNG pngStruct;
+				png_bytep * rawData;
+				unsigned int rawDataSize;
+
 			private:
 				int SafeFGetC(FILE * file);
 		};	
