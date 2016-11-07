@@ -57,6 +57,8 @@
 #define DSGL_CANNOT_CREATE_TEXTURE		-21
 #define DSGL_CANNOT_CREATE_DEPTH_BUFFER		-22
 #define DSGL_FBO_DOESNT_EXIST			-23
+#define DSGL_IMAGES_CANNOT_OPEN_IMAGE_FILE	-24
+#define DSGL_IMAGES_INPUT_IMAGE_CORRUPTED	-25
 
 #define DSGL_MSG_GLFW_INIT_FAILED               "DSGL: GLFW initialization failed."
 #define DSGL_MSG_GL3W_INIT_FAILED		"DSGL: GL3W initialization failed."
@@ -72,6 +74,8 @@
 #define DSGL_MSG_VBO_DOESNT_EXIST		"DSGL: VBO doesn't exist."
 #define DSGL_MSG_ID_DOESNT_NAME_A_PROGRAM	"DSGL: ID doesn't name a program."
 #define DSGL_MSG_FBO_DOESNT_EXIST		"DSGL: FBO doesn't exist."
+#define DSGL_IMAGES_MSG_CANNOT_OPEN_IMAGE_FILE	"DSGL: Cannot open image file."
+#define DSGL_IMAGES_MSG_INPUT_IMAGE_CORRUPTED	"DSGL: Input image is corrupted";
 
 namespace DSGL {
 	int GetFileSize(const char * inputFilePath);
