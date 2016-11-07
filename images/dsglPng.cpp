@@ -104,6 +104,7 @@ namespace DSGL {
 					return GL_RGBA8;
 			}
 		}
+
 		GLenum Png::GetFormat() {
 			switch ( ((IHDRCHUNK *) (this->pngStruct.IHDR.Data))->ColorType) {
 				case 2:

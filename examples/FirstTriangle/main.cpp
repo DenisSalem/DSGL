@@ -23,6 +23,7 @@ int main() {
 	VAO.AttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), 0);
 
 	glEnable(GL_CULL_FACE);
+	glCullFace(GL_FRONT);
 	
 	/* Actual render loop, for instance rely on glfw */
 
