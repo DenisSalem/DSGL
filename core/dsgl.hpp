@@ -75,7 +75,7 @@
 #define DSGL_MSG_ID_DOESNT_NAME_A_PROGRAM	"DSGL: ID doesn't name a program."
 #define DSGL_MSG_FBO_DOESNT_EXIST		"DSGL: FBO doesn't exist."
 #define DSGL_IMAGES_MSG_CANNOT_OPEN_IMAGE_FILE	"DSGL: Cannot open image file."
-#define DSGL_IMAGES_MSG_INPUT_IMAGE_CORRUPTED	"DSGL: Input image is corrupted";
+#define DSGL_IMAGES_MSG_INPUT_IMAGE_CORRUPTED	"DSGL: Input image is corrupted"
 
 namespace DSGL {
 	int GetFileSize(const char * inputFilePath);

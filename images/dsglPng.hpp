@@ -1,5 +1,6 @@
 #include "dsglImages.hpp"
 
+#include <vector>
 #include <png.h>
 
 namespace DSGL {
@@ -41,13 +42,13 @@ namespace DSGL {
 				void Read(const char * file);
 				void Write(const char * file);
 
-				unsigned int Png::Width();
-				unsigned int Png::Height();
+				unsigned int Width();
+				unsigned int Height();
 
 				std::shared_ptr<std::vector<rgba8>> image;
 				PNG pngStruct;
 			private:
-				unsigned char SafeFGetC(FILE * file);
-		}	
+				int SafeFGetC(FILE * file);
+		};	
 	}
 }
