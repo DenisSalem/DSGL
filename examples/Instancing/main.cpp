@@ -13,7 +13,7 @@ int main() {
 	
 	context.InitSimpleWindow();
 	
-	DSGL::ShaderProgram shaderProgram("vertex.shader","fragment.shader");
+	DSGL::PipelineProgram pipelineProgram("vertex.shader","fragment.shader");
 
 	/* Define our mesh, a quad for instance. */
 	DSGL::Meshes::Quad quad;
@@ -54,7 +54,7 @@ int main() {
 		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
-		shaderProgram.Use(); /* Optional since we're using only one shaderProgram, but must be called at least one time */
+		pipelineProgram.Use(); /* Optional since we're using only one shaderProgram, but must be called at least one time */
 
 		VAO.Bind(); /* Optional since we're using only one VAO, but must be called at least one time */
 
