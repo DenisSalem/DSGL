@@ -23,7 +23,6 @@ int main() {
 	VAO.AttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), 0);
 
 	glEnable(GL_CULL_FACE);
-	glCullFace(GL_FRONT);
 	
 	/* Actual render loop, for instance rely on glfw */
 
@@ -40,7 +39,7 @@ int main() {
 
 		usleep(40000); /* Let the GPU take a breath */
 
-		glDrawElements(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_INT, (GLvoid *) 0);
+		glDrawElements(GL_TRIANGLE_STRIP, 3, GL_UNSIGNED_INT, (GLvoid *) 0);
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0); /* Optional since we're using only one VAO */
 

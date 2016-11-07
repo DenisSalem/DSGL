@@ -1,4 +1,5 @@
 #include <iostream>
+#include <unistd.h>
 
 #include "dsgl.hpp"
 #include "dsglMeshes.hpp"
@@ -11,10 +12,6 @@ int main(int argc, char ** argv) {
 	
 	/* Regular and compute shaders */
 	DSGL::PipelineProgram pipelineProgram("vertex.shader","fragment.shader");
-	DSGL::ComputeProgram bell("bell.cs");
-	glUseProgram(bell.ID);
-	bell.Uniformui("brushScale", 256);
-	glUseProgram(0);
 
 	/* Create buffers */
 	DSGL::Meshes::Quad quad;
@@ -33,9 +30,12 @@ int main(int argc, char ** argv) {
 	DSGL::Cubemap::Brushes brush(256);
 
 	/* ----- Render loop ----- */
-	while(true) {
-		glEnable(GL_CULL_FACE);
-    		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	while (!glfwWindowShouldClose(context.window)) {
+		glfwPollEvents();
+		
+		usleep(40000); /* Let the GPU take a breath */
+    		
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		/* ----- Actual render ----- */
     

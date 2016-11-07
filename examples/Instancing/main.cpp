@@ -1,7 +1,6 @@
 #include "dsgl.hpp"
 #include "dsglMeshes.hpp"
 
-#include <sstream>
 #include <unistd.h>
 
 #include <glm/glm.hpp>
@@ -43,22 +42,21 @@ int main() {
 	/* Set up how instances memory is organized */
 	VAO.InstancesAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(GLfloat), 0, 1);
 
+	/* Actual render loop, for instance rely on glfw */
 	glEnable(GL_CULL_FACE);
 	
-	/* Actual render loop, for instance rely on glfw */
-
 	while (!glfwWindowShouldClose(context.window)) {
-        	glfwSwapBuffers(context.window);
-        	
 		glfwPollEvents();
 		
+		glfwSwapBuffers(context.window);
+				
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		
 		pipelineProgram.Use(); /* Optional since we're using only one shaderProgram, but must be called at least one time */
+		
+		usleep(40000); /* Let the GPU take a breath */
 
 		VAO.Bind(); /* Optional since we're using only one VAO, but must be called at least one time */
-
-		usleep(40000); /* Let the GPU take a breath */
 
 		glDrawElementsInstanced(GL_TRIANGLE_STRIP, 4, GL_UNSIGNED_INT, (GLvoid *) 0, 100);
 
@@ -66,7 +64,6 @@ int main() {
 
 		glUseProgram(0); /* Optional since we're using only one shader program */
 
-		glfwSwapBuffers(context.window);
 	}
 
 	return DSGL_END_NICELY;

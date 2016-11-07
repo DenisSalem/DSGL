@@ -35,8 +35,6 @@ int main(int argc, char ** argv) {
 	/* Set up how texcoords is organized in memory */
   	VAO.AttribPointer(texCoords.ID, 1, 2, GL_FLOAT, GL_FALSE, 2*sizeof(GLfloat), 0);
 	
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_FRONT);
 	/* ----- Render loop ----- */
 	while(!glfwWindowShouldClose(context.window)) {
 		glfwSwapBuffers(context.window);
