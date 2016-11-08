@@ -158,6 +158,11 @@ namespace DSGL {
 		GLuint textureID;
 		int width;
 		int height;
+
+		GLenum internalFormat;
+		GLenum format;
+		GLenum type;
+
 		GLvoid * rawData;
 		GLuint normalMapID;
 	};

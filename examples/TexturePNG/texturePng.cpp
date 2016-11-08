@@ -12,6 +12,14 @@ int main(int argc, char ** argv) {
 
 	DSGL::Images::Png png(argv[1]);
 
+	std::cout << "ColorType: " << png.ColorType() << "\n";
+	std::cout << "Format: " << png.image.format << "\n";
+	std::cout << "Interlace: " <<  (int) (((DSGL::Images::IHDRCHUNK *) (png.pngStruct.IHDR.Data))->BitDepth) << "\n";
+	std::cout << "Channel size: " << PNG_IMAGE_SAMPLE_CHANNELS(png.image.format) << "\n";
+
+	//for (int i = 0; i < 340*3; i++)
+	//std::cout << i << "\t" << (int) (((unsigned char *)png.rawData)[i]) << "\n"; 
+
 	/* OpenGL context */
 	DSGL::Context context("OPEN AND DISPLAY IMAGE WITH DSGL", png.Width(), png.Height(), 4, 3);
 	context.InitSimpleWindow();
@@ -34,7 +42,7 @@ int main(int argc, char ** argv) {
 
 	/* Set up how texcoords is organized in memory */
   	VAO.AttribPointer(texCoords.ID, 1, 2, GL_FLOAT, GL_FALSE, 2*sizeof(GLfloat), 0);
-	
+	glEnable (GL_BLEND); glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	/* ----- Render loop ----- */
 	while(!glfwWindowShouldClose(context.window)) {
 		glfwSwapBuffers(context.window);

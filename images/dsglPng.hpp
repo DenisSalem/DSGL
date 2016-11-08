@@ -45,10 +45,12 @@ namespace DSGL {
 				GLenum GetInternalFormat();
 				GLenum GetFormat();
 				GLenum GetType();
+				unsigned int ColorType();
 				unsigned int Width();
 				unsigned int Height();
 
 				PNG pngStruct;
+				png_image image;
 				png_bytep * rawData;
 				unsigned int rawDataSize;
 

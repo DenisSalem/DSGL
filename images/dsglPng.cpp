@@ -72,26 +72,23 @@ namespace DSGL {
 				throw Exception(DSGL_IMAGES_UNSUPPORTED_BIT_DEPTH, DSGL_IMAGES_MSG_UNSUPPORTED_BIT_DEPTH);
 			}
 			
-			png_image image;
-			memset(&image, 0, (sizeof image));
-			image.version = PNG_IMAGE_VERSION;
+			memset(&this->image, 0, sizeof(png_image));
+			this->image.version = PNG_IMAGE_VERSION;
 
-			if (png_image_begin_read_from_file(&image, file) != 0 ) {
-
+			if (png_image_begin_read_from_file(&this->image, file) != 0 ) {
 				switch ( ((IHDRCHUNK *) (this->pngStruct.IHDR.Data))->ColorType) {
 					case 2:
-						image.format = PNG_FORMAT_RGB;
 						break;
 					case 6:
-						image.format = PNG_FORMAT_RGBA;
 						break;
 						
 				  	default:
 						throw Exception(DSGL_IMAGES_UNSUPPORTED_COLOR_TYPE, DSGL_IMAGES_MSG_UNSUPPORTED_COLOR_TYPE);
 				}
-				this->rawData = new png_bytep[PNG_IMAGE_SIZE(image)];
-				if (this->rawData != NULL && png_image_finish_read(&image, NULL, this->rawData, 0, NULL) !=0) {
-					this->rawDataSize = PNG_IMAGE_SIZE(image);
+
+				this->rawData = new png_bytep[PNG_IMAGE_SIZE(this->image)];
+				if (this->rawData != NULL && png_image_finish_read(&this->image, NULL, this->rawData, 0, NULL) !=0) {
+					this->rawDataSize = PNG_IMAGE_SIZE(this->image);
                 		}
         		}
 		}
@@ -99,7 +96,7 @@ namespace DSGL {
 		GLenum Png::GetInternalFormat() {
 			switch ( ((IHDRCHUNK *) (this->pngStruct.IHDR.Data))->ColorType) {
 				case 2:
-					return GL_RGB8;
+					return GL_RGB;
 				default:
 					return GL_RGBA8;
 			}
@@ -124,6 +121,10 @@ namespace DSGL {
 
 		unsigned int Png::Height() {
 			return ((IHDRCHUNK *) (this->pngStruct.IHDR.Data))->Height;
+		}
+		
+		unsigned int Png::ColorType() {
+			return ((IHDRCHUNK *) (this->pngStruct.IHDR.Data))->ColorType;
 		}
 
 		int Png::SafeFGetC(FILE * file) {

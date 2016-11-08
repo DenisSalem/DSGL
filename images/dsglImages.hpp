@@ -7,7 +7,6 @@ namespace DSGL {
 			GLubyte Red;      
 			GLubyte Green;    
 			GLubyte Blue;
-			GLubyte Alpha;
 		} rgb8;
 
 		typedef struct RGBA8 {
@@ -17,6 +16,12 @@ namespace DSGL {
 			GLubyte Alpha;
 		} rgba8;
 
+		typedef struct RGB32f {
+			GLfloat Red;      
+			GLfloat Green;    
+			GLfloat Blue;
+		} rgb32f;
+		
 		typedef struct RGBA32f {
 			GLfloat Red;      
 			GLfloat Green;    
