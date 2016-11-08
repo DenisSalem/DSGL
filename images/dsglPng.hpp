@@ -42,7 +42,6 @@ namespace DSGL {
 				void Read(const char * file);
 				void Write(const char * file);
 
-				GLenum GetInternalFormat();
 				GLenum GetFormat();
 				GLenum GetType();
 				unsigned int ColorType();
