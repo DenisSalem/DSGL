@@ -93,15 +93,6 @@ namespace DSGL {
         		}
 		}
 
-		GLenum Png::GetInternalFormat() {
-			switch ( ((IHDRCHUNK *) (this->pngStruct.IHDR.Data))->ColorType) {
-				case 2:
-					return GL_RGB;
-				default:
-					return GL_RGBA8;
-			}
-		}
-
 		GLenum Png::GetFormat() {
 			switch ( ((IHDRCHUNK *) (this->pngStruct.IHDR.Data))->ColorType) {
 				case 2:
