@@ -61,25 +61,27 @@
 #define DSGL_IMAGES_INPUT_IMAGE_CORRUPTED	-25
 #define DSGL_IMAGES_UNSUPPORTED_BIT_DEPTH	-26
 #define DSGL_IMAGES_UNSUPPORTED_COLOR_TYPE	-27
+#define DSGL_IMAGES_UNSUPPORTED_PIXEL_FORMAT	-28
 
-#define DSGL_MSG_GLFW_INIT_FAILED               "DSGL: GLFW initialization failed."
-#define DSGL_MSG_GL3W_INIT_FAILED		"DSGL: GL3W initialization failed."
-#define DSGL_MSG_WINDOW_POINTER_NULL            "DSGL: Window pointer is null." 
-#define DSGL_MSG_VBO_IS_NULL			"DSGL: Vertex Buffer name is null."
-#define DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS	"DSGL: Uniform location doesn't exist."
-#define DSGL_MSG_CANNOT_CREATE_FBO		"DSGL: Cannot create frame buffer object."
-#define DSGL_MSG_CANNOT_CREATE_VBO		"DSGL: VBO creation failed."
-#define DSGL_MSG_CANNOT_CREATE_SHADER		"DSGL: Cannot create shader."
-#define DSGL_MSG_CANNOT_CREATE_DEPTH_BUFFER	"DSGL: Cannot create depth buffer."
-#define DSGL_MSG_ERROR_AT_SHDR_COMPILE_TIME	"DSGL: Cannot compile shader."
-#define DSGL_MSG_CANNOT_CREATE_TEXTURE		"DSGL: Cannot create texture."
-#define DSGL_MSG_VBO_DOESNT_EXIST		"DSGL: VBO doesn't exist."
-#define DSGL_MSG_ID_DOESNT_NAME_A_PROGRAM	"DSGL: ID doesn't name a program."
-#define DSGL_MSG_FBO_DOESNT_EXIST		"DSGL: FBO doesn't exist."
-#define DSGL_IMAGES_MSG_CANNOT_OPEN_IMAGE_FILE	"DSGL: Cannot open image file."
-#define DSGL_IMAGES_MSG_INPUT_IMAGE_CORRUPTED	"DSGL: Input image is corrupted"
-#define DSGL_IMAGES_MSG_UNSUPPORTED_BIT_DEPTH	"DSGL: Unsupported Bit depth."
-#define DSGL_IMAGES_MSG_UNSUPPORTED_COLOR_TYPE	"DSGL: Unsupported Color Type."
+#define DSGL_MSG_GLFW_INIT_FAILED               	"DSGL: GLFW initialization failed."
+#define DSGL_MSG_GL3W_INIT_FAILED			"DSGL: GL3W initialization failed."
+#define DSGL_MSG_WINDOW_POINTER_NULL            	"DSGL: Window pointer is null." 
+#define DSGL_MSG_VBO_IS_NULL				"DSGL: Vertex Buffer name is null."
+#define DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS		"DSGL: Uniform location doesn't exist."
+#define DSGL_MSG_CANNOT_CREATE_FBO			"DSGL: Cannot create frame buffer object."
+#define DSGL_MSG_CANNOT_CREATE_VBO			"DSGL: VBO creation failed."
+#define DSGL_MSG_CANNOT_CREATE_SHADER			"DSGL: Cannot create shader."
+#define DSGL_MSG_CANNOT_CREATE_DEPTH_BUFFER		"DSGL: Cannot create depth buffer."
+#define DSGL_MSG_ERROR_AT_SHDR_COMPILE_TIME		"DSGL: Cannot compile shader."
+#define DSGL_MSG_CANNOT_CREATE_TEXTURE			"DSGL: Cannot create texture."
+#define DSGL_MSG_VBO_DOESNT_EXIST			"DSGL: VBO doesn't exist."
+#define DSGL_MSG_ID_DOESNT_NAME_A_PROGRAM		"DSGL: ID doesn't name a program."
+#define DSGL_MSG_FBO_DOESNT_EXIST			"DSGL: FBO doesn't exist."
+#define DSGL_IMAGES_MSG_CANNOT_OPEN_IMAGE_FILE		"DSGL: Cannot open image file."
+#define DSGL_IMAGES_MSG_INPUT_IMAGE_CORRUPTED		"DSGL: Input image is corrupted"
+#define DSGL_IMAGES_MSG_UNSUPPORTED_BIT_DEPTH		"DSGL: Unsupported Bit depth."
+#define DSGL_IMAGES_MSG_UNSUPPORTED_COLOR_TYPE		"DSGL: Unsupported Color Type."
+#define DSGL_IMAGES_MSG_UNSUPPORTED_PIXEL_FORMAT	"DSGL: Unsupported Pixel Format."
 
 namespace DSGL {
 	int GetFileSize(const char * inputFilePath);

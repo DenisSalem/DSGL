@@ -94,11 +94,13 @@ namespace DSGL {
 		}
 
 		GLenum Png::GetFormat() {
-			switch ( ((IHDRCHUNK *) (this->pngStruct.IHDR.Data))->ColorType) {
-				case 2:
+			switch ( this->image.format) {
+				case PNG_FORMAT_RGB:
 					return GL_RGB;
-				default:
+				case PNG_FORMAT_RGBA:
 					return GL_RGBA;
+				default:
+					throw Exception(DSGL_IMAGES_UNSUPPORTED_PIXEL_FORMAT, DSGL_IMAGES_MSG_UNSUPPORTED_PIXEL_FORMAT);
 			}
 		}
 

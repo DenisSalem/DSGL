@@ -31,7 +31,7 @@ int main(int argc, char ** argv) {
 	DSGL::Meshes::Quad quad;
 
 	/* Create buffers */
-	DSGL::Textures texture(GL_TEXTURE_2D, png.Height(), png.Width(), png.rawData, png.GetFormat(), png.GetType());
+	DSGL::Textures texture(GL_TEXTURE_2D, png.Width(), png.Height(), png.rawData, png.GetFormat(), png.GetType());
 	DSGL::Elements elements(4 * sizeof(GLuint), quad.index);
 	DSGL::VertexBufferObject VBO(sizeof(GLfloat) * 12, quad.vertex);
 	DSGL::VertexBufferObject texCoords(sizeof(GLfloat) * 8, quad.texCoords);
