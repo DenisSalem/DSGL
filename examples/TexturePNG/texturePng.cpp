@@ -24,7 +24,7 @@ int main(int argc, char ** argv) {
 	DSGL::Context context("OPEN AND DISPLAY IMAGE WITH DSGL", png.Width(), png.Height(), 4, 3);
 	context.InitSimpleWindow();
 	
-	/* Regular and compute shaders */
+	/* Regular shaders */
 	DSGL::PipelineProgram pipelineProgram("vertex.shader","fragment.shader");
 
 	/* DSGL provide built in simple quad for playing with and debugging. */
