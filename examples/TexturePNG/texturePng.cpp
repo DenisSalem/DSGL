@@ -13,14 +13,14 @@ int main(int argc, char ** argv) {
 	DSGL::Images::Png png(argv[1]);
 
 	std::cout << "ColorType: " << png.ColorType() << "\n";
+	std::cout << "Width: " << png.Width() << "\n";
+	std::cout << "Height: " << png.Height() << "\n";
 	std::cout << "Format: " << png.image.format << "\n";
 	std::cout << "Interlace: " <<  (int) (((DSGL::Images::IHDRCHUNK *) (png.pngStruct.IHDR.Data))->BitDepth) << "\n";
 	std::cout << "Channel size: " << PNG_IMAGE_SAMPLE_CHANNELS(png.image.format) << "\n";
 
-	//for (int i = 0; i < 340*3; i++)
-	//std::cout << i << "\t" << (int) (((unsigned char *)png.rawData)[i]) << "\n"; 
-
 	/* OpenGL context */
+
 	DSGL::Context context("OPEN AND DISPLAY IMAGE WITH DSGL", png.Width(), png.Height(), 4, 3);
 	context.InitSimpleWindow();
 	
@@ -31,7 +31,7 @@ int main(int argc, char ** argv) {
 	DSGL::Meshes::Quad quad;
 
 	/* Create buffers */
-	DSGL::Textures texture(GL_TEXTURE_2D, png.Width(),png.Height(), png.rawData,png.GetFormat(),png.GetType());
+	DSGL::Textures texture(GL_TEXTURE_2D, png.Height(), png.Width(), png.rawData, png.GetFormat(), png.GetType());
 	DSGL::Elements elements(4 * sizeof(GLuint), quad.index);
 	DSGL::VertexBufferObject VBO(sizeof(GLfloat) * 12, quad.vertex);
 	DSGL::VertexBufferObject texCoords(sizeof(GLfloat) * 8, quad.texCoords);
@@ -43,6 +43,7 @@ int main(int argc, char ** argv) {
 	/* Set up how texcoords is organized in memory */
   	VAO.AttribPointer(texCoords.ID, 1, 2, GL_FLOAT, GL_FALSE, 2*sizeof(GLfloat), 0);
 	glEnable (GL_BLEND); glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
 	/* ----- Render loop ----- */
 	while(!glfwWindowShouldClose(context.window)) {
 		glfwSwapBuffers(context.window);

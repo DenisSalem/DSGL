@@ -186,6 +186,7 @@ namespace DSGL {
 			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glGenerateMipmap(target);
+			glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // In case of loading RGB data, prevent misalignemnt shit
 			glTexImage2D(target, 0, GL_RGBA32F, this->width, this->height, 0, this->format, this->type, this->rawData);
 			glBindImageTexture (0, this->textureID, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
 		}
