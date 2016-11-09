@@ -87,10 +87,13 @@ namespace DSGL {
 				}
 
 				this->rawData = new png_bytep[PNG_IMAGE_SIZE(this->image)];
-				if (this->rawData != NULL && png_image_finish_read(&this->image, NULL, this->rawData, 0, NULL) !=0) {
+				if (this->rawData != NULL && png_image_finish_read(&this->image, NULL, this->rawData, 0, NULL) != 0) {
 					this->rawDataSize = PNG_IMAGE_SIZE(this->image);
                 		}
         		}
+			else {
+				throw Exception(DSGL_IMAGES_ERROR_WHILE_READING, DSGL_IMAGES_MSG_ERROR_WHILE_READING);
+			}
 		}
 
 		GLenum Png::GetFormat() {

@@ -62,6 +62,7 @@
 #define DSGL_IMAGES_UNSUPPORTED_BIT_DEPTH	-26
 #define DSGL_IMAGES_UNSUPPORTED_COLOR_TYPE	-27
 #define DSGL_IMAGES_UNSUPPORTED_PIXEL_FORMAT	-28
+#define DSGL_IMAGES_ERROR_WHILE_READING		-29 
 
 #define DSGL_MSG_GLFW_INIT_FAILED               	"DSGL: GLFW initialization failed."
 #define DSGL_MSG_GL3W_INIT_FAILED			"DSGL: GL3W initialization failed."
@@ -82,6 +83,7 @@
 #define DSGL_IMAGES_MSG_UNSUPPORTED_BIT_DEPTH		"DSGL: Unsupported Bit depth."
 #define DSGL_IMAGES_MSG_UNSUPPORTED_COLOR_TYPE		"DSGL: Unsupported Color Type."
 #define DSGL_IMAGES_MSG_UNSUPPORTED_PIXEL_FORMAT	"DSGL: Unsupported Pixel Format."
+#define DSGL_IMAGES_MSG_ERROR_WHILE_READING		"DSGL: Error while reading input image." 
 
 namespace DSGL {
 	int GetFileSize(const char * inputFilePath);
