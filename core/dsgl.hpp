@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <ctime>
 #include <cstring>
 #include <memory>
 #include <iostream>
@@ -88,6 +89,7 @@
 namespace DSGL {
 	int GetFileSize(const char * inputFilePath);
 	void PrintNicelyWorkGroupsCapabilities();
+	unsigned long int GetRandom(int salt);
 	
 	struct Exception {
 		Exception(int code, const char * msg);
@@ -225,15 +227,17 @@ namespace DSGL {
 
 	};
 
-
-
 	class ShaderProgram {
 		public:
 			void Uniformui(const char * uniformName, GLuint v0);
+			
 			void Uniformf(const char * uniformName, GLfloat v0);
 			void Uniformf(const char * uniformName, GLfloat v0, GLfloat v1);
 			void Uniformf(const char * uniformName, GLfloat v0, GLfloat v1, GLfloat v2);
-				
+			
+			void Uniform4fv(const char * uniformName, int size, GLfloat * array);		
+			void Uniform3fv(const char * uniformName, int size, GLfloat * array);		
+			
 			virtual void Use() = 0;
 	
 			GLuint ID;

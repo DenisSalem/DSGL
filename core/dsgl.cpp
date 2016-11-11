@@ -645,6 +645,26 @@ namespace DSGL {
 		}
 	}
 
+	void ShaderProgram::Uniform4fv(const char * uniformName, int size, GLfloat * array) {
+		GLint loc = glGetUniformLocation(this->ID, uniformName);
+		if (loc != -1) {
+			glUniform4fv(loc, size, array);
+		}
+		else {
+		  throw Exception(DSGL_UNIFORM_LOCATION_DOESNT_EXISTS, DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS);
+		}
+	}
+
+	void ShaderProgram::Uniform3fv(const char * uniformName, int size, GLfloat * array) {
+		GLint loc = glGetUniformLocation(this->ID, uniformName);
+		if (loc != -1) {
+			glUniform3fv(loc, size, array);
+		}
+		else {
+		  throw Exception(DSGL_UNIFORM_LOCATION_DOESNT_EXISTS, DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS);
+		}
+	}
+
 	/* ----- Miscellaneous functions ----- */
 	
 	int GetFileSize(const char * inputFilePath) {
@@ -656,6 +676,11 @@ namespace DSGL {
 		end = inputFile.tellg();
 		inputFile.close();
 		return int(end - begin);
+	}
+
+	unsigned long int GetRandom(int salt) {
+		std::srand(std::time(0));
+		return std::rand()*salt*3.1415;
 	}
 
 	void PrintNicelyWorkGroupsCapabilities() {

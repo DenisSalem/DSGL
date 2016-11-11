@@ -1,13 +1,12 @@
 #include <iostream>
 #include <unistd.h>
-
 #include "dsgl.hpp"
 #include "dsglMeshes.hpp"
 #include "dsglCubemap.hpp"
 
 int main(int argc, char ** argv) {
 	/* OpenGL context */
-	DSGL::Context context("CUBEMAPING WITH DSGL", 256, 256, 4, 3);
+	DSGL::Context context("CUBEMAPING WITH DSGL", 256, 512, 4, 3);
 	context.InitSimpleWindow();
 	
 	/* Regular and compute shaders */
@@ -27,7 +26,13 @@ int main(int argc, char ** argv) {
 	/* Set up how texcoords is organized in memory */
   	VAO.AttribPointer(texCoords.ID, 1, 2, GL_FLOAT, GL_FALSE, 2*sizeof(GLfloat), 0);
 	
-	DSGL::Cubemap::Brushes brush(256);
+	char * seed = new char[4096];
+
+	for (int i = 0; i < 4096 / sizeof(unsigned long int); i++) {
+		((unsigned long int *) seed)[i] = DSGL::GetRandom(i);
+	}
+
+	DSGL::Cubemap::Brushes brush(256, seed);
 
 	/* ----- Render loop ----- */
 	while (!glfwWindowShouldClose(context.window)) {
@@ -55,6 +60,8 @@ int main(int argc, char ** argv) {
 
 		glfwSwapBuffers(context.window);
 	}
+
+	delete[] seed;
 
 	return 0;
 }
