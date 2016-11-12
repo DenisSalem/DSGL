@@ -1,8 +1,9 @@
 #include "dsgl.hpp"
 
-#define DSGL_CUBEMAP_BRUSHES_MAX_NUMBER 2
-#define DSGL_CUBEMAP_BRUSH_BELL		0
-#define DSGL_CUBEMAP_BRUSH_VORONOI	1
+#define DSGL_CUBEMAP_BRUSHES_MAX_NUMBER 	3
+#define DSGL_CUBEMAP_BRUSH_BELL			0
+#define DSGL_CUBEMAP_BRUSH_VORONOI		1
+#define DSGL_CUBEMAP_BRUSH_DOUBLE_VORONOI	2
 
 
 namespace DSGL {
@@ -17,6 +18,7 @@ namespace DSGL {
 		struct Brushes {
 		  	static const char * bellShader;
 		  	static const char * voronoiShader;
+		  	static const char * doubleVoronoiShader;
 		  	Brushes(unsigned int scale, char * seed);
 			
 			unsigned int scale;
