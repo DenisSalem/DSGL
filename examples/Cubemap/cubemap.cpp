@@ -6,7 +6,7 @@
 
 int main(int argc, char ** argv) {
 	/* OpenGL context */
-	DSGL::Context context("CUBEMAPING WITH DSGL", 256, 768, 4, 3);
+	DSGL::Context context("CUBEMAPING WITH DSGL", 256, 1024, 4, 3);
 	context.InitSimpleWindow();
 	
 	/* Regular and compute shaders */

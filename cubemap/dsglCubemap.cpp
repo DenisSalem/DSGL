@@ -43,13 +43,50 @@ namespace DSGL {
 							"			minDistance = tmp;\n"
 							"		}\n"
 							"	}\n"
-							"	float distance = minDistance / ( float(brushScale) / 4.25 ); // Normalization is an approximation\n"
+							"	float distance = minDistance / ( float(brushScale) / 4 );\n"
 							"	vec4 factor = imageLoad(voronoi, ivec2(gl_GlobalInvocationID.xy));\n"
-							"	imageStore(voronoi, ivec2(gl_GlobalInvocationID.xy)+ivec2(0,brushScale), vec4(distance * factor));\n"
+							"	imageStore(voronoi, ivec2(gl_GlobalInvocationID.xy)+ivec2(0,brushScale), clamp(vec4(distance * factor), vec4(0.0), vec4(1.0)));\n"
 							"}";
 		
-		const char * Brushes::doubleVoronoiShader =
-							"#version 430\n";
+		const char * Brushes::doubleVoronoiShader = "#version 430\n"
+							"layout (local_size_x = 1, local_size_y = 1) in;\n"
+							"layout (rgba32f, binding = 0) uniform image2D voronoi;\n"
+							"uniform uint brushScale;\n"
+							"uniform vec4 voronoiSeeds[64];\n"
+							"const uint area = brushScale*brushScale;\n"
+							"void main() {\n"
+							"	vec2 pixel = vec2(gl_GlobalInvocationID.xy);\n"
+							"	float minDistance = 16581375.0;\n"
+							"	int closest=0;\n"
+							"	float tmp;\n"
+							"	for (int i=0; i < 64; i++) {\n"
+							"		tmp = sqrt(\n"
+							"			pow(abs(pixel.x - voronoiSeeds[i].x),2) +\n"
+							"			pow(abs(pixel.y - voronoiSeeds[i].y),2)\n"
+							"		);\n"
+							"		if (tmp < minDistance) {\n"
+							"			closest=i;\n"
+							"			minDistance = tmp;\n"
+							"		}\n"
+							"	}\n"
+							"	float secondMinDistance = 16581375.0;\n"
+							"	int secondClosest=0;\n"
+							"	for (int i=0; i < 64; i++) {\n"
+	  						"		if(i != closest) {\n"
+							"			tmp = sqrt(\n"
+							"				pow(abs(pixel.x - voronoiSeeds[i].x),2) +\n"
+							"				pow(abs(pixel.y - voronoiSeeds[i].y),2)\n"
+							"			);\n"
+							"			if (tmp < secondMinDistance) {\n"
+							"				secondClosest=i;\n"
+							"				secondMinDistance = tmp;\n"
+							"			}\n"
+							"		}\n"
+							"	}\n"
+							"	float distance = (secondMinDistance - minDistance) / (float(brushScale) / 4 );\n"
+							"	vec4 factor = imageLoad(voronoi, ivec2(gl_GlobalInvocationID.xy));\n"
+							"	imageStore(voronoi, ivec2(gl_GlobalInvocationID.xy)+ivec2(0,brushScale*2), clamp(vec4(distance * factor),vec4(0.0),vec4(1.0)));\n"
+							"}";
 
 		Brushes::Brushes(unsigned int scale, char * seed) {
 		  	this->scale = scale;
@@ -64,7 +101,7 @@ namespace DSGL {
 			glUseProgram(0);
 
 			this->brushes->Bind();
-        		bell.Use(this->scale,this->scale,1);
+        		bell.Use(this->scale, this->scale,1);
 			glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 			this->brushes->Unbind();
 
@@ -72,10 +109,9 @@ namespace DSGL {
 			
 			abcd32f voronoiSeeds[DSGL_VORONOI_CELLS] = {0};
 			for(int i = 0; i < DSGL_VORONOI_CELLS; i++) {
-				voronoiSeeds[i].a = seed[(i*i)] % scale;		// x
-				voronoiSeeds[i].b = seed[(i*i*i) % 4096] % scale;	// y
+				voronoiSeeds[i].a = seed[(i)] % scale;		// x
+				voronoiSeeds[i].b = seed[(i*2)] % scale;	// y
 			}
-			voronoiSeeds[0].c = 0.0;
 
 			DSGL::ComputeProgram voronoi(Brushes::voronoiShader, DSGL_READ_FROM_STRING);
 			glUseProgram(voronoi.ID);
@@ -84,11 +120,46 @@ namespace DSGL {
 			glUseProgram(0);
 			
 			this->brushes->Bind();
-        		voronoi.Use(this->scale,this->scale,1);
+        		voronoi.Use(this->scale, this->scale,1);
 			glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 			this->brushes->Unbind();
 
 			// Double Voronoï
+	
+			for(int i = DSGL_VORONOI_CELLS; i < DSGL_VORONOI_CELLS*2; i++) {
+				voronoiSeeds[i-DSGL_VORONOI_CELLS].a = seed[i*3] % scale;	// x
+				voronoiSeeds[i-DSGL_VORONOI_CELLS].b = seed[i*4] % scale;	// y
+			}
+
+			DSGL::ComputeProgram doubleVoronoi(Brushes::doubleVoronoiShader, DSGL_READ_FROM_STRING);
+			glUseProgram(doubleVoronoi.ID);
+			doubleVoronoi.Uniformui("brushScale", scale);
+			doubleVoronoi.Uniform4fv("voronoiSeeds", DSGL_VORONOI_CELLS, (GLfloat *) voronoiSeeds);
+			glUseProgram(0);
+			
+			this->brushes->Bind();
+        		doubleVoronoi.Use(this->scale, this->scale,1);
+			glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+			this->brushes->Unbind();
+
+			// Flat Voronoï tesselation
+			
+			for(int i = DSGL_VORONOI_CELLS * 2; i < DSGL_VORONOI_CELLS*3; i++) {
+				voronoiSeeds[i-DSGL_VORONOI_CELLS*2].a = seed[i*3] % scale;	// x
+				voronoiSeeds[i-DSGL_VORONOI_CELLS*2].b = seed[i*4] % scale;	// y
+			}
+			
+			DSGL::ComputeProgram flatVoronoiTesselation("voronoi.cs", DSGL_READ_FROM_FILE);
+			glUseProgram(flatVoronoiTesselation.ID);
+			flatVoronoiTesselation.Uniformui("brushScale", scale);
+			flatVoronoiTesselation.Uniform4fv("voronoiSeeds", DSGL_VORONOI_CELLS, (GLfloat *) voronoiSeeds);
+			glUseProgram(0);
+			
+			this->brushes->Bind();
+        		flatVoronoiTesselation.Use(this->scale, this->scale,1);
+			glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
+			this->brushes->Unbind();
+			
 		}
 	}
 }

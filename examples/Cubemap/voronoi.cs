@@ -1,7 +1,7 @@
 #version 430
 
 layout (local_size_x = 1, local_size_y = 1) in;
-layout (rgba32f, binding = 0) uniform image2D voronoi;
+layout (rgba32f, binding = 0) coherent volatile uniform image2D voronoi;
 
 uniform uint brushScale;
 uniform vec4 voronoiSeeds[64];
@@ -26,8 +26,30 @@ void main() {
 		}
 	}
 
-	float distance = minDistance / ( float(brushScale) / 4.25 ); // Normalization is an approximation
+	float secondMinDistance = 16581375.0;
+	int secondClosest=0;
+	for (int i=0; i < 64; i++) {
+	  	if(i != closest) {
+			tmp = sqrt(
+				pow(abs(pixel.x - voronoiSeeds[i].x),2) +
+				pow(abs(pixel.y - voronoiSeeds[i].y),2)
+			);
+
+			if (tmp < secondMinDistance) {
+				secondClosest = i;
+				secondMinDistance = tmp;
+			}
+		}
+	}
+
+
+
+	float distance = sqrt(
+		pow(abs(voronoiSeeds[closest].x - voronoiSeeds[secondClosest].x),2) +
+		pow(abs(voronoiSeeds[closest].x - voronoiSeeds[secondClosest].y),2)
+	) / float(brushScale)  ;
 	
+	distance  = distance < 0.25 ? 0 : distance;
 	vec4 factor = imageLoad(voronoi, ivec2(gl_GlobalInvocationID.xy));
-	imageStore(voronoi, ivec2(gl_GlobalInvocationID.xy)+ivec2(0,brushScale), vec4(distance * factor));
+	imageStore(voronoi, ivec2(gl_GlobalInvocationID.xy)+ivec2(0,brushScale*3), (vec4(distance * factor)));
 }
