@@ -197,9 +197,13 @@ namespace DSGL {
 	}
 
 	void Textures::Bind() {
+		this->Bind(0);
+	}
+
+	void Textures::Bind(GLuint unit) {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, this->textureID);
-		glBindImageTexture (0, this->textureID, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+		glBindImageTexture(unit, this->textureID, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
 	}
 
 	void Textures::Unbind() {

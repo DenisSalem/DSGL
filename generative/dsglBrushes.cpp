@@ -1,9 +1,8 @@
-#include "dsglCubemap.hpp"
-
-#define DSGL_VORONOI_CELLS 64
+#include "dsgl.hpp"
+#include "dsglBrushes.hpp"
 
 namespace DSGL {
-	namespace Cubemap {
+	namespace Generative {
 	  	const char * Brushes::bellShader =	"#version 430\n"
 							"layout (local_size_x = 1, local_size_y = 1) in;\n"
 							"layout (rgba32f, binding = 0) uniform image2D bell;\n"
@@ -45,7 +44,7 @@ namespace DSGL {
 							"	}\n"
 							"	float distance = minDistance / ( float(brushScale) / 4 );\n"
 							"	vec4 factor = imageLoad(voronoi, ivec2(gl_GlobalInvocationID.xy));\n"
-							"	imageStore(voronoi, ivec2(gl_GlobalInvocationID.xy)+ivec2(0,brushScale), clamp(vec4(distance * factor), vec4(0.0), vec4(1.0)));\n"
+							"	imageStore(voronoi, ivec2(gl_GlobalInvocationID.xy)+ivec2(brushScale,0), clamp(vec4(distance * factor), vec4(0.0), vec4(1.0)));\n"
 							"}";
 		
 		const char * Brushes::doubleVoronoiShader = "#version 430\n"
@@ -85,13 +84,57 @@ namespace DSGL {
 							"	}\n"
 							"	float distance = (secondMinDistance - minDistance) / (float(brushScale) / 4 );\n"
 							"	vec4 factor = imageLoad(voronoi, ivec2(gl_GlobalInvocationID.xy));\n"
-							"	imageStore(voronoi, ivec2(gl_GlobalInvocationID.xy)+ivec2(0,brushScale*2), clamp(vec4(distance * factor),vec4(0.0),vec4(1.0)));\n"
+							"	imageStore(voronoi, ivec2(gl_GlobalInvocationID.xy)+ivec2(brushScale*2,0), clamp(vec4(distance * factor),vec4(0.0),vec4(1.0)));\n"
+							"}";
+		
+		const char * Brushes::flatVoronoiTesselationShader = "#version 430\n"
+							"layout (local_size_x = 1, local_size_y = 1) in;\n"
+							"layout (rgba32f, binding = 0) coherent volatile uniform image2D voronoi;\n"
+							"uniform uint brushScale;\n"
+							"uniform vec4 voronoiSeeds[64];\n"
+							"const uint area = brushScale*brushScale;\n"
+							"void main() {\n"
+							"	vec2 pixel = vec2(gl_GlobalInvocationID.xy);\n"
+							"	float minDistance = 16581375.0;\n"
+							"	int closest=0;\n"
+							"	float tmp;\n"
+							"	for (int i=0; i < 64; i++) {\n"
+							"		tmp = sqrt(\n"
+							"			pow(abs(pixel.x - voronoiSeeds[i].x),2) +\n"
+							"			pow(abs(pixel.y - voronoiSeeds[i].y),2)\n"
+							"		);\n"
+							"		if (tmp < minDistance) {\n"
+							"			closest=i;\n"
+							"			minDistance = tmp;\n"
+							"		}\n"
+							"	}\n"
+							"	float secondMinDistance = 16581375.0;\n"
+							"	int secondClosest=0;\n"
+							"	for (int i=0; i < 64; i++) {\n"
+	  						"		if(i != closest) {\n"
+							"			tmp = sqrt(\n"
+							"				pow(abs(pixel.x - voronoiSeeds[i].x),2) +\n"
+							"				pow(abs(pixel.y - voronoiSeeds[i].y),2)\n"
+							"			);\n"
+							"			if (tmp < secondMinDistance) {\n"
+							"				secondClosest = i;\n"
+							"				secondMinDistance = tmp;\n"
+							"			}\n"
+							"		}\n"
+							"	}\n"
+							"	float distance = sqrt(\n"
+							"		pow(abs(voronoiSeeds[closest].x - voronoiSeeds[secondClosest].x),2) +\n"
+							"		pow(abs(voronoiSeeds[closest].x - voronoiSeeds[secondClosest].y),2)\n"
+							"	) / float(brushScale)  ;\n"
+							"	distance  = distance < 0.25 ? 0 : distance;\n"
+							"	vec4 factor = imageLoad(voronoi, ivec2(gl_GlobalInvocationID.xy));\n"
+							"	imageStore(voronoi, ivec2(gl_GlobalInvocationID.xy)+ivec2(brushScale*3,0), (vec4(distance * factor)));\n"
 							"}";
 
 		Brushes::Brushes(unsigned int scale, char * seed) {
 		  	this->scale = scale;
 			
-			this->brushes = std::make_shared<Textures>(GL_TEXTURE_2D, scale, scale * DSGL_CUBEMAP_BRUSHES_MAX_NUMBER, (GLvoid*)NULL);
+			this->brushes = std::make_shared<Textures>(GL_TEXTURE_2D, scale * DSGL_GENERATIVE_BRUSHES_MAX_NUMBER, scale, (GLvoid*)NULL);
 			
 			// Bell
 			
@@ -107,16 +150,17 @@ namespace DSGL {
 
 			// Voronoï
 			
-			abcd32f voronoiSeeds[DSGL_VORONOI_CELLS] = {0};
-			for(int i = 0; i < DSGL_VORONOI_CELLS; i++) {
-				voronoiSeeds[i].a = seed[(i)] % scale;		// x
-				voronoiSeeds[i].b = seed[(i*2)] % scale;	// y
+			float voronoiSeeds[4*DSGL_GENERATIVE_VORONOI_CELLS] = {0};
+
+			for(int i = 0; i < DSGL_GENERATIVE_VORONOI_CELLS; i++) {
+				voronoiSeeds[(i*4)] = ((short int *)seed)[i] % scale;
+				voronoiSeeds[(i*4)+1] = ((short int *)seed)[i*3] % scale;
 			}
 
 			DSGL::ComputeProgram voronoi(Brushes::voronoiShader, DSGL_READ_FROM_STRING);
 			glUseProgram(voronoi.ID);
 			voronoi.Uniformui("brushScale", scale);
-			voronoi.Uniform4fv("voronoiSeeds", DSGL_VORONOI_CELLS, (GLfloat *) voronoiSeeds);
+			voronoi.Uniform4fv("voronoiSeeds", DSGL_GENERATIVE_VORONOI_CELLS, (GLfloat *) voronoiSeeds);
 			glUseProgram(0);
 			
 			this->brushes->Bind();
@@ -126,15 +170,15 @@ namespace DSGL {
 
 			// Double Voronoï
 	
-			for(int i = DSGL_VORONOI_CELLS; i < DSGL_VORONOI_CELLS*2; i++) {
-				voronoiSeeds[i-DSGL_VORONOI_CELLS].a = seed[i*3] % scale;	// x
-				voronoiSeeds[i-DSGL_VORONOI_CELLS].b = seed[i*4] % scale;	// y
+			for(int i = DSGL_GENERATIVE_VORONOI_CELLS; i < DSGL_GENERATIVE_VORONOI_CELLS*2; i++) {
+				voronoiSeeds[(i-DSGL_GENERATIVE_VORONOI_CELLS)*4] = ((short int *)seed)[i*5] % scale;		
+				voronoiSeeds[((i-DSGL_GENERATIVE_VORONOI_CELLS))*4+1] = ((short int *)seed)[i*7] % scale;
 			}
 
 			DSGL::ComputeProgram doubleVoronoi(Brushes::doubleVoronoiShader, DSGL_READ_FROM_STRING);
 			glUseProgram(doubleVoronoi.ID);
 			doubleVoronoi.Uniformui("brushScale", scale);
-			doubleVoronoi.Uniform4fv("voronoiSeeds", DSGL_VORONOI_CELLS, (GLfloat *) voronoiSeeds);
+			doubleVoronoi.Uniform4fv("voronoiSeeds", DSGL_GENERATIVE_VORONOI_CELLS, (GLfloat *) voronoiSeeds);
 			glUseProgram(0);
 			
 			this->brushes->Bind();
@@ -144,15 +188,15 @@ namespace DSGL {
 
 			// Flat Voronoï tesselation
 			
-			for(int i = DSGL_VORONOI_CELLS * 2; i < DSGL_VORONOI_CELLS*3; i++) {
-				voronoiSeeds[i-DSGL_VORONOI_CELLS*2].a = seed[i*3] % scale;	// x
-				voronoiSeeds[i-DSGL_VORONOI_CELLS*2].b = seed[i*4] % scale;	// y
+			for(int i = DSGL_GENERATIVE_VORONOI_CELLS * 2; i < DSGL_GENERATIVE_VORONOI_CELLS*3; i++) {
+				voronoiSeeds[(i-DSGL_GENERATIVE_VORONOI_CELLS*2)*4] = ((short int *)seed)[i*3] % scale;	// x
+				voronoiSeeds[((i-DSGL_GENERATIVE_VORONOI_CELLS*2)*4)+1] = ((short int *)seed)[i*5] % scale;	// y
 			}
 			
-			DSGL::ComputeProgram flatVoronoiTesselation("voronoi.cs", DSGL_READ_FROM_FILE);
+			DSGL::ComputeProgram flatVoronoiTesselation(Brushes::flatVoronoiTesselationShader, DSGL_READ_FROM_STRING);
 			glUseProgram(flatVoronoiTesselation.ID);
 			flatVoronoiTesselation.Uniformui("brushScale", scale);
-			flatVoronoiTesselation.Uniform4fv("voronoiSeeds", DSGL_VORONOI_CELLS, (GLfloat *) voronoiSeeds);
+			flatVoronoiTesselation.Uniform4fv("voronoiSeeds", DSGL_GENERATIVE_VORONOI_CELLS, (GLfloat *) voronoiSeeds);
 			glUseProgram(0);
 			
 			this->brushes->Bind();

@@ -159,6 +159,7 @@ namespace DSGL {
 
 		void SetNormalMap(GLvoid * rawData);
 		void Bind();
+		void Bind(GLuint unit);
 		void Unbind();
 
 		GLuint textureID;
