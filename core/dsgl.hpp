@@ -155,7 +155,7 @@ namespace DSGL {
 	struct Textures {
 		Textures(GLuint target);
 		Textures(GLuint target, GLuint width, GLuint height, GLvoid * rawData);
-		Textures(GLuint target, GLuint width, GLuint height, GLvoid * rawData, GLenum format, GLenum type);
+		Textures(GLuint target, GLuint width, GLuint height, GLvoid * rawData, GLenum cpuSideFormat, GLenum cpuSidetype, GLenum gpuSideFormat);
 
 		void SetNormalMap(GLvoid * rawData);
 		void Bind();
@@ -166,9 +166,11 @@ namespace DSGL {
 		int width;
 		int height;
 
+		GLuint target;
 		GLenum internalFormat;
-		GLenum format;
-		GLenum type;
+		GLenum gpuSideFormat;
+		GLenum cpuSideFormat;
+		GLenum cpuSideType;
 
 		GLvoid * rawData;
 		GLuint normalMapID;

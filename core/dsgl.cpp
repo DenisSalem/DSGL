@@ -171,14 +171,16 @@ namespace DSGL {
 		glBindTexture(target, 0);
 	}
 
-	Textures::Textures(GLuint target, GLuint width, GLuint height, GLvoid * rawData) : Textures(target, width, height, rawData, GL_RGBA, GL_FLOAT) {}
+	Textures::Textures(GLuint target, GLuint width, GLuint height, GLvoid * rawData) : Textures(target, width, height, rawData, GL_RGBA, GL_FLOAT, GL_RGBA32F) {}
 
-	Textures::Textures(GLuint target, GLuint width, GLuint height, GLvoid * rawData, GLenum format, GLenum type) : Textures(target) {
+	Textures::Textures(GLuint target, GLuint width, GLuint height, GLvoid * rawData, GLenum cpuSideFormat, GLenum cpuSidetype, GLenum gpuSideFormat) : Textures(target) {
 	  	this->width = width;
 		this->height = height;
 		this-> rawData = rawData;
-		this->format = format;
-		this->type = type;
+		this->cpuSideFormat = cpuSideFormat;
+		this->gpuSideFormat = gpuSideFormat;
+		this->cpuSideType = cpuSideType;
+		this->target = target;
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(target, this->textureID); {
 			glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -189,10 +191,15 @@ namespace DSGL {
 			if( width % 4 != 0) {
 			  glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // In case of NPOT width texture, prevent from misalignment shit.
 			}
-			glTexImage2D(target, 0, GL_RGBA32F, this->width, this->height, 0, this->format, this->type, this->rawData);
-			glBindImageTexture (0, this->textureID, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+			if(target == GL_TEXTURE_2D) {
+				glTexImage2D(target, 0, gpuSideFormat, this->width, this->height, 0, cpuSideFormat, cpuSideType, this->rawData);
+			}
+			else if(target == GL_TEXTURE_1D) {
+				glTexImage1D(target, 0, gpuSideFormat, this->width, 0, cpuSideFormat, cpuSideType, this->rawData);
+			}
+			glBindImageTexture (0, this->textureID, 0, GL_FALSE, 0, GL_WRITE_ONLY, gpuSideFormat);
 		}
-		glBindImageTexture (0, 0, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+		glBindImageTexture (0, 0, 0, GL_FALSE, 0, GL_WRITE_ONLY, gpuSideFormat);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
@@ -202,13 +209,13 @@ namespace DSGL {
 
 	void Textures::Bind(GLuint unit) {
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, this->textureID);
-		glBindImageTexture(unit, this->textureID, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
+		glBindTexture(this->target, this->textureID);
+		glBindImageTexture(unit, this->textureID, 0, GL_FALSE, 0, GL_WRITE_ONLY, gpuSideFormat);
 	}
 
 	void Textures::Unbind() {
-		glBindImageTexture (0, 0, 0, GL_FALSE, 0, GL_WRITE_ONLY, GL_RGBA32F);
-    		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindImageTexture (0, 0, 0, GL_FALSE, 0, GL_WRITE_ONLY, gpuSideFormat);
+    		glBindTexture(this->target, 0);
 	}
 
 	/* ---- VertexArrayObject ----- */
