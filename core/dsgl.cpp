@@ -171,16 +171,20 @@ namespace DSGL {
 		glBindTexture(target, 0);
 	}
 
-	Textures::Textures(GLuint target, GLuint width, GLuint height, GLvoid * rawData) : Textures(target, width, height, rawData, GL_RGBA, GL_FLOAT, GL_RGBA32F) {}
+	Textures::Textures(GLenum target, GLuint width, GLuint height, GLvoid * rawData) : Textures(target, width, height, rawData, GL_RGBA, GL_FLOAT, GL_RGBA32F) {}
+	
+	Textures::Textures(GLenum target, GLuint width, GLuint height, GLvoid * rawData, GLenum cpuSideFormat, GLenum cpuSideType) : Textures(target, width, height, rawData, cpuSideFormat, cpuSideType, GL_RGBA32F) {
+	}
 
-	Textures::Textures(GLuint target, GLuint width, GLuint height, GLvoid * rawData, GLenum cpuSideFormat, GLenum cpuSidetype, GLenum gpuSideFormat) : Textures(target) {
+	Textures::Textures(GLenum target, GLuint width, GLuint height, GLvoid * rawData, GLenum cpuSideFormat, GLenum cpuSideType, GLint gpuSideFormat) : Textures(target) {
 	  	this->width = width;
 		this->height = height;
-		this-> rawData = rawData;
+		this->rawData = rawData;
 		this->cpuSideFormat = cpuSideFormat;
-		this->gpuSideFormat = gpuSideFormat;
 		this->cpuSideType = cpuSideType;
+		this->gpuSideFormat = gpuSideFormat;
 		this->target = target;
+
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(target, this->textureID); {
 			glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -192,7 +196,9 @@ namespace DSGL {
 			  glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // In case of NPOT width texture, prevent from misalignment shit.
 			}
 			if(target == GL_TEXTURE_2D) {
-				glTexImage2D(target, 0, gpuSideFormat, this->width, this->height, 0, cpuSideFormat, cpuSideType, this->rawData);
+				DSGL_TRACE
+					glTexImage2D(target, 0, gpuSideFormat, this->width, this->height, 0, cpuSideFormat, cpuSideType, this->rawData);
+				DSGL_TRACE
 			}
 			else if(target == GL_TEXTURE_1D) {
 				glTexImage1D(target, 0, gpuSideFormat, this->width, 0, cpuSideFormat, cpuSideType, this->rawData);
@@ -200,7 +206,7 @@ namespace DSGL {
 			glBindImageTexture (0, this->textureID, 0, GL_FALSE, 0, GL_WRITE_ONLY, gpuSideFormat);
 		}
 		glBindImageTexture (0, 0, 0, GL_FALSE, 0, GL_WRITE_ONLY, gpuSideFormat);
-		glBindTexture(GL_TEXTURE_2D, 0);
+		glBindTexture(target, 0);
 	}
 
 	void Textures::Bind() {
