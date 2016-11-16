@@ -14,6 +14,7 @@ namespace DSGL {
 	namespace Generative {
 		struct Brushes {
 		  	Brushes(unsigned int scale, char * seed);
+			~Brushes();
 		  	
 			static const char * bellShader;
 		  	static const char * voronoiShader;

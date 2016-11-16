@@ -134,11 +134,9 @@ namespace DSGL {
 		Brushes::Brushes(unsigned int scale, char * seed) {
 		  	this->scale = scale;
 			
-			//this->brushes = std::make_shared<Textures>(GL_TEXTURE_2D, scale * DSGL_GENERATIVE_BRUSHES_MAX_NUMBER, scale, (GLvoid*)NULL);
+			this->brushes = std::make_shared<Textures>(GL_TEXTURE_2D, scale * DSGL_GENERATIVE_BRUSHES_MAX_NUMBER, scale, (GLvoid*)NULL);
 			// Bell
-			
 			DSGL::ComputeProgram bell(Brushes::bellShader, DSGL_READ_FROM_STRING);
-			/*
 			glUseProgram(bell.ID);
 			bell.Uniformui("brushScale", scale);
 			glUseProgram(0);
@@ -147,7 +145,7 @@ namespace DSGL {
         		bell.Use(this->scale, this->scale,1);
 			glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 			this->brushes->Unbind();
-
+			
 			// Voronoï
 			
 			float voronoiSeeds[4*DSGL_GENERATIVE_VORONOI_CELLS] = {0};
@@ -167,6 +165,7 @@ namespace DSGL {
         		voronoi.Use(this->scale, this->scale,1);
 			glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 			this->brushes->Unbind();
+			
 			// Double Voronoï
 	
 			for(int i = DSGL_GENERATIVE_VORONOI_CELLS; i < DSGL_GENERATIVE_VORONOI_CELLS*2; i++) {
@@ -201,8 +200,10 @@ namespace DSGL {
 			this->brushes->Bind();
         		flatVoronoiTesselation.Use(this->scale, this->scale,1);
 			glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
-			this->brushes->Unbind();*/
-			DSGL_TRACE;
+			this->brushes->Unbind();
+		}
+		Brushes::~Brushes() {
+		//	DSGL_TRACE;
 		}
 	}
 }

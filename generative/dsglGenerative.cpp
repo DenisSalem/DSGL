@@ -6,9 +6,7 @@ namespace DSGL {
 		unsigned int SquareSurface::seedOffset = 42;
 
 		SquareSurface::SquareSurface(GLuint scale, std::shared_ptr<Textures> brushes, const char * seed) {
-			DSGL_TRACE; std::cout << "Surface\n";
 			this->surface = std::make_shared<Textures>(GL_TEXTURE_2D, scale, scale, (GLvoid*) NULL);
-			DSGL_TRACE; std::cout << "Surface\n";
 
 			GLbyte zeroes[4] = {0};
 			glClearTexImage(this->surface->textureID, 0, GL_RGBA, GL_UNSIGNED_BYTE, zeroes);
@@ -22,7 +20,10 @@ namespace DSGL {
 
 			this->SetUpCoords(scale,0,0,scale);
 			
-		      	Textures t_coords(GL_TEXTURE_1D, coordsSetSize, 1, (GLvoid *) this->coords, GL_RGB, GL_INT, GL_RGBA32I);
+			// GL_RGB_INTEGER and NOT GL_RGB: http://stackoverflow.com/questions/10058641/opengl-geometry-shader-integer-texture-fetch-fails
+		      	Textures t_coords(GL_TEXTURE_2D, 256, 480, (GLvoid *) this->coords, GL_RGB_INTEGER, GL_INT, GL_RGBA32I);
+			
+			DSGL_TRACE;
 
 			DSGL::ComputeProgram generativeSurface("GenerativeSurface.cs", DSGL_READ_FROM_FILE);
 			
@@ -79,5 +80,6 @@ namespace DSGL {
         		SetUpCoords(scale/2, offsetX+scale/2, offsetY+scale/2, realScale);
 			SetUpCoords(scale/2, offsetX+scale/2, offsetY+0, realScale);
 		}
+
 	}
 }

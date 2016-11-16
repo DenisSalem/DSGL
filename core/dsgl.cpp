@@ -466,7 +466,6 @@ namespace DSGL {
 		this->ID = glCreateProgram();
 		glAttachShader(this->ID, this->compute->ID);
   		glLinkProgram(this->ID);
-		glDeleteShader(this->compute->ID);
 		glGetProgramiv(this->ID, GL_LINK_STATUS, &this->Result);
 
 		if (!Result) {
@@ -487,18 +486,12 @@ namespace DSGL {
 	ComputeProgram::ComputeProgram(const char * inputShader) : ComputeProgram(inputShader, DSGL_READ_FROM_FILE) {}
 
 	ComputeProgram::~ComputeProgram() {
-		DSGL_TRACE;
 		if (glIsShader(this->compute->ID)) {
-		DSGL_TRACE;
 			glDetachShader(this->ID, this->compute->ID);
-		DSGL_TRACE;
 		}
 		if (glIsProgram(this->ID)) {
-		DSGL_TRACE;
 			glDeleteProgram(this->ID);
-		DSGL_TRACE;
 		}
-		DSGL_TRACE;
 	}
 
 	void ComputeProgram::Use() {

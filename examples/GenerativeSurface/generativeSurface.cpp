@@ -35,10 +35,8 @@ int main(int argc, char ** argv) {
 
 	DSGL::Generative::Brushes brush(512, seed);
 	
-	DSGL_TRACE;
+	DSGL::Generative::SquareSurface surface(512, brush.brushes, seed);
 	
-	//DSGL::Generative::SquareSurface surface(512, brush.brushes, seed);
-/*
 	// ----- Render loop ----- //
 	while (!glfwWindowShouldClose(context.window)) {
 		glfwPollEvents();
@@ -65,7 +63,7 @@ int main(int argc, char ** argv) {
 
 		glfwSwapBuffers(context.window);
 	}
-*/
+
 	delete[] seed;
 
 	return 0;
