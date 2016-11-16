@@ -6,8 +6,10 @@ namespace DSGL {
 		unsigned int SquareSurface::seedOffset = 42;
 
 		SquareSurface::SquareSurface(GLuint scale, std::shared_ptr<Textures> brushes, const char * seed) {
-		
+			DSGL_TRACE; std::cout << "Surface\n";
 			this->surface = std::make_shared<Textures>(GL_TEXTURE_2D, scale, scale, (GLvoid*) NULL);
+			DSGL_TRACE; std::cout << "Surface\n";
+
 			GLbyte zeroes[4] = {0};
 			glClearTexImage(this->surface->textureID, 0, GL_RGBA, GL_UNSIGNED_BYTE, zeroes);
 			this->seed = seed;
@@ -20,7 +22,7 @@ namespace DSGL {
 
 			this->SetUpCoords(scale,0,0,scale);
 			
-			//Textures t_coords(GL_TEXTURE_1D, coordsSetSize, 0, (GLvoid *) this->coords, GL_RGB32I, GL_INT, GL_RGBA32I);
+		      	Textures t_coords(GL_TEXTURE_1D, coordsSetSize, 1, (GLvoid *) this->coords, GL_RGB, GL_INT, GL_RGBA32I);
 
 			DSGL::ComputeProgram generativeSurface("GenerativeSurface.cs", DSGL_READ_FROM_FILE);
 			
@@ -33,7 +35,7 @@ namespace DSGL {
 
 			this->surface->Bind(0);
 			brushes->Bind(1);
-			//t_coords.Bind(2);
+			t_coords.Bind(2);
         		generativeSurface.Use(scale, scale,1);
 			glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 			brushes->Unbind();

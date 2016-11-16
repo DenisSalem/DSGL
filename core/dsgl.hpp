@@ -157,6 +157,7 @@ namespace DSGL {
 		Textures(GLenum target, GLuint width, GLuint height, GLvoid * rawData);
 		Textures(GLenum target, GLuint width, GLuint height, GLvoid * rawData, GLenum cpuSideFormat, GLenum cpuSidetype);
 		Textures(GLenum target, GLuint width, GLuint height, GLvoid * rawData, GLenum cpuSideFormat, GLenum cpuSidetype, GLint gpuSideFormat);
+		~Textures();
 
 		void SetNormalMap(GLvoid * rawData);
 		void Bind();

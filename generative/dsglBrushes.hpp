@@ -13,11 +13,12 @@
 namespace DSGL {
 	namespace Generative {
 		struct Brushes {
-		  	static const char * bellShader;
+		  	Brushes(unsigned int scale, char * seed);
+		  	
+			static const char * bellShader;
 		  	static const char * voronoiShader;
 		  	static const char * doubleVoronoiShader;
 		  	static const char * flatVoronoiTesselationShader;
-		  	Brushes(unsigned int scale, char * seed);
 			
 			unsigned int scale;
 			

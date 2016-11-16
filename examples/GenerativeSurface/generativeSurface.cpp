@@ -34,18 +34,20 @@ int main(int argc, char ** argv) {
 	}
 
 	DSGL::Generative::Brushes brush(512, seed);
-
-	DSGL::Generative::SquareSurface surface(512, brush.brushes, seed);
-
-	/* ----- Render loop ----- */
+	
+	DSGL_TRACE;
+	
+	//DSGL::Generative::SquareSurface surface(512, brush.brushes, seed);
+/*
+	// ----- Render loop ----- //
 	while (!glfwWindowShouldClose(context.window)) {
 		glfwPollEvents();
 		
-		usleep(40000); /* Let the GPU take a breath */
+		usleep(40000); // Let the GPU take a breath //
     		
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		/* ----- Actual render ----- */
+		// ----- Actual render ----- //
     
 		pipelineProgram.Use();
     
@@ -63,7 +65,7 @@ int main(int argc, char ** argv) {
 
 		glfwSwapBuffers(context.window);
 	}
-
+*/
 	delete[] seed;
 
 	return 0;
