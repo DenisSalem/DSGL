@@ -18,13 +18,11 @@ namespace DSGL {
 				SquareSurface(GLuint scale, std::shared_ptr<Textures> brushes, const char * seed);
 				~SquareSurface();
 
-				unsigned int GetRandomFromSeed(unsigned int salt);
 				static unsigned int seedOffset;
 
 				const char * seed;
 
 				std::shared_ptr<Textures> surface;
-				GLint * coords;
 			private:
 				void SetUpCoords(int scale, int offsetX, int offsetY, int realScale);
 				
