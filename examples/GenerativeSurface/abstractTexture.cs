@@ -10,9 +10,7 @@ uniform uint scale;
 uniform uint depth;
 uniform uint brushesNumber;
 
-const int GOLDEN_NUMBER = 161803;
-const int PI 		= 314159;
-const int EULER 	= 271828;
+const int GOLDEN_NUMBER = 16180339;
 
 uint GetRandom(int salt) {
 	return imageLoad(seed, salt % 1024).x;
@@ -21,7 +19,7 @@ uint GetRandom(int salt) {
 void main() {
 	ivec2 pixel = ivec2(gl_GlobalInvocationID.xy);
 
-	float height = float(GetRandom( (PI * pixel.x) ^ (GOLDEN_NUMBER * pixel.y) ^ EULER )) / float(scale);
+	float height = float(GetRandom(pixel.x ^ GOLDEN_NUMBER ^ pixel.y)) / float(scale);
 	
 	imageStore(surface, pixel, vec4(vec3(height), 1.0));
 }

@@ -683,6 +683,25 @@ namespace DSGL {
 
 	// ----- Miscellaneous functions ----- //
 	
+	unsigned int ReadFile(const char * filename, char ** dest) {
+		unsigned int size;
+		
+		FILE * inputFile = fopen(filename, "r");
+		if (inputFile == 0) {
+			throw Exception(DSGL_CANNOT_READ_FILE, DSGL_MSG_CANNOT_READ_FILE, filename);
+		}
+		size = GetFileSize(filename)+1;
+		(*dest) = new char[size];
+		for (int i=0; i < size; i++) {
+			(*dest)[i] = (unsigned char ) fgetc(inputFile);
+			if ( (*dest)[i] == EOF) {
+				(*dest)[i] = '\0';
+				break;
+			}
+		}
+		return size;
+	}
+
 	int GetFileSize(const char * inputFilePath) {
 		// http://www.cplusplus.com/doc/tutorial/files/
 		std::streampos begin, end;
@@ -692,11 +711,6 @@ namespace DSGL {
 		end = inputFile.tellg();
 		inputFile.close();
 		return int(end - begin);
-	}
-
-	unsigned long int GetRandom(int salt) {
-		std::srand(std::time(0));
-		return std::rand()*salt*3.1415;
 	}
 
 	void PrintNicelyWorkGroupsCapabilities() {

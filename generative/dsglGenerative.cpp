@@ -18,20 +18,20 @@ namespace DSGL {
 			}
 
 			// GL_RGB_INTEGER and NOT GL_RGB: http://stackoverflow.com/questions/10058641/opengl-geometry-shader-integer-texture-fetch-fails
-		      	Textures t_coords(GL_TEXTURE_1D, 4096 / sizeof(GLuint), 1, (GLvoid *) this->seed, GL_RED_INTEGER, GL_UNSIGNED_INT, GL_RGBA32I);
+		      	Textures gpuSideSeed(GL_TEXTURE_1D, 4096 / sizeof(GLuint), 1, (GLvoid *) this->seed, GL_RED_INTEGER, GL_UNSIGNED_INT, GL_R32UI);
 			
 			DSGL::ComputeProgram generativeSurface("GenerativeSurface.cs", DSGL_READ_FROM_FILE);
 			
 			glUseProgram(generativeSurface.ID);
 			generativeSurface.Uniformui("scale", scale);
-			generativeSurface.Uniformui("depth", 8);
-			generativeSurface.Uniformui("brushesNumber", DSGL_GENERATIVE_VORONOI_CELLS);
+			//generativeSurface.Uniformui("depth", 8);
+			//generativeSurface.Uniformui("brushesNumber", DSGL_GENERATIVE_VORONOI_CELLS);
 			glUseProgram(0);
 
 
 			this->surface->Bind(0);
 			brushes->Bind(1);
-			t_coords.Bind(2);
+			gpuSideSeed.Bind(2);
         		generativeSurface.Use(scale, scale,1);
 			glMemoryBarrier(GL_SHADER_IMAGE_ACCESS_BARRIER_BIT);
 			brushes->Unbind();

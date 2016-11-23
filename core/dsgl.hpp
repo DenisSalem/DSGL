@@ -16,6 +16,10 @@
 	#include <GLFW/glfw3.h>
 #endif
 
+#ifdef _WIN32
+	#include <ctime>
+#endif
+
 #ifndef DSGL_CORE_INCLUDED
 #define DSGL_CORE_INCLUDED
 
@@ -64,6 +68,7 @@
 #define DSGL_IMAGES_UNSUPPORTED_COLOR_TYPE	-27
 #define DSGL_IMAGES_UNSUPPORTED_PIXEL_FORMAT	-28
 #define DSGL_IMAGES_ERROR_WHILE_READING		-29 
+#define DSGL_CANNOT_READ_FILE		        -30
 
 #define DSGL_MSG_GLFW_INIT_FAILED               	"DSGL: GLFW initialization failed."
 #define DSGL_MSG_GL3W_INIT_FAILED			"DSGL: GL3W initialization failed."
@@ -85,11 +90,12 @@
 #define DSGL_IMAGES_MSG_UNSUPPORTED_COLOR_TYPE		"DSGL: Unsupported Color Type."
 #define DSGL_IMAGES_MSG_UNSUPPORTED_PIXEL_FORMAT	"DSGL: Unsupported Pixel Format."
 #define DSGL_IMAGES_MSG_ERROR_WHILE_READING		"DSGL: Error while reading input image." 
+#define DSGL_MSG_CANNOT_READ_FILE		        "DSGL: Cannot read file."
 
 namespace DSGL {
+	unsigned int ReadFile(const char * filename, char ** dest);
 	int GetFileSize(const char * inputFilePath);
 	void PrintNicelyWorkGroupsCapabilities();
-	unsigned long int GetRandom(int salt);
 	
 	struct Exception {
 		Exception(int code, const char * msg);
