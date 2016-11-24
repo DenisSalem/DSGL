@@ -627,7 +627,7 @@ namespace DSGL {
 			glUniform1ui(loc, v0);
 		}
 		else {
-		  throw Exception(DSGL_UNIFORM_LOCATION_DOESNT_EXISTS, DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS);
+		  throw Exception(DSGL_UNIFORM_LOCATION_DOESNT_EXISTS, DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS, uniformName);
 		}
 	}
 
@@ -637,7 +637,7 @@ namespace DSGL {
 			glUniform1f(loc, v0);
 		}
 		else {
-		  throw Exception(DSGL_UNIFORM_LOCATION_DOESNT_EXISTS, DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS);
+		  throw Exception(DSGL_UNIFORM_LOCATION_DOESNT_EXISTS, DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS, uniformName);
 		}
 	}
 
@@ -647,7 +647,7 @@ namespace DSGL {
 			glUniform2f(loc, v0, v1);
 		}
 		else {
-		  throw Exception(DSGL_UNIFORM_LOCATION_DOESNT_EXISTS, DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS);
+		  throw Exception(DSGL_UNIFORM_LOCATION_DOESNT_EXISTS, DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS, uniformName);
 		}
 	}
 
@@ -657,7 +657,7 @@ namespace DSGL {
 			glUniform3f(loc, v0, v1, v2);
 		}
 		else {
-		  throw Exception(DSGL_UNIFORM_LOCATION_DOESNT_EXISTS, DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS);
+		  throw Exception(DSGL_UNIFORM_LOCATION_DOESNT_EXISTS, DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS, uniformName);
 		}
 	}
 
@@ -667,7 +667,7 @@ namespace DSGL {
 			glUniform4fv(loc, size, array);
 		}
 		else {
-		  throw Exception(DSGL_UNIFORM_LOCATION_DOESNT_EXISTS, DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS);
+		  throw Exception(DSGL_UNIFORM_LOCATION_DOESNT_EXISTS, DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS, uniformName);
 		}
 	}
 
@@ -677,7 +677,7 @@ namespace DSGL {
 			glUniform3fv(loc, size, array);
 		}
 		else {
-		  throw Exception(DSGL_UNIFORM_LOCATION_DOESNT_EXISTS, DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS);
+		  throw Exception(DSGL_UNIFORM_LOCATION_DOESNT_EXISTS, DSGL_MSG_UNIFORM_LOCATION_DOESNT_EXISTS, uniformName);
 		}
 	}
 

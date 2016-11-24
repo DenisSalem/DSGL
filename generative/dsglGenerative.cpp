@@ -17,7 +17,7 @@ namespace DSGL {
 				coordsSetSize += scale*scale / (i*i);
 			}
 
-			// GL_RGB_INTEGER and NOT GL_RGB: http://stackoverflow.com/questions/10058641/opengl-geometry-shader-integer-texture-fetch-fails
+			// GL_RED_INTEGER and NOT GL_RED: http://stackoverflow.com/questions/10058641/opengl-geometry-shader-integer-texture-fetch-fails
 		      	Textures gpuSideSeed(GL_TEXTURE_1D, 4096 / sizeof(GLuint), 1, (GLvoid *) this->seed, GL_RED_INTEGER, GL_UNSIGNED_INT, GL_R32UI);
 			
 			DSGL::ComputeProgram generativeSurface("GenerativeSurface.cs", DSGL_READ_FROM_FILE);
@@ -25,7 +25,7 @@ namespace DSGL {
 			glUseProgram(generativeSurface.ID);
 			generativeSurface.Uniformui("scale", scale);
 			generativeSurface.Uniformui("depth", 8);
-			generativeSurface.Uniformui("brushesNumber", DSGL_GENERATIVE_BRUSHES_MAX_NUMBER);
+			generativeSurface.Uniformui("brushesNumber", 3);
 			glUseProgram(0);
 
 

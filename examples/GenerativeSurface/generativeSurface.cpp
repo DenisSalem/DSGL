@@ -6,25 +6,11 @@
 #include "dsglMeshes.hpp"
 #include "dsglBrushes.hpp"
 #include "dsglGenerative.hpp"
-#ifdef __i386
-
-extern __inline__ uint64_t rdtsc(void) {
-  uint64_t x;
-  __asm__ volatile ("rdtsc" : "=A" (x));
-  return x;
-}
-#elif defined __amd64
-extern __inline__ uint64_t rdtsc(void) {
-  uint64_t a, d;
-  __asm__ volatile ("rdtsc" : "=a" (a), "=d" (d));
-  return (d<<32) | a;
-}
-#endif
 
 int main(int argc, char ** argv) {
 	try {
 		/* OpenGL context */
-		DSGL::Context context("CUBEMAPING WITH DSGL", 512, 512, 4, 4);
+		DSGL::Context context("GENERATIVE SURFACE WITH DSGL", 512, 512, 4, 4);
 		context.InitSimpleWindow();
 	
 		/* Regular and compute shaders */
@@ -43,7 +29,7 @@ int main(int argc, char ** argv) {
 
 		/* Set up how texcoords is organized in memory */
   		VAO.AttribPointer(texCoords.ID, 1, 2, GL_FLOAT, GL_FALSE, 2*sizeof(GLfloat), 0);
-	
+		
 		auto time = std::chrono::high_resolution_clock::now();
                 auto count = time.time_since_epoch().count();
 
@@ -52,29 +38,22 @@ int main(int argc, char ** argv) {
                 generator.seed(std::default_random_engine::result_type(count));
 		
 		auto dice = std::bind ( distribution, generator );
-	
+		
 		char * seed = new char[4096];
 		for (int i = 0; i < 4096 / sizeof(unsigned int); i++) {
 			((unsigned int*)seed)[i] = (unsigned int) dice();
 		}
-		
-		std::chrono::high_resolution_clock::time_point t1,t2;
 
-		t1 = std::chrono::high_resolution_clock::now();	
-		
+		GLuint myQuery;
+		GLuint64 elapsed;
+		glGenQueries(1, &myQuery);
+
 		DSGL::Generative::Brushes brush(512, seed);
-		
-		t2 = std::chrono::high_resolution_clock::now();	
-		auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
-    		std::cout << "Brushes duration: " << float(duration) / 1000000.0 << "s\n";
-		
-		t1 = std::chrono::high_resolution_clock::now();	
-		
+		glBeginQuery(GL_TIME_ELAPSED, myQuery);
 		DSGL::Generative::SquareSurface surface(512, brush.brushes, seed);
-		
-		t2 = std::chrono::high_resolution_clock::now();	
-		duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
-    		std::cout << "Surface duration: " << float(duration) / 1000000.0 << "s\n";
+		glEndQuery(GL_TIME_ELAPSED);
+    		glGetQueryObjectui64v(myQuery, GL_QUERY_RESULT, &elapsed);
+		std::cout << "Surface duration: " << elapsed / 1000.0 << "μs\n";
 
 		// ----- Render loop ----- //
 		while (!glfwWindowShouldClose(context.window)) {

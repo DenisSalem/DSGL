@@ -16,10 +16,6 @@
 	#include <GLFW/glfw3.h>
 #endif
 
-#ifdef _WIN32
-	#include <ctime>
-#endif
-
 #ifndef DSGL_CORE_INCLUDED
 #define DSGL_CORE_INCLUDED
 

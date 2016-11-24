@@ -44,7 +44,7 @@ namespace DSGL {
 							"	}\n"
 							"	float distance = minDistance / ( float(brushScale) / 4 );\n"
 							"	vec4 factor = imageLoad(voronoi, ivec2(gl_GlobalInvocationID.xy));\n"
-							"	imageStore(voronoi, ivec2(gl_GlobalInvocationID.xy)+ivec2(brushScale,0), clamp(vec4(distance * factor), vec4(0.0), vec4(1.0)));\n"
+							"	imageStore(voronoi, ivec2(gl_GlobalInvocationID.xy)+ivec2(brushScale,0), clamp(vec4(vec3(distance * factor),1.0), vec4(0.0), vec4(1.0)));\n"
 							"}";
 		
 		const char * Brushes::doubleVoronoiShader = "#version 430\n"
@@ -84,7 +84,7 @@ namespace DSGL {
 							"	}\n"
 							"	float distance = (secondMinDistance - minDistance) / (float(brushScale) / 4 );\n"
 							"	vec4 factor = imageLoad(voronoi, ivec2(gl_GlobalInvocationID.xy));\n"
-							"	imageStore(voronoi, ivec2(gl_GlobalInvocationID.xy)+ivec2(brushScale*2,0), clamp(vec4(distance * factor),vec4(0.0),vec4(1.0)));\n"
+							"	imageStore(voronoi, ivec2(gl_GlobalInvocationID.xy)+ivec2(brushScale*2,0), clamp(vec4(vec3(distance * factor),1.0),vec4(0.0),vec4(1.0)));\n"
 							"}";
 		
 		const char * Brushes::flatVoronoiTesselationShader = "#version 430\n"
@@ -126,9 +126,8 @@ namespace DSGL {
 							"		pow(abs(voronoiSeeds[closest].x - voronoiSeeds[secondClosest].x),2) +\n"
 							"		pow(abs(voronoiSeeds[closest].x - voronoiSeeds[secondClosest].y),2)\n"
 							"	) / float(brushScale)  ;\n"
-							"	distance  = distance < 0.25 ? 0 : distance;\n"
 							"	vec4 factor = imageLoad(voronoi, ivec2(gl_GlobalInvocationID.xy));\n"
-							"	imageStore(voronoi, ivec2(gl_GlobalInvocationID.xy)+ivec2(brushScale*3,0), (vec4(distance * factor)));\n"
+							"	imageStore(voronoi, ivec2(gl_GlobalInvocationID.xy)+ivec2(brushScale*3,0), vec4(vec3(distance * factor),1.0));\n"
 							"}";
 
 		Brushes::Brushes(unsigned int scale, char * seed) {
