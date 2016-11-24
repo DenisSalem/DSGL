@@ -24,8 +24,8 @@ namespace DSGL {
 			
 			glUseProgram(generativeSurface.ID);
 			generativeSurface.Uniformui("scale", scale);
-			//generativeSurface.Uniformui("depth", 8);
-			//generativeSurface.Uniformui("brushesNumber", DSGL_GENERATIVE_VORONOI_CELLS);
+			generativeSurface.Uniformui("depth", 8);
+			generativeSurface.Uniformui("brushesNumber", DSGL_GENERATIVE_BRUSHES_MAX_NUMBER);
 			glUseProgram(0);
 
 

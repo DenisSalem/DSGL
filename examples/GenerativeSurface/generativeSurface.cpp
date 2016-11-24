@@ -6,6 +6,20 @@
 #include "dsglMeshes.hpp"
 #include "dsglBrushes.hpp"
 #include "dsglGenerative.hpp"
+#ifdef __i386
+
+extern __inline__ uint64_t rdtsc(void) {
+  uint64_t x;
+  __asm__ volatile ("rdtsc" : "=A" (x));
+  return x;
+}
+#elif defined __amd64
+extern __inline__ uint64_t rdtsc(void) {
+  uint64_t a, d;
+  __asm__ volatile ("rdtsc" : "=a" (a), "=d" (d));
+  return (d<<32) | a;
+}
+#endif
 
 int main(int argc, char ** argv) {
 	try {
@@ -34,7 +48,7 @@ int main(int argc, char ** argv) {
                 auto count = time.time_since_epoch().count();
 
 		std::default_random_engine generator;
-		std::uniform_int_distribution<int> distribution(0,511);
+		std::uniform_int_distribution<int> distribution(0,4294967295);
                 generator.seed(std::default_random_engine::result_type(count));
 		
 		auto dice = std::bind ( distribution, generator );
@@ -43,10 +57,24 @@ int main(int argc, char ** argv) {
 		for (int i = 0; i < 4096 / sizeof(unsigned int); i++) {
 			((unsigned int*)seed)[i] = (unsigned int) dice();
 		}
+		
+		std::chrono::high_resolution_clock::time_point t1,t2;
 
+		t1 = std::chrono::high_resolution_clock::now();	
+		
 		DSGL::Generative::Brushes brush(512, seed);
-
+		
+		t2 = std::chrono::high_resolution_clock::now();	
+		auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+    		std::cout << "Brushes duration: " << float(duration) / 1000000.0 << "s\n";
+		
+		t1 = std::chrono::high_resolution_clock::now();	
+		
 		DSGL::Generative::SquareSurface surface(512, brush.brushes, seed);
+		
+		t2 = std::chrono::high_resolution_clock::now();	
+		duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
+    		std::cout << "Surface duration: " << float(duration) / 1000000.0 << "s\n";
 
 		// ----- Render loop ----- //
 		while (!glfwWindowShouldClose(context.window)) {
