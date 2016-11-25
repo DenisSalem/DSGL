@@ -44,16 +44,10 @@ int main(int argc, char ** argv) {
 			((unsigned int*)seed)[i] = (unsigned int) dice();
 		}
 
-		GLuint myQuery;
-		GLuint64 elapsed;
-		glGenQueries(1, &myQuery);
 
 		DSGL::Generative::Brushes brush(512, seed);
-		glBeginQuery(GL_TIME_ELAPSED, myQuery);
 		DSGL::Generative::SquareSurface surface(512, brush.brushes, seed);
-		glEndQuery(GL_TIME_ELAPSED);
-    		glGetQueryObjectui64v(myQuery, GL_QUERY_RESULT, &elapsed);
-		std::cout << "Surface duration: " << elapsed / 1000.0 << "μs\n";
+
 
 		// ----- Render loop ----- //
 		while (!glfwWindowShouldClose(context.window)) {

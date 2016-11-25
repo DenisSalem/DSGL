@@ -6,16 +6,32 @@ namespace DSGL {
 		unsigned int SquareSurface::seedOffset = 42;
 
 		SquareSurface::SquareSurface(GLuint scale, std::shared_ptr<Textures> brushes, const char * seed) {
-			this->surface = std::make_shared<Textures>(GL_TEXTURE_2D, scale, scale, (GLvoid*) NULL);
-
-			GLbyte zeroes[4] = {0};
-			glClearTexImage(this->surface->textureID, 0, GL_RGBA, GL_UNSIGNED_BYTE, zeroes);
 			this->seed = seed;
+			this->surface = std::make_shared<Textures>(GL_TEXTURE_2D, scale, scale, (GLvoid*) NULL, GL_RGBA_INTEGER, GL_UNSIGNED_INT, GL_RGBA32UI);
 
-			int coordsSetSize = 0;
-			for (int i = scale; i >= 2; i/=2) {
-				coordsSetSize += scale*scale / (i*i);
-			}
+			GLuint defaultColor[4] = {4294967295,4294967295,4294967295,4294967295};
+			//glClearTexImage(this->surface->textureID, 0, GL_RGBA_INTEGER, GL_UNSIGNED_INT, defaultColor);
+			
+			glFinish();
+
+			GLuint color[4] = {0};
+		DSGL_TRACE;
+			this->surface->Bind(0);
+			glReadPixels( 	0,
+  				0,
+				1,
+				1,
+				GL_RGBA,
+				GL_UNSIGNED_INT,
+				color);
+			this->surface->Unbind();
+			glFinish();
+		DSGL_TRACE;
+
+			std::cout << "Red: "<< (unsigned int) color[0] << "\n";
+			std::cout << "Green: "<< (unsigned int) color[1] << "\n";
+			std::cout << "BLue: "<< (unsigned int) color[2] << "\n";
+			std::cout << "Alpha: "<< (unsigned int) color[3] << "\n";
 
 			// GL_RED_INTEGER and NOT GL_RED: http://stackoverflow.com/questions/10058641/opengl-geometry-shader-integer-texture-fetch-fails
 		      	Textures gpuSideSeed(GL_TEXTURE_1D, 4096 / sizeof(GLuint), 1, (GLvoid *) this->seed, GL_RED_INTEGER, GL_UNSIGNED_INT, GL_R32UI);
