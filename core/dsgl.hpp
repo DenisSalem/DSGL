@@ -65,6 +65,7 @@
 #define DSGL_IMAGES_UNSUPPORTED_PIXEL_FORMAT	-28
 #define DSGL_IMAGES_ERROR_WHILE_READING		-29 
 #define DSGL_CANNOT_READ_FILE		        -30
+#define DSGL_CANNOT_CREATE_TEXTURE_BUFFER	-31
 
 #define DSGL_MSG_GLFW_INIT_FAILED               	"DSGL: GLFW initialization failed."
 #define DSGL_MSG_GL3W_INIT_FAILED			"DSGL: GL3W initialization failed."
@@ -87,20 +88,19 @@
 #define DSGL_IMAGES_MSG_UNSUPPORTED_PIXEL_FORMAT	"DSGL: Unsupported Pixel Format."
 #define DSGL_IMAGES_MSG_ERROR_WHILE_READING		"DSGL: Error while reading input image." 
 #define DSGL_MSG_CANNOT_READ_FILE		        "DSGL: Cannot read file."
+#define DSGL_MSG_CANNOT_CREATE_TEXTURE_BUFFER		"DSGL: Cannot create texture buffer."
 
 namespace DSGL {
-	unsigned int ReadFile(const char * filename, char ** dest);
-	int GetFileSize(const char * inputFilePath);
 	void PrintNicelyWorkGroupsCapabilities();
 	
 	struct Exception {
 		Exception(int code, const char * msg);
-		Exception(int code, const char * msg, const char * filename);
+		Exception(int code, const char * msg, const char * ressource);
 
 		int code;
 		
 		std::string msg;
-		std::string filename;
+		std::string ressource;
 	};
 	
 	struct Context {
@@ -154,19 +154,35 @@ namespace DSGL {
 		GLuint ID;
 	};
 
-	struct Textures {
-		Textures(GLenum target);
-		Textures(GLenum target, GLuint width, GLuint height, GLvoid * rawData);
-		Textures(GLenum target, GLuint width, GLuint height, GLvoid * rawData, GLenum cpuSideFormat, GLenum cpuSidetype);
-		Textures(GLenum target, GLuint width, GLuint height, GLvoid * rawData, GLenum cpuSideFormat, GLenum cpuSidetype, GLint gpuSideFormat);
-		~Textures();
-
-		void SetNormalMap(GLvoid * rawData);
+	struct TextureBuffer {
+		TextureBuffer();
+		TextureBuffer(GLsizeiptr size, const GLvoid * data, GLenum usage);
+		TextureBuffer(GLsizeiptr size, const GLvoid * data, GLenum usage, GLenum gpuSideFormat);
+		~TextureBuffer();
+		
 		void Bind();
 		void Bind(GLuint unit);
 		void Unbind();
 
+		GLsizeiptr size;
+		GLenum usage;
+		GLint gpuSideFormat;
 		GLuint textureID;
+		GLuint bufferID;
+	};
+
+	struct Texture {
+		Texture(GLenum target);
+		Texture(GLenum target, GLuint width, GLuint height, GLvoid * rawData);
+		Texture(GLenum target, GLuint width, GLuint height, GLvoid * rawData, GLenum cpuSideFormat, GLenum cpuSidetype);
+		Texture(GLenum target, GLuint width, GLuint height, GLvoid * rawData, GLenum cpuSideFormat, GLenum cpuSidetype, GLint gpuSideFormat);
+		~Texture();
+
+		void Bind();
+		void Bind(GLuint unit);
+		void Unbind();
+
+		GLuint ID;
 		int width;
 		int height;
 
@@ -176,7 +192,6 @@ namespace DSGL {
 		GLenum cpuSideType;
 
 		GLvoid * rawData;
-		GLuint normalMapID;
 	};
 	
 	struct VertexArrayObject {
@@ -221,6 +236,7 @@ namespace DSGL {
 			~Shader();
 
 			void ReadFromFile(const char * shaderFilename);
+			int GetFileSize(const char * inputFilePath);
 			
 			std::string shaderSource;
 			

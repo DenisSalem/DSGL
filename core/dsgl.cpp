@@ -1,23 +1,23 @@
 #include "dsgl.hpp"
 
 namespace DSGL {
-	/* ----- Exception ----- */
+	// ----- Exception ----- //
 	
 	Exception::Exception(int code, const char* msg) : Exception(code, msg, NULL) {}
 	
-	Exception::Exception(int code, const char * msg, const char * filename) {
+	Exception::Exception(int code, const char * msg, const char * ressource) {
 		this->code = code;
 		this->msg = std::string(msg);
 		#ifdef DSGL_DEBUG
-			if (filename != NULL) {
-				this->filename = std::string(filename);
-				std::cerr << "DSGL: " << this->filename << "\n";
+			if (ressource != NULL) {
+				this->ressource = std::string(ressource);
+				std::cerr << "DSGL: " << this->ressource << "\n";
 			}
 			std::cerr << this->msg << "\n";
 		#endif
 	}
 	
-	/* ----- Context ----- */
+	// ----- Context ----- //
 	
 	Context::Context(const char * name, int width, int height, int glMajorVersion, int glMinorVersion) {
 		this->name = std::string(name);
@@ -60,12 +60,12 @@ namespace DSGL {
 		#endif
 	}
 	
-	/* FrameBufferObject */
+	// FrameBufferObject //
 
 	FrameBufferObject::FrameBufferObject(GLuint width, GLuint height) : FrameBufferObject(width, height, DSGL_FBO_DEPTH, GL_RGB) {}
 
 	FrameBufferObject::FrameBufferObject(GLuint width, GLuint height, bool withDepthBuffer, GLenum bufferType) {
-	  	/* Create FBO */
+	  	// Create FBO //
 	  	this->width = width;
 		this->height = height;
 
@@ -74,7 +74,7 @@ namespace DSGL {
 		if (!glIsBuffer(this->ID)) {
 			throw Exception(DSGL_CANNOT_CREATE_FBO, DSGL_MSG_CANNOT_CREATE_FBO);
 		}
-		/* Create destination texture */
+		// Create destination texture //
 		glGenTextures(1, &this->textureID);
 		glBindTexture(GL_TEXTURE_2D, this->textureID);
 		if(!glIsTexture(this->textureID)) {
@@ -84,7 +84,7 @@ namespace DSGL {
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	
-		/* Optional depth buffer */
+		// Optional depth buffer //
 		if (withDepthBuffer) {
 			glGenRenderbuffers(1, &this->depthBufferID);
 			glBindRenderbuffer(GL_RENDERBUFFER, this->depthBufferID);
@@ -128,7 +128,7 @@ namespace DSGL {
     		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
-	/* ----- VertexBufferObject ----- */
+	// ----- VertexBufferObject ----- //
 	
         VertexBufferObject::VertexBufferObject(GLsizeiptr size, const GLvoid * data) : VertexBufferObject(size, data, GL_STATIC_DRAW) {}
 	
@@ -160,33 +160,85 @@ namespace DSGL {
 		}
 	}
 
-	/* ---- Textures ----- */
+	// ----- TextureBuffer ----- //
 
-	Textures::Textures(GLuint target) {
+	TextureBuffer::TextureBuffer() {
 		glGenTextures(1, &this->textureID);
-		glBindTexture(target, this->textureID);
+		glBindTexture(GL_TEXTURE_BUFFER, this->textureID);
 		if(!glIsTexture(this->textureID)) {
+			throw Exception(DSGL_CANNOT_CREATE_TEXTURE, DSGL_MSG_CANNOT_CREATE_TEXTURE);
+		}
+		glBindTexture(GL_TEXTURE_BUFFER, 0);
+
+		glGenBuffers(1, &this->bufferID);
+  		glBindBuffer(GL_TEXTURE_BUFFER, this->bufferID);
+		if(!glIsBuffer(this->bufferID)) {
+			throw Exception(DSGL_CANNOT_CREATE_TEXTURE_BUFFER, DSGL_MSG_CANNOT_CREATE_TEXTURE_BUFFER);
+		}
+  		glBindBuffer(GL_TEXTURE_BUFFER, 0);
+	}
+
+	TextureBuffer::TextureBuffer(GLsizeiptr size, const GLvoid * data, GLenum usage) : TextureBuffer(size, data, usage, GL_RGBA32F) {}
+
+	TextureBuffer::TextureBuffer(GLsizeiptr size, const GLvoid * data, GLenum usage, GLenum gpuSideFormat) : TextureBuffer() {
+		this->size = size;
+		this->usage = usage;
+		this->gpuSideFormat = gpuSideFormat;
+		glBindBuffer(GL_TEXTURE_BUFFER, this->bufferID);
+  		glBufferData(GL_TEXTURE_BUFFER, size, data, usage);
+		glBindBuffer(GL_TEXTURE_BUFFER,0);
+	}
+
+	TextureBuffer::~TextureBuffer() {
+		glDeleteTextures(1, &this->textureID);
+		glDeleteBuffers(1, &this->bufferID);
+	}
+
+	 void TextureBuffer::Bind() {
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_BUFFER, this->textureID);
+		glBindBuffer(GL_TEXTURE_BUFFER, this->bufferID);
+		glTexBuffer(GL_TEXTURE_BUFFER, this->gpuSideFormat, this->bufferID);
+	}
+
+	void TextureBuffer::Bind(GLuint unit) {
+		this->Bind();
+		glBindImageTexture(unit, this->textureID, 0, GL_FALSE, 0, GL_WRITE_ONLY, gpuSideFormat);
+	}
+	
+	void TextureBuffer::Unbind() {
+    		glBindTexture(GL_TEXTURE_BUFFER, 0);
+		glBindBuffer(GL_TEXTURE_BUFFER,0);
+	}
+	
+
+	// ---- Textures ----- //
+
+	Texture::Texture(GLuint target) {
+		this->target = target;
+		glGenTextures(1, &this->ID);
+		glBindTexture(target, this->ID);
+		if(!glIsTexture(this->ID)) {
 			throw Exception(DSGL_CANNOT_CREATE_TEXTURE, DSGL_MSG_CANNOT_CREATE_TEXTURE);
 		}
 		glBindTexture(target, 0);
 	}
 
-	Textures::Textures(GLenum target, GLuint width, GLuint height, GLvoid * rawData) : Textures(target, width, height, rawData, GL_RGBA, GL_FLOAT, GL_RGBA32F) {}
+	Texture::Texture(GLenum target, GLuint width, GLuint height, GLvoid * rawData) : Texture(target, width, height, rawData, GL_RGBA, GL_FLOAT, GL_RGBA32F) {}
 	
-	Textures::Textures(GLenum target, GLuint width, GLuint height, GLvoid * rawData, GLenum cpuSideFormat, GLenum cpuSideType) : Textures(target, width, height, rawData, cpuSideFormat, cpuSideType, GL_RGBA32F) {
+	Texture::Texture(GLenum target, GLuint width, GLuint height, GLvoid * rawData, GLenum cpuSideFormat, GLenum cpuSideType) : Texture(target, width, height, rawData, cpuSideFormat, cpuSideType, GL_RGBA32F) {
 	}
 
-	Textures::Textures(GLenum target, GLuint width, GLuint height, GLvoid * rawData, GLenum cpuSideFormat, GLenum cpuSideType, GLint gpuSideFormat) : Textures(target) {
+	Texture::Texture(GLenum target, GLuint width, GLuint height, GLvoid * rawData, GLenum cpuSideFormat, GLenum cpuSideType, GLint gpuSideFormat) : Texture(target) {
 	  	this->width = width;
 		this->height = height;
 		this->rawData = rawData;
 		this->cpuSideFormat = cpuSideFormat;
 		this->cpuSideType = cpuSideType;
 		this->gpuSideFormat = gpuSideFormat;
-		this->target = target;
 
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(target, this->textureID); {
+		glBindTexture(target, this->ID); {
 			glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTexParameteri(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
@@ -201,34 +253,30 @@ namespace DSGL {
 			else if(target == GL_TEXTURE_1D) {
 				glTexImage1D(target, 0, gpuSideFormat, this->width, 0, cpuSideFormat, cpuSideType, this->rawData);
 			}
-			glBindImageTexture (0, this->textureID, 0, GL_FALSE, 0, GL_WRITE_ONLY, gpuSideFormat);
 		}
-		glBindImageTexture (0, 0, 0, GL_FALSE, 0, GL_WRITE_ONLY, gpuSideFormat);
 		glBindTexture(target, 0);
 	}
 
-	Textures::~Textures() {
-		// Must delete texture there...
-		glDeleteTextures(1, &this->textureID);
-		glDeleteTextures(1, &this->normalMapID);
+	Texture::~Texture() {
+		glDeleteTextures(1, &this->ID);
 	}
 
-	void Textures::Bind() {
+	void Texture::Bind() {
 		this->Bind(0);
 	}
 
-	void Textures::Bind(GLuint unit) {
+	void Texture::Bind(GLuint unit) {
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(this->target, this->textureID);
-		glBindImageTexture(unit, this->textureID, 0, GL_FALSE, 0, GL_WRITE_ONLY, gpuSideFormat);
+		glBindTexture(this->target, this->ID);
+		glBindImageTexture(unit, this->ID, 0, GL_FALSE, 0, GL_WRITE_ONLY, gpuSideFormat);
 	}
 
-	void Textures::Unbind() {
+	void Texture::Unbind() {
 		glBindImageTexture (0, 0, 0, GL_FALSE, 0, GL_WRITE_ONLY, gpuSideFormat);
     		glBindTexture(this->target, 0);
 	}
 
-	/* ---- VertexArrayObject ----- */
+	// ---- VertexArrayObject ----- //
 	
 	VertexArrayObject::VertexArrayObject() {
 		glGenVertexArrays(1, &this->ID);
@@ -437,7 +485,7 @@ namespace DSGL {
 		if (shader == 0) {
 			throw Exception(DSGL_CANNOT_READ_SHADER_SOURCE, "DSGL: Cannot read shader source.", shaderFilename);
 		}
-		this->shaderSourceSize = GetFileSize(shaderFilename)+1;
+		this->shaderSourceSize = this->GetFileSize(shaderFilename)+1;
 		stringBuffer = new char[this->shaderSourceSize];
 		for (int i=0; i < this->shaderSourceSize; i++) {
 			stringBuffer[i] = (unsigned char ) fgetc(shader);
@@ -452,6 +500,18 @@ namespace DSGL {
 		fclose(shader);
 		delete[] stringBuffer;
 	}
+
+	int Shader::GetFileSize(const char * inputFilePath) {
+		// http://www.cplusplus.com/doc/tutorial/files/
+		std::streampos begin, end;
+		std::ifstream inputFile(inputFilePath, std::ios::binary);
+		begin = inputFile.tellg();
+		inputFile.seekg(0, std::ios::end);
+		end = inputFile.tellg();
+		inputFile.close();
+		return int(end - begin);
+	}
+
 	
 	Shader::~Shader() {
 		glDeleteShader(this->ID);
@@ -683,36 +743,6 @@ namespace DSGL {
 
 	// ----- Miscellaneous functions ----- //
 	
-	unsigned int ReadFile(const char * filename, char ** dest) {
-		unsigned int size;
-		
-		FILE * inputFile = fopen(filename, "r");
-		if (inputFile == 0) {
-			throw Exception(DSGL_CANNOT_READ_FILE, DSGL_MSG_CANNOT_READ_FILE, filename);
-		}
-		size = GetFileSize(filename)+1;
-		(*dest) = new char[size];
-		for (int i=0; i < size; i++) {
-			(*dest)[i] = (unsigned char ) fgetc(inputFile);
-			if ( (*dest)[i] == EOF) {
-				(*dest)[i] = '\0';
-				break;
-			}
-		}
-		return size;
-	}
-
-	int GetFileSize(const char * inputFilePath) {
-		// http://www.cplusplus.com/doc/tutorial/files/
-		std::streampos begin, end;
-		std::ifstream inputFile(inputFilePath, std::ios::binary);
-		begin = inputFile.tellg();
-		inputFile.seekg(0, std::ios::end);
-		end = inputFile.tellg();
-		inputFile.close();
-		return int(end - begin);
-	}
-
 	void PrintNicelyWorkGroupsCapabilities() {
 		int workgroup_count[3];
 		int workgroup_size[3];
