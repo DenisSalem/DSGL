@@ -19,7 +19,7 @@ namespace DSGL {
 			static const char * bellShader;
 		  	static const char * voronoiShader;
 		  	static const char * doubleVoronoiShader;
-		  	static const char * flatVoronoiTesselationShader;
+		  	static const char * jellyVoronoiTesselationShader;
 			
 			unsigned int scale;
 			
