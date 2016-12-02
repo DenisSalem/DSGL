@@ -2,7 +2,7 @@
 
 ## Damn Simple OpenGL
 
-- [Read documention](tree/masterdoc/docEN.md)
-- [Lire la documentation](tree/masterdoc/docFR.md)
+- [Read documention](doc/docEN.md)
+- [Lire la documentation](doc/docFR.md)
 
 
