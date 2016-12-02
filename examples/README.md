@@ -1,4 +1,4 @@
-# ![DSGL](https://raw.githubusercontent.com/DenisSalem/DSGL/789ca6d88e197f5a806179337ba8a793c4fc6968/doc/dsglLogo.png "DSGL")
+# ![DSGL](https://framagit.org/denissalem/DSGL/blob/master/doc/dsglLogo.png "DSGL")
 
 # EXAMPLES
 

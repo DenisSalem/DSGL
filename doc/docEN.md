@@ -1,11 +1,11 @@
-# ![DSGL](https://raw.githubusercontent.com/DenisSalem/DSGL/789ca6d88e197f5a806179337ba8a793c4fc6968/doc/dsglLogo.png "DSGL")
+# ![DSGL](https://framagit.org/denissalem/DSGL/blob/master/doc/dsglLogo.png "DSGL")
 
 # Damn Simple OpenGL
 
 1. [About](#about)
 2. [Installation and compilation](#installation-and-compilation)
 3. [API](#api)
-	1. [Core](https://github.com/DenisSalem/DSGL/blob/master/doc/coreEN.md)
+	1. [Core]((https://framagit.org/denissalem/DSGL/blob/master/doc/coreEN.md)
 		1. [DSGL_TRACE](https://github.com/DenisSalem/DSGL/blob/master/doc/coreEN.md#dsgl_trace)
 		2. [PrintNicelyWorkGroupsCapabilities](https://github.com/DenisSalem/DSGL/blob/master/doc/coreEN.md#printnicelyworkgroupscapabilities)
 		3. [Exception](https://github.com/DenisSalem/DSGL/blob/master/doc/coreEN.md#exception)
@@ -17,10 +17,10 @@
 		9. [ShaderProgram](https://github.com/DenisSalem/DSGL/blob/master/doc/coreEN.md#shaderprogram)
 		10. [PipelineProgram](https://github.com/DenisSalem/DSGL/blob/master/doc/coreEN.md#pipelineprogram)
 		11. [ComputeProgram](https://github.com/DenisSalem/DSGL/blob/master/doc/coreEN.md#computeprogram)
-	2. [Meshes](https://github.com/DenisSalem/DSGL/blob/master/doc/meshesEN.md)
+	2. [Meshes]((https://framagit.org/denissalem/DSGL/blob/master/doc/meshesEN.md)
 		1. [Triangle](https://github.com/DenisSalem/DSGL/blob/master/doc/meshesEN.md#triangle)
 		2. [Quad](https://github.com/DenisSalem/DSGL/blob/master/doc/meshesEN.md#quad)
-4. [Examples](https://github.com/DenisSalem/DSGL/tree/master/examples)
+4. [Examples]((https://framagit.org/denissalem/DSGL/tree/master/examples)
 5. [FAQ](#faq)
 	1. [How do I use my extensions loader](#how-do-i-use-my-extensions-loader)
 
@@ -41,18 +41,18 @@ DSGL support some nice libraries you may want to use by passing to compiler some
 - [gl3w](https://github.com/skaslev/gl3w) : compile with *-D DSGL_GL3W*.
 
 
-Include [dsgl.hpp](https://github.com/DenisSalem/DSGL/blob/master/core/dsgl.hpp) and [dsgl.cpp](https://github.com/DenisSalem/DSGL/blob/master/core/dsgl.cpp) from [Core](https://github.com/DenisSalem/DSGL/tree/master/core) in your project for general purposes features.
+Include [dsgl.hpp]((https://framagit.org/denissalem/DSGL/blob/master/core/dsgl.hpp) and [dsgl.cpp]((https://framagit.org/denissalem/DSGL/blob/master/core/dsgl.cpp) from [Core]((https://framagit.org/denissalem/DSGL/tree/master/core) in your project for general purposes features.
 
 Depending of your needs one may want to also includes all sources files from
 
-- [meshes](https://github.com/DenisSalem/DSGL/tree/master/meshes)
-- [images](https://github.com/DenisSalem/DSGL/tree/master/images)
-- [generative](https://github.com/DenisSalem/DSGL/tree/master/generative)
+- [meshes]((https://framagit.org/denissalem/DSGL/tree/master/meshes)
+- [images]((https://framagit.org/denissalem/DSGL/tree/master/images)
+- [generative]((https://framagit.org/denissalem/DSGL/tree/master/generative)
 
 ## API
 
-- [Core](https://github.com/DenisSalem/DSGL/blob/master/doc/coreEN.md) contains main DSGL features, each of them are defined within DSGL namespace.
-- [Meshes](https://github.com/DenisSalem/DSGL/blob/master/doc/meshesEN.md) hold some simples meshes for debugging, testing. Also useful for basic needs. Everything there is defined within DSGL::Meshes namespace.
+- [Core]((https://framagit.org/denissalem/DSGL/blob/master/doc/coreEN.md) contains main DSGL features, each of them are defined within DSGL namespace.
+- [Meshes]((https://framagit.org/denissalem/DSGL//blob/master/doc/meshesEN.md) hold some simples meshes for debugging, testing. Also useful for basic needs. Everything there is defined within DSGL::Meshes namespace.
 
 ## FAQ
 

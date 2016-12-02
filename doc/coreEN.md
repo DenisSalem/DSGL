@@ -1,8 +1,8 @@
-# ![DSGL](https://raw.githubusercontent.com/DenisSalem/DSGL/789ca6d88e197f5a806179337ba8a793c4fc6968/doc/dsglLogo.png "DSGL")
+# ![DSGL](https://framagit.org/denissalem/DSGL/blob/master/doc/dsglLogo.png "DSGL")
 
 # CORE
 
-To use DSGL core features just include [dsgl.hpp](https://github.com/DenisSalem/DSGL/blob/master/core/dsgl.hpp) and [dsgl.cpp](https://github.com/DenisSalem/DSGL/blob/master/core/dsgl.cpp) in your project.
+To use DSGL core features just include [dsgl.hpp](https://framagit.org/denissalem/DSGL/blob/master/core/dsgl.hpp) and [dsgl.cpp](https://framagit.org/denissalem/DSGL/blob/master/core/dsgl.cpp) in your project.
 
 - [DSGL_TRACE](#dsgl_trace)
 - [PrintNicelyWorkGroupsCapabilities](#printnicelyworkgroupscapabilities)
