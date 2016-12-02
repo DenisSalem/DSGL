@@ -2,7 +2,7 @@
 
 ## Damn Simple OpenGL
 
-- [Read documention](https://github.com/DenisSalem/DSGL/tree/master/doc/docEN.md)
-- [Lire la documentation](https://github.com/DenisSalem/DSGL/tree/master/doc/docFR.md)
+- [Read documention](doc/docEN.md)
+- [Lire la documentation](doc/docFR.md)
 
 
