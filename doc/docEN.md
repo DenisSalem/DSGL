@@ -18,7 +18,7 @@
 		10. [PipelineProgram](https://framagit.org/denissalem/DSGL/blob/master/doc/coreEN.md#pipelineprogram)
 		11. [ComputeProgram](https://framagit.org/denissalem/DSGL/blob/master/doc/coreEN.md#computeprogram)
 	2. [Meshes](https://framagit.org/denissalem/DSGL/blob/master/doc/meshesEN.md)
-		1. [Triangle](https://framagit.org/denissalem/DenisSalem/DSGL/blob/master/doc/meshesEN.md#triangle)
+		1. [Triangle](https://framagit.org/denissalem/DSGL/blob/master/doc/meshesEN.md#triangle)
 		2. [Quad](https://framagit.org/denissalem/DSGL/blob/master/doc/meshesEN.md#quad)
 4. [Examples](https://framagit.org/denissalem/DSGL/tree/master/examples)
 5. [FAQ](#faq)

@@ -1,4 +1,4 @@
-# ![DSGL](https://framagit.org/denissalem/DSGL/blob/master/doc/dsglLogo.png "DSGL")
+# ![DSGL](https://framagit.org/denissalem/DSGL/raw/a0abd277147e41a7e0846b84d4a14dfed1a3e8a6/doc/dsglLogo.png "DSGL")
 
 # CORE
 

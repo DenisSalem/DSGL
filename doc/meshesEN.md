@@ -1,8 +1,8 @@
-# ![DSGL](https://raw.githubusercontent.com/DenisSalem/DSGL/789ca6d88e197f5a806179337ba8a793c4fc6968/doc/dsglLogo.png "DSGL")
+# ![DSGL](https://framagit.org/denissalem/DSGL/raw/a0abd277147e41a7e0846b84d4a14dfed1a3e8a6/doc/dsglLogo.png "DSGL")
 
 # MESHES
 
-To use DSGL MESHES features just include [meshes/dsglMeshes.hpp](https://github.com/DenisSalem/DSGL/blob/master/meshes/dsglMeshes.hpp) and [meshes/dsglMeshes.cpp](https://github.com/DenisSalem/DSGL/blob/master/meshes/dsglMeshes.cpp) in your project.
+To use DSGL MESHES features just include [meshes/dsglMeshes.hpp](https://framagit.org/denissalem/DSGL/blob/master/meshes/dsglMeshes.hpp) and [meshes/dsglMeshes.cpp](https://framagit.org/denissalem/DSGL/blob/master/meshes/dsglMeshes.cpp) in your project.
 
 Every classes there are defined within DSGL::Meshes namespace.
 
@@ -28,7 +28,7 @@ and methods
 
 - __Triangle__ setup by default a wide screen triangle. x,y,z may be defined and act as offset. 
 
-Example of usage belong there: [FirstTriangle](https://github.com/DenisSalem/DSGL/tree/master/examples/FirstTriangle).
+Example of usage belong there: [FirstTriangle](https://framagit.org/denissalem/DSGL/tree/master/examples/FirstTriangle).
 
 ## Quad
 
@@ -53,6 +53,6 @@ and methods
 
 There is multiple examples of usage there:
 
-- [ComputeShader](https://github.com/DenisSalem/DSGL/tree/master/examples/ComputeShader)
-- [Instancing](https://github.com/DenisSalem/DSGL/tree/master/examples/Instancing)
-- [TexturePNG](https://github.com/DenisSalem/DSGL/tree/master/examples/TexturePNG)
+- [ComputeShader](https://framagit.org/denissalem/DSGL/tree/master/examples/ComputeShader)
+- [Instancing](https://framagit.org/denissalem/DSGL/tree/master/examples/Instancing)
+- [TexturePNG](https://framagit.org/denissalem/DSGL/tree/master/examples/TexturePNG)
