@@ -23,7 +23,7 @@ namespace DSGL {
 			
 			unsigned int scale;
 			
-			std::shared_ptr<Texture> brushes;
+			std::shared_ptr<TextureBuffer> brushes;
 		};
 	}
 }

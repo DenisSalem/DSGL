@@ -9,7 +9,7 @@
 int main(int argc, char ** argv) {
 	try {
 		/* OpenGL context */
-		DSGL::Context context("GENERATIVE SURFACE WITH DSGL", 2048, 512, 4, 4);
+		DSGL::Context context("GENERATIVE SURFACE WITH DSGL", 512 * DSGL_GENERATIVE_BRUSHES_MAX_NUMBER, 512, 4, 3);
 		context.InitSimpleWindow();
 	
 		/* Regular and compute shaders */
@@ -52,6 +52,7 @@ int main(int argc, char ** argv) {
 		auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
 		std::cout << "Duration: " << float(duration) / 1000000.0 << "s\n";
 		
+		DSGL_TRACE
 		// ----- Render loop ----- //
 		while (!glfwWindowShouldClose(context.window)) {
 			glfwPollEvents();

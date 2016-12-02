@@ -185,7 +185,9 @@ namespace DSGL {
 		this->usage = usage;
 		this->gpuSideFormat = gpuSideFormat;
 		glBindBuffer(GL_TEXTURE_BUFFER, this->bufferID);
-  		glBufferData(GL_TEXTURE_BUFFER, size, data, usage);
+		if (data != NULL) {
+  			glBufferData(GL_TEXTURE_BUFFER, size, data, usage);
+		}
 		glBindBuffer(GL_TEXTURE_BUFFER,0);
 	}
 
@@ -512,9 +514,11 @@ namespace DSGL {
 		return int(end - begin);
 	}
 
-	
+	// something goes wrong there
 	Shader::~Shader() {
-		glDeleteShader(this->ID);
+		if (glIsShader(this->ID)) {
+			glDeleteShader(this->ID);
+		}
 	}
 
 	// ComputeShader //
@@ -650,27 +654,22 @@ namespace DSGL {
 	void PipelineProgram::Clean(bool shadersOnly) {
 		if (glIsShader(this->vertex->ID)) {
 			glDetachShader(this->ID, this->vertex->ID);
-			glDeleteShader(this->vertex->ID);
 		}
 
 		if (glIsShader(this->tesselationControl->ID)) {
 			glDetachShader(this->ID, this->tesselationControl->ID);
-			glDeleteShader(this->tesselationControl->ID);
 		}
 		
 		if (glIsShader(this->tesselationEvaluation->ID)) {
 			glDetachShader(this->ID, this->tesselationEvaluation->ID);
-			glDeleteShader(this->tesselationEvaluation->ID);
 		}
 		
 		if (glIsShader(this->geometry->ID)) {
 			glDetachShader(this->ID, this->geometry->ID);
-			glDeleteShader(this->geometry->ID);
 		}
 		
 		if (glIsShader(this->fragment->ID)) {
 			glDetachShader(this->ID, this->fragment->ID);
-			glDeleteShader(this->fragment->ID);
 		}
 		
 		if (!shadersOnly) {
