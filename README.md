@@ -1,4 +1,4 @@
-# ![DSGL](https://framagit.org/denissalem/DSGL/blob/master/doc/dsglLogo.png "DSGL")
+# ![DSGL](https://framagit.org/denissalem/DSGL/raw/master/doc/dsglLogo.png "DSGL")
 
 ## Damn Simple OpenGL
 
