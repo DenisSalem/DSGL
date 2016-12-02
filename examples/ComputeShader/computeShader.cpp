@@ -23,7 +23,7 @@ int main(int argc, char ** argv) {
 	DSGL::Meshes::Quad quad;
 
 	/* Create buffers */
-	DSGL::Textures texture(GL_TEXTURE_2D, 640,480, NULL);
+	DSGL::Texture texture(GL_TEXTURE_2D, 640,480, NULL);
 	DSGL::Elements elements(4 * sizeof(GLuint), quad.index);
 	DSGL::VertexBufferObject VBO(sizeof(GLfloat) * 12, quad.vertex);
 	DSGL::VertexBufferObject texCoords(sizeof(GLfloat) * 8, quad.texCoords);

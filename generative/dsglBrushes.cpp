@@ -110,7 +110,7 @@ namespace DSGL {
 		Brushes::Brushes(unsigned int scale, char * seed) {
 		  	this->scale = scale;
 			
-			this->brushes = std::make_shared<Textures>(GL_TEXTURE_2D, scale * DSGL_GENERATIVE_BRUSHES_MAX_NUMBER, scale, (GLvoid*)NULL);
+			this->brushes = std::make_shared<Texture>(GL_TEXTURE_2D, scale * DSGL_GENERATIVE_BRUSHES_MAX_NUMBER, scale, (GLvoid*)NULL);
 			// Bell
 			DSGL::ComputeProgram bell(Brushes::bellShader, DSGL_READ_FROM_STRING);
 			glUseProgram(bell.ID);
