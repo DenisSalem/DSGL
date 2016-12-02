@@ -41,13 +41,13 @@ DSGL support some nice libraries you may want to use by passing to compiler some
 - [gl3w](https://github.com/skaslev/gl3w) : compile with *-D DSGL_GL3W*.
 
 
-Include [dsgl.hpp](https://framagit.org/denissalem/DSGL/blob/master/core/dsgl.hpp) and [dsgl.cpp]((https://framagit.org/denissalem/DSGL/blob/master/core/dsgl.cpp) from [Core]((https://framagit.org/denissalem/DSGL/tree/master/core) in your project for general purposes features.
+Include [dsgl.hpp](https://framagit.org/denissalem/DSGL/blob/master/core/dsgl.hpp) and [dsgl.cpp](https://framagit.org/denissalem/DSGL/blob/master/core/dsgl.cpp) from [Core](https://framagit.org/denissalem/DSGL/tree/master/core) in your project for general purposes features.
 
 Depending of your needs one may want to also includes all sources files from
 
 - [meshes](https://framagit.org/denissalem/DSGL/tree/master/meshes)
 - [images](https://framagit.org/denissalem/DSGL/tree/master/images)
-- [generative]((https://framagit.org/denissalem/DSGL/tree/master/generative)
+- [generative](https://framagit.org/denissalem/DSGL/tree/master/generative)
 
 ## API
 
