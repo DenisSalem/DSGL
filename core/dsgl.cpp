@@ -196,10 +196,9 @@ namespace DSGL {
 		glDeleteBuffers(1, &this->bufferID);
 	}
 
-	 void TextureBuffer::Bind() {
+	void TextureBuffer::Bind() {
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_BUFFER, this->textureID);
-		glBindBuffer(GL_TEXTURE_BUFFER, this->bufferID);
 		glTexBuffer(GL_TEXTURE_BUFFER, this->gpuSideFormat, this->bufferID);
 	}
 
