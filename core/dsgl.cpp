@@ -244,7 +244,6 @@ namespace DSGL {
 			glTexParameteri(target, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 			glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-			glGenerateMipmap(target);
 			if( width % 4 != 0) {
 			  glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // In case of NPOT width texture, prevent from misalignment shit.
 			}
@@ -254,6 +253,7 @@ namespace DSGL {
 			else if(target == GL_TEXTURE_1D) {
 				glTexImage1D(target, 0, gpuSideFormat, this->width, 0, cpuSideFormat, cpuSideType, this->rawData);
 			}
+			glGenerateMipmap(target); // Must be called after glTexImage or it will issue error 1282
 		}
 		glBindTexture(target, 0);
 	}
