@@ -21,7 +21,7 @@ int main(int argc, char ** argv) {
 
 	/* OpenGL context */
 
-	DSGL::Context context("OPEN AND DISPLAY IMAGE WITH DSGL", png.Width(), png.Height(), 4, 3);
+	DSGL::Context context("OPEN AND DISPLAY IMAGE WITH DSGL", png.Width(), png.Height(), 3, 3);
 	context.InitSimpleWindow();
 	
 	/* Regular shaders */
