@@ -5,7 +5,7 @@
 int main() {
 	/* Init Context and create shader program used to render our instances. */
 
-	DSGL::Context context("DSGL HELLO TRIANGLE",640,480,4,3);
+	DSGL::Context context("DSGL HELLO TRIANGLE",640,480,3,3);
 	
 	context.InitSimpleWindow();
 	
